@@ -49,6 +49,7 @@ export interface IConsultationDetail {
   doctor: {
     firstName: string;
     lastName: string;
+    gender: GenderType;
   };
   acupunctureTreatment: {
     id: string | null;

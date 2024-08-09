@@ -28,6 +28,7 @@ export interface IGetSingleConsultationResponse {
   doctor: {
     firstName: string;
     lastName: string;
+    gender: GenderType;
   };
   acupunctureTreatment: {
     id: string | null;
