@@ -9,8 +9,6 @@ const api = axios.create({
   baseURL: `${import.meta.env.VITE_APP_SERVER_URL}/api`,
 });
 
-// append auth token here rather than in initialization of axios
-// or we can't get the token without refresh page after signing in
 api.interceptors.request.use((config) => {
   const auth = getAuthFromCache();
   config.headers.Authorization = `Bearer ${auth ? auth.token : ''}`;
