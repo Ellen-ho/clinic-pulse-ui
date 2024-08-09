@@ -7,9 +7,9 @@ import HomeLandingLayout from '../../../layout/HomeLandingLayout';
 
 const Home: React.FC = () => {
   const { state } = useContext(AuthContext);
-  const isLoggedIn = state.isLoggedIn;
+  const isSignedIn = state.isSignedIn;
 
-  return isLoggedIn ? (
+  return isSignedIn ? (
     <Navigate to="/dashboard" />
   ) : (
     <HomeLandingLayout>

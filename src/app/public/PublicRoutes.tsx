@@ -9,9 +9,9 @@ const PublicRoutes = () => {
   const { state } = useContext(AuthContext);
 
   const cachedAuth = getAuthFromCache();
-  const isLoggedIn = cachedAuth && cachedAuth.isLoggedIn;
+  const isSignedIn = cachedAuth && cachedAuth.isSignedIn;
 
-  return isLoggedIn ? (
+  return isSignedIn ? (
     <Navigate to="/dashboard" replace={true} state={{ from: location }} />
   ) : (
     <Layout>
