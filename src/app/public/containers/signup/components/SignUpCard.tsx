@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
@@ -19,25 +19,33 @@ import {
 import { signupUser } from '../../../../../services/UserService';
 import { FormWrapper } from '../../../../../components/form/Index.styled';
 import { ButtonAreaWrapper } from '../../../../layout/CommonWrapper.styled';
+import { UserRoleType } from '../../../../../types/Users';
+import { GenderType } from '../../../../../types/Share';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface ISignUpFormInputs {
-  displayName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  confirmPassword: string;
-  role: string;
+  role: UserRoleType;
+  onboardDate: Date;
+  gender: GenderType;
+  birthDate: Date;
 }
 
 const schema = yup
   .object({
-    displayName: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password')], 'Passwords must match')
-      .required('Confirm Password is required'),
-    role: yup.string().required(),
+    role: yup.string().oneOf(Object.values(UserRoleType)).required(),
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    onboardDate: yup.date().required(),
+    gender: yup.string().oneOf(Object.values(GenderType)).required(),
+    birthDate: yup.date().required(),
   })
   .required();
 
@@ -50,6 +58,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<ISignUpFormInputs>({
     resolver: yupResolver(schema),
@@ -57,10 +66,14 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
 
   const onSignUp = async (data: ISignUpFormInputs) => {
     const payload = {
-      displayName: data.displayName,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       password: data.password,
       role: data.role,
+      onboardDate: data.onboardDate,
+      gender: data.gender,
+      birthDate: data.birthDate,
     };
 
     const response = await signupUser(payload);
@@ -68,91 +81,112 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-          align="center"
-          sx={{ marginBottom: '15px' }}
-        >
-          {title}
-        </Typography>
-        <FormWrapper onSubmit={handleSubmit(onSignUp)}>
-          <TextField
-            label="DisplayName"
-            type="displayName"
-            size="small"
-            {...register('displayName')}
-            error={!!errors.displayName}
-            helperText={<>{errors.displayName?.message}</>}
-          />
-          <TextField
-            label="Email"
-            type="email"
-            size="small"
-            {...register('email')}
-            error={!!errors.email}
-            helperText={<>{errors.email?.message}</>}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            size="small"
-            {...register('password')}
-            error={!!errors.password}
-            helperText={<>{errors.password?.message}</>}
-          />
-          <TextField
-            label="Confirm Password"
-            type="password"
-            size="small"
-            {...register('confirmPassword')}
-            error={!!errors.confirmPassword}
-            helperText={<>{errors.confirmPassword?.message}</>}
-          />
-          <FormControl>
-            <InputLabel>User Role</InputLabel>
-            <Select
-              label="User Role"
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Card>
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            align="center"
+            sx={{ marginBottom: '15px' }}
+          >
+            {title}
+          </Typography>
+          <FormWrapper onSubmit={handleSubmit(onSignUp)}>
+            <FormControl>
+              <InputLabel>User Role</InputLabel>
+              <Select
+                label="User Role"
+                size="small"
+                {...register('role')}
+                error={!!errors.role}
+                defaultValue=""
+              >
+                <MenuItem value="ADMIN">ADMIN</MenuItem>
+                <MenuItem value="DOCTOR">Doctor</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="FirstName"
+              type="firstName"
               size="small"
-              {...register('role')}
-              error={!!errors.role}
-              defaultValue=""
-            >
-              <MenuItem value="PATIENT">Patient</MenuItem>
-              <MenuItem value="DOCTOR">Doctor</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox name="confirm" color="primary" />}
-            label={
-              <Typography variant="body2">
-                By continuing, I confirm that I am over 18 years old and agree
-                to Medi Connect's{' '}
-                <Link href="#" underline="hover">
-                  Terms
-                </Link>{' '}
-                and{' '}
-                <Link href="#" underline="hover">
-                  Privacy Policy
-                </Link>
-              </Typography>
-            }
-          />
-
-          <ButtonAreaWrapper>
-            <Button type="submit" variant="contained" color="primary">
-              Sign Up
-            </Button>
-            <Button variant="text" onClick={() => navigate('/signin')}>
-              Sign In
-            </Button>
-          </ButtonAreaWrapper>
-        </FormWrapper>
-      </CardContent>
-    </Card>
+              {...register('firstName')}
+              error={!!errors.firstName}
+              helperText={<>{errors.firstName?.message}</>}
+            />
+            <TextField
+              label="LastName"
+              type="lastName"
+              size="small"
+              {...register('lastName')}
+              error={!!errors.lastName}
+              helperText={<>{errors.lastName?.message}</>}
+            />
+            <FormControl>
+              <InputLabel>Gender</InputLabel>
+              <Select
+                label="Gender"
+                size="small"
+                {...register('gender')}
+                error={!!errors.gender}
+                defaultValue=""
+              >
+                <MenuItem value="MALE">MALE</MenuItem>
+                <MenuItem value="FEMALE">FEMALE</MenuItem>
+                <MenuItem value="NON_BINARY">NON_BINARY</MenuItem>
+              </Select>
+            </FormControl>
+            <Controller
+              name="birthDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  label="Birth Date"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              name="onboardDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  label="Onboard Date"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <TextField
+              label="Email"
+              type="email"
+              size="small"
+              {...register('email')}
+              error={!!errors.email}
+              helperText={<>{errors.email?.message}</>}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              size="small"
+              {...register('password')}
+              error={!!errors.password}
+              helperText={<>{errors.password?.message}</>}
+            />
+            <ButtonAreaWrapper>
+              <Button type="submit" variant="contained" color="primary">
+                Sign Up
+              </Button>
+              <Button variant="text" onClick={() => navigate('/signin')}>
+                Sign In
+              </Button>
+            </ButtonAreaWrapper>
+          </FormWrapper>
+        </CardContent>
+      </Card>
+    </LocalizationProvider>
   );
 };
 
