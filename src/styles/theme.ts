@@ -69,17 +69,17 @@ export const theme = createTheme({
         containedPrimary: {
           color: '#fff',
           '&:hover': {
-            backgroundColor: '#80CADA', // Your desired hover color
+            backgroundColor: '#80CADA',
           },
         },
         outlinedPrimary: {
           '&:hover': {
-            borderColor: '#80CADA', // Adjust border color for outlined buttons
+            borderColor: '#80CADA',
           },
         },
         textPrimary: {
           '&:hover': {
-            color: '#80CADA', // Set hover color for text buttons
+            color: '#80CADA',
           },
         },
       },
