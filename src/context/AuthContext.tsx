@@ -1,45 +1,28 @@
 import { createContext } from 'react';
 
 export interface AuthState {
-  isLoggedIn: boolean;
+  isSignedIn: boolean;
   token: string | null;
   currentUser: {
     id: string;
-    displayName: string;
     role: string;
-    avatar: string | null;
   } | null;
-  patientId: string | null;
   doctorId: string | null;
-  hasProfile: boolean;
 }
 
 export type AuthAction =
   | {
-      type: 'LOG_IN';
+      type: 'SIGN_IN';
       payload: {
         token: string;
         currentUser: {
           id: string;
-          displayName: string;
           role: string;
-          avatar: string | null;
         };
-        patientId: string;
         doctorId: string;
-        hasProfile: boolean;
       };
     }
-  | { type: 'LOG_OUT' }
-  | {
-      type: 'UPDATE_PROFILE';
-      payload: {
-        avatar: string | null;
-        patientId: string | null;
-        doctorId: string | null;
-        hasProfile: boolean;
-      };
-    };
+  | { type: 'SIGN_OUT' };
 
 interface AuthContextProps {
   state: AuthState;
@@ -47,12 +30,10 @@ interface AuthContextProps {
 }
 
 export const initialState = {
-  isLoggedIn: false,
+  isSignedIn: false,
   token: null,
   currentUser: null,
-  patientId: null,
   doctorId: null,
-  hasProfile: false,
 };
 
 export const AuthContext = createContext<AuthContextProps>({
