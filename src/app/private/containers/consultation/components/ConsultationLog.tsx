@@ -5,6 +5,7 @@ import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import ConsultationTimeline from './ConsultationTimeLine';
 import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
+import { Card } from '@mui/material';
 
 const ConsultationLog: React.FC = () => {
   const { id } = useParams();
@@ -16,16 +17,13 @@ const ConsultationLog: React.FC = () => {
   );
 
   return (
-    <PrimaryPageContent>
-      <CommonWrapper>
-        <SecondaryPageTop />
-        {isLoading || !data ? (
-          <>Loading</>
-        ) : (
-          <ConsultationTimeline consultation={data} />
-        )}
-      </CommonWrapper>
-    </PrimaryPageContent>
+    <Card>
+      {isLoading || !data ? (
+        <>Loading</>
+      ) : (
+        <ConsultationTimeline consultation={data} />
+      )}
+    </Card>
   );
 };
 

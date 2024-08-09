@@ -32,7 +32,7 @@ const ConsultationDetail: React.FC = () => {
   }
 
   return (
-    <BasicCard title="Consultation Details">
+    <BasicCard title="門診詳情">
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
         <Typography variant="body1">
           看診日期: {data.consultationDate}

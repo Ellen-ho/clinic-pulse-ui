@@ -50,7 +50,7 @@ const ConsultationListPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>
-        Consultation List
+        門診列表
       </Typography>
       <ConsultationListFilters onApply={handleApplyFilters} />
       <ConsultationList {...filters} />
