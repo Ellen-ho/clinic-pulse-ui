@@ -9,6 +9,10 @@ import useInitAuth from './hooks/UseInitAuth';
 import PublicRoutes from './app/public/PublicRoutes';
 import LoadingComponent from './components/loading/Loading';
 import Dashboard from './app/private/containers/dashboard/Index';
+import ConsultationList from './app/private/containers/consultation/components/ConsultationList';
+import ConsultationLog from './app/private/containers/consultation/components/ConsultationLog';
+import ConsultationListFilters from './app/private/containers/consultation/components/ConsultationListFilters';
+import ConsultationListPage from './app/private/containers/consultation/pages/ConsultationListPage';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -21,6 +25,8 @@ const App: React.FC = () => {
     <Routes>
       <Route element={<PrivateRoutes />}>
         <Route element={<Dashboard />} path="/dashboard" />
+        <Route element={<ConsultationListPage />} path="/consultation" />
+        <Route element={<ConsultationLog />} path="/consultation/:id" />
       </Route>
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
