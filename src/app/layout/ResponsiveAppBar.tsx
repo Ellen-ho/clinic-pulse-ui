@@ -22,12 +22,19 @@ const topPages = [
 
 const ResponsiveAppBar: React.FC = () => {
   const { state, dispatch } = useContext(AuthContext);
-  const isLoggedIn = state.isLoggedIn;
+  const isSignedIn = state.isSignedIn;
 
   const navigate = useNavigate();
 
   const handlePageClick = (link: string) => {
     navigate(link);
+  };
+
+  const handleSignOut = () => {
+    dispatch({
+      type: 'SIGN_OUT',
+    });
+    navigate('/signin');
   };
 
   return (
@@ -42,7 +49,7 @@ const ResponsiveAppBar: React.FC = () => {
               variant="h6"
               noWrap
               component="a"
-              href={isLoggedIn ? '/dashboard' : '/'}
+              href={isSignedIn ? '/dashboard' : '/'}
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
@@ -55,7 +62,7 @@ const ResponsiveAppBar: React.FC = () => {
           </Box>
 
           <Box sx={{ display: { py: 2 } }}>
-            {isLoggedIn && (
+            {isSignedIn && (
               <Box sx={{ display: 'flex' }}>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                   {topPages.map((page) => {
@@ -69,6 +76,9 @@ const ResponsiveAppBar: React.FC = () => {
                       </Button>
                     );
                   })}
+                  <Button onClick={handleSignOut} sx={{ color: 'white' }}>
+                    登出
+                  </Button>
                 </Box>
               </Box>
             )}

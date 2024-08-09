@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
-import { loginUser } from '../../../../services/UserService';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import PrimaryPageContent from '../../../layout/PrimaryPageContent';
@@ -18,6 +17,7 @@ import {
 import { FormWrapper } from '../../../../components/form/Index.styled';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import { ButtonAreaWrapper } from '../../../layout/CommonWrapper.styled';
+import { signinUser } from '../../../../services/UserService';
 
 interface ISignInFormInputs {
   email: string;
@@ -49,20 +49,16 @@ const SignIn: React.FC = () => {
       password: data.password,
     };
 
-    const response = await loginUser(payload);
+    const response = await signinUser(payload);
     dispatch({
-      type: 'LOG_IN',
+      type: 'SIGN_IN',
       payload: {
         token: response.token,
         currentUser: {
           id: response.user.id,
-          displayName: response.user.displayName,
           role: response.user.role,
-          avatar: response.user.avatar,
         },
-        patientId: response.patientId,
         doctorId: response.doctorId,
-        hasProfile: response.hasProfile,
       },
     });
   };

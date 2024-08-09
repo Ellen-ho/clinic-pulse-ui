@@ -9,27 +9,23 @@ const useInitAuth = () => {
   useEffect(() => {
     const initializeAuth = async () => {
       const cachedAuth = getAuthFromCache();
-      const isLogin = cachedAuth != null && cachedAuth.isLoggedIn;
+      const isSignedIn = cachedAuth != null && cachedAuth.isSignedIn;
 
-      if (isLogin) {
+      if (isSignedIn) {
         dispatch({
-          type: 'LOG_IN',
+          type: 'SIGN_IN',
           payload: {
             token: cachedAuth.token as string,
             currentUser: cachedAuth.currentUser as {
               id: string;
-              displayName: string;
-              avatar: string;
               role: string;
             },
-            patientId: cachedAuth.patientId as string,
             doctorId: cachedAuth.doctorId as string,
-            hasProfile: cachedAuth.hasProfile as boolean,
           },
         });
       } else {
         dispatch({
-          type: 'LOG_OUT',
+          type: 'SIGN_OUT',
         });
       }
       setIsLoading(false);

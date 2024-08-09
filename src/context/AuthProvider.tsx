@@ -8,14 +8,12 @@ import {
 
 const reducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case 'LOG_IN': {
+    case 'SIGN_IN': {
       const udpatedState = {
-        isLoggedIn: true,
+        isSignedIn: true,
         token: action.payload.token,
         currentUser: action.payload.currentUser,
-        patientId: action.payload.patientId,
         doctorId: action.payload.doctorId,
-        hasProfile: action.payload.hasProfile,
       };
       localStorage.setItem('auth', JSON.stringify(udpatedState));
       return {
@@ -23,14 +21,12 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
         ...udpatedState,
       };
     }
-    case 'LOG_OUT': {
+    case 'SIGN_OUT': {
       const udpatedState = {
-        isLoggedIn: false,
+        isSignedIn: false,
         token: null,
         currentUser: null,
-        patientId: null,
         doctorId: null,
-        hasProfile: false,
       };
       localStorage.setItem('auth', JSON.stringify(udpatedState));
       return {
@@ -38,22 +34,6 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
         ...udpatedState,
       };
     }
-    case 'UPDATE_PROFILE': {
-      const udpatedState = {
-        ...state,
-        hasProfile: action.payload.hasProfile,
-        patientId: action.payload.patientId,
-        doctorId: action.payload.doctorId,
-      };
-      udpatedState.currentUser!.avatar = action.payload.avatar;
-
-      localStorage.setItem('auth', JSON.stringify(udpatedState));
-      return {
-        ...state,
-        ...udpatedState,
-      };
-    }
-
     default:
       return state;
   }

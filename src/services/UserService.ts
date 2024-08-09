@@ -1,12 +1,13 @@
+import { GenderType } from '../types/Share';
 import { UserRoleType } from '../types/Users';
 import api from './ApiService';
 
-interface ILoginRequest {
+interface ISigninRequest {
   email: string;
   password: string;
 }
 
-interface ILoginResponse {
+interface ISigninResponse {
   token: string;
   user: {
     id: string;
@@ -21,87 +22,26 @@ interface ILoginResponse {
 }
 
 interface ISignupRequest {
-  displayName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  role: string;
+  role: UserRoleType;
+  onboardDate: Date;
+  gender: GenderType;
+  birthDate: Date;
 }
 
 interface ISignupResponse {
   id: string;
-  displayName: string;
   email: string;
   role: string;
 }
 
-interface IGetUserAccountResponse {
-  id: string;
-  displayName: string;
-  email: string;
-  role: UserRoleType;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface IEditUserAccountRequest {
-  displayName: string;
-  password: string;
-}
-
-interface IEditUserAccountResponse {
-  id: string;
-  displayName: string;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface IUploadAvatarImageResponse {
-  imageUrl: string;
-}
-
-interface ICreatePasswordChangeMailRequest {
-  email: string;
-}
-
-interface ICreatePasswordChangeMailResponse {
-  success: boolean;
-  error?: string;
-}
-
-interface IUpdatePasswordRequest {
-  newPassword: string;
-  resetToken: string;
-}
-
-interface IUpdatePasswordResponse {
-  success: boolean;
-}
-
-export const updatePassword = async (
-  data: IUpdatePasswordRequest,
-): Promise<IUpdatePasswordResponse> => {
-  const response = await api.patch<IUpdatePasswordResponse>(
-    '/users/reset-password',
-    data,
-  );
-  return response.data;
-};
-
-export const createPasswordChangeMail = async (
-  data: ICreatePasswordChangeMailRequest,
-): Promise<ICreatePasswordChangeMailResponse> => {
-  const response = await api.post<ICreatePasswordChangeMailResponse>(
-    '/users/reset-password-mail',
-    data,
-  );
-  return response.data;
-};
-
-export const loginUser = async (
-  data: ILoginRequest,
-): Promise<ILoginResponse> => {
-  const response = await api.post<ILoginResponse>('/users/login', data);
+export const signinUser = async (
+  data: ISigninRequest,
+): Promise<ISigninResponse> => {
+  const response = await api.post<ISigninResponse>('/users/signin', data);
   return response.data;
 };
 
@@ -109,45 +49,5 @@ export const signupUser = async (
   data: ISignupRequest,
 ): Promise<ISignupResponse> => {
   const response = await api.post<ISignupResponse>('/users', data);
-  return response.data;
-};
-
-export const getUserAccount = async (): Promise<IGetUserAccountResponse> => {
-  const response = await api.get<IGetUserAccountResponse>('/users/account');
-  return response.data;
-};
-
-export const editUserAccount = async (
-  data: IEditUserAccountRequest,
-): Promise<IEditUserAccountResponse> => {
-  const response = await api.patch<IEditUserAccountResponse>(
-    '/users/account',
-    data,
-  );
-  return response.data;
-};
-
-export const getOAuthAccessToken = async (): Promise<ILoginResponse> => {
-  const response = await api.get<ILoginResponse>('/auth/success', {
-    withCredentials: true,
-  });
-  return response.data;
-};
-
-export const uploadAvatar = async (
-  imageFile: File,
-): Promise<IUploadAvatarImageResponse> => {
-  const formData = new FormData();
-  formData.append('avatar', imageFile);
-
-  const response = await api.post<IUploadAvatarImageResponse>(
-    '/users/upload-avatar',
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    },
-  );
   return response.data;
 };

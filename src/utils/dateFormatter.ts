@@ -9,5 +9,6 @@ export const dateFormatter = (
   date: string,
   format: string = 'MMM D, YYYY h:mm A',
 ) => {
+  if (!date) return 'No date provided';
   return dayjs(date).tz('Asia/Taipei').format(format);
 };

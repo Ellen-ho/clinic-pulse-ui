@@ -5,14 +5,14 @@ import Layout from '../layout/Layout';
 const PrivateRoutes = () => {
   const location = useLocation();
   const cachedAuth = getAuthFromCache();
-  const isLoggedIn = cachedAuth && cachedAuth.isLoggedIn;
+  const isSignedIn = cachedAuth && cachedAuth.isSignedIn;
 
-  return isLoggedIn ? (
+  return isSignedIn ? (
     <Layout>
       <Outlet />
     </Layout>
   ) : (
-    <Navigate to="/signin" replace={true} state={{ from: location }} />
+    <Navigate to="/dashboard" replace={true} state={{ from: location }} />
   );
 };
 
