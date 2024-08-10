@@ -11,6 +11,8 @@ import LoadingComponent from './components/loading/Loading';
 import Dashboard from './app/private/containers/dashboard/Index';
 import ConsultationListPage from './app/private/containers/consultation/pages/ConsultationListPage';
 import ConsultationDetailPage from './app/private/containers/consultation/pages/ConsultationDetailPage';
+import FeedbackListPage from './app/private/containers/feedback/pages/FeedbackListPage';
+import FeedbackDetailPage from './app/private/containers/feedback/pages/FeedbackDetailPage';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -25,6 +27,8 @@ const App: React.FC = () => {
         <Route element={<Dashboard />} path="/dashboard" />
         <Route element={<ConsultationListPage />} path="/consultation" />
         <Route element={<ConsultationDetailPage />} path="/consultation/:id" />
+        <Route element={<FeedbackListPage />} path="/feedback" />
+        <Route element={<FeedbackDetailPage />} path="/feedback/:id" />
       </Route>
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
