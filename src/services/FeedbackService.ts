@@ -1,7 +1,40 @@
-import { GenderType, TimePeriodType } from '../types/Share';
+import { OnsiteCancelReasonType } from '../types/Consultation';
+import { SelectedContent } from '../types/Feedback';
+import { GenderType, TimePeriodType, TreatmentType } from '../types/Share';
 import api from './ApiService';
 
-interface IGetFeedbackListRequest {
+export interface IGetSingleFeedbackRequest {
+  feedbackId: string;
+}
+
+export interface IGetSingleFeedbackResponse {
+  id: string;
+  receivedDate: string;
+  receivedAt: Date;
+  feedbackRating: number;
+  selectedContent: SelectedContent;
+  detailedContent: string | null;
+  consultation: {
+    id: string;
+    consultationDate: string;
+    consultationTimePeriod: TimePeriodType;
+    onsiteCancelAt: Date | null;
+    onsiteCancelReason: OnsiteCancelReasonType | null;
+    treatmentType: TreatmentType;
+  };
+  doctor: {
+    firstName: string;
+    lastName: string;
+    gender: GenderType;
+  };
+  patient: {
+    firstName: string;
+    lastName: string;
+    gender: GenderType;
+  };
+}
+
+export interface IGetFeedbackListRequest {
   startDate: string;
   endDate: string;
   clinicId?: string;
@@ -13,7 +46,7 @@ interface IGetFeedbackListRequest {
   limit: number;
 }
 
-interface IGetFeedbackListResponse {
+export interface IGetFeedbackListResponse {
   data: Array<{
     doctor: {
       firstName: string;
@@ -26,6 +59,7 @@ interface IGetFeedbackListResponse {
       gender: GenderType;
     };
     id: string;
+    receivedDate: string;
     receivedAt: Date;
     feedbackRating: number;
     clinicId: string;
@@ -48,5 +82,14 @@ export const getFeedbackList = async ({
   queryString: string;
 }): Promise<IGetFeedbackListResponse> => {
   const response = await api.get(`/feedbacks?${queryString}`);
+  return response.data;
+};
+
+export const getSingleFeedback = async ({
+  feedbackId,
+}: IGetSingleFeedbackRequest): Promise<IGetSingleFeedbackResponse> => {
+  const response = await api.get<IGetSingleFeedbackResponse>(
+    `/feedbacks/${feedbackId}`,
+  );
   return response.data;
 };
