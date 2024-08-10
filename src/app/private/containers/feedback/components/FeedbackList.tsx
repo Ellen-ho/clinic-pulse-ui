@@ -29,7 +29,7 @@ const columns: IColumn[] = [
       return `${value.lastName}${value.firstName}`;
     },
   },
-  { label: '反饋日期', id: 'receivedAt', minWidth: 120 },
+  { label: '反饋日期', id: 'receivedDate', minWidth: 120 },
   { label: '院區', id: 'clinicName', minWidth: 120 },
   { label: '時段', id: 'consultationTimePeriod', minWidth: 120 },
   { label: '反饋星等', id: 'feedbackRating', minWidth: 120 },
@@ -101,7 +101,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(Number(event.target.value));
-    setPage(0);
+    setPage(1);
   };
 
   const handleClickFeedback = (id: string) => {
