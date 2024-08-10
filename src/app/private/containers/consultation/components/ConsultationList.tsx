@@ -105,7 +105,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(Number(event.target.value));
-    setPage(0);
+    setPage(1);
   };
 
   const handleClickConsultation = (id: string) => {

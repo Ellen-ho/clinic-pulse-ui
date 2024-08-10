@@ -5,7 +5,6 @@ import ConsultationList from '../components/ConsultationList';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import useSWR from 'swr';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
