@@ -16,3 +16,10 @@ export enum TreatmentType {
   BOTH_TREATMENT = 'BOTH_TREATMENT',
   NO_TREATMENT = 'NO_TREATMENT',
 }
+
+export enum Granularity {
+  DAY = 'DAY',
+  WEEK = 'WEEK',
+  MONTH = 'MONTH',
+  YEAR = 'YEAR',
+}
