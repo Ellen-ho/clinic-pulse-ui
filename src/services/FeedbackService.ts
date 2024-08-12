@@ -40,6 +40,7 @@ export interface IGetFeedbackListRequest {
   clinicId?: string;
   timePeriod?: TimePeriodType;
   doctorId?: string;
+  patientName?: string;
   patientId?: string;
   feedbackRating?: number;
   page: number;
