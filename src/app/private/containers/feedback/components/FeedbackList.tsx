@@ -7,16 +7,17 @@ import { getConsultationList } from '../../../../../services/ConsultationService
 import StickyHeadTable, {
   IColumn,
 } from '../../../../../components/table/StickyHeadTable';
+import { TimePeriodType } from '../../../../../types/Share';
+import { getFeedbackList } from '../../../../../services/FeedbackService';
 
-interface IConsultationListProps {
+interface IFeedbackListProps {
   startDate: string;
   endDate: string;
   clinicId?: string;
-  timePeriod?: string;
-  totalDurationMin?: number;
-  totalDurationMax?: number;
-  patientName?: string;
+  timePeriod?: TimePeriodType;
   doctorId?: string;
+  patientId?: string;
+  feedbackRating?: number;
 }
 
 const columns: IColumn[] = [
@@ -28,15 +29,10 @@ const columns: IColumn[] = [
       return `${value.lastName}${value.firstName}`;
     },
   },
-  { label: '日期', id: 'consultationDate', minWidth: 120 },
+  { label: '反饋日期', id: 'receivedDate', minWidth: 120 },
+  { label: '院區', id: 'clinicName', minWidth: 120 },
   { label: '時段', id: 'consultationTimePeriod', minWidth: 120 },
-  { label: '號碼', id: 'consultationNumber', minWidth: 120 },
-  { label: '治療', id: 'treatmentType', minWidth: 120 },
-  {
-    label: '總時長(分鐘)',
-    id: 'totalDuration',
-    minWidth: 120,
-  },
+  { label: '反饋星等', id: 'feedbackRating', minWidth: 120 },
   {
     label: '醫師',
     id: 'doctor',
@@ -45,17 +41,21 @@ const columns: IColumn[] = [
       return `${value.lastName}${value.firstName}`;
     },
   },
+  {
+    label: '當次門診',
+    id: 'consultation',
+    minWidth: 120,
+  },
 ];
 
-const ConsultationList: React.FC<IConsultationListProps> = ({
+const FeedbackList: React.FC<IFeedbackListProps> = ({
   startDate,
   endDate,
   clinicId,
   timePeriod,
-  totalDurationMin,
-  totalDurationMax,
   doctorId,
-  patientName,
+  patientId,
+  feedbackRating,
 }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
@@ -68,12 +68,9 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     if (endDate) params.set('endDate', endDate);
     if (clinicId) params.set('clinicId', clinicId);
     if (timePeriod) params.set('timePeriod', timePeriod);
-    if (totalDurationMin !== undefined)
-      params.set('totalDurationMin', String(totalDurationMin));
-    if (totalDurationMax !== undefined)
-      params.set('totalDurationMax', String(totalDurationMax));
+    if (feedbackRating) params.set('feedbackRating', String(feedbackRating));
     if (doctorId) params.set('doctorId', doctorId);
-    if (patientName) params.set('patientName', patientName);
+    if (patientId) params.set('patientId', patientId);
     params.set('page', String(page));
     params.set('limit', String(rowsPerPage));
 
@@ -83,19 +80,18 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     endDate,
     clinicId,
     timePeriod,
-    totalDurationMin,
-    totalDurationMax,
+    feedbackRating,
     doctorId,
-    patientName,
+    patientId,
     page,
     rowsPerPage,
   ]);
 
-  const { data, error } = useSWR(`getConsultationList?${queryString}`, () => {
-    return getConsultationList({ queryString });
+  const { data, error } = useSWR(`getFeedbackList?${queryString}`, () => {
+    return getFeedbackList({ queryString });
   });
 
-  const { data: consultations, totalCounts } = data || {};
+  const { data: feedbacks, totalCounts } = data || {};
 
   const handlePageChange = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -108,22 +104,22 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     setPage(1);
   };
 
-  const handleClickConsultation = (id: string) => {
-    navigate(`/consultation/${id}`);
+  const handleClickFeedback = (id: string) => {
+    navigate(`/feedback/${id}`);
   };
 
   return (
     <StickyHeadTable
       columns={columns}
-      data={consultations || []}
+      data={feedbacks || []}
       count={totalCounts || 0}
       page={page}
       rowsPerPage={rowsPerPage}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}
-      onRowClick={handleClickConsultation}
+      onRowClick={handleClickFeedback}
     />
   );
 };
 
-export default ConsultationList;
+export default FeedbackList;

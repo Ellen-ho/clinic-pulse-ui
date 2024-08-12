@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
-import { Grid, TextField, Button, Autocomplete } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Grid,
+  TextField,
+  Button,
+  Autocomplete,
+  CircularProgress,
+  createFilterOptions,
+} from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import dayjs from 'dayjs';
+import { getPatientNameAutoComplete } from '../../../../../services/PatientService';
+import _ from 'lodash';
 
 interface IConsultationListFiltersProps {
   onApply: (filters: {
@@ -14,9 +23,14 @@ interface IConsultationListFiltersProps {
     timePeriod?: string;
     totalDurationMin?: number;
     totalDurationMax?: number;
-    patientId?: string;
+    patientName?: string;
     doctorId?: string;
   }) => void;
+}
+
+interface IPatientOption {
+  id: string;
+  fullName: string;
 }
 
 const doctors = [
@@ -26,10 +40,7 @@ const doctors = [
   { label: '黃千華', id: '4' },
   { label: '李嘉芳', id: '5' },
 ];
-const patients = [
-  { label: '林黃月', id: '1' },
-  { label: '趙偉健', id: '2' },
-];
+
 const clinics = [
   { label: '台北院區', id: '1' },
   { label: '台中院區', id: '16458ab0-4bb6-4141-9bf0-6d7398942d9b' },
@@ -74,7 +85,34 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     undefined,
   );
   const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
-  const [patientId, setPatientId] = useState<string | undefined>(undefined);
+  const [patientName, setPatientName] = useState('');
+  const [options, setOptions] = useState<IPatientOption[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
+
+  const fetchPatients = async (searchText: string) => {
+    if (!searchText.trim()) {
+      setOptions([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await getPatientNameAutoComplete({
+        query: { searchText },
+      });
+      setOptions(result.patients);
+    } catch (error) {
+      console.error('Failed to fetch patients:', error);
+      setOptions([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!isComposing && patientName) {
+      fetchPatients(patientName);
+    }
+  }, [patientName, isComposing]);
 
   const handleApplyFilters = () => {
     onApply({
@@ -84,46 +122,69 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
       timePeriod,
       totalDurationMin,
       totalDurationMax,
-      patientId,
+      patientName: patientName.trim() ? patientName : undefined,
       doctorId,
     });
   };
 
+  useEffect(() => {
+    const debouncedFetch = _.debounce(handleApplyFilters, 400);
+    debouncedFetch();
+
+    return () => {
+      debouncedFetch.cancel();
+    };
+  }, [
+    startDate,
+    endDate,
+    clinicId,
+    timePeriod,
+    totalDurationMin,
+    totalDurationMax,
+    doctorId,
+    patientName,
+    options,
+  ]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={2}>
           <DatePicker
-            label="Date Picker"
+            label="起始時間"
             format="YYYY/MM/DD"
             defaultValue={dayjs().startOf('month')}
+            onChange={(newValue) => {
+              setStartDate(newValue ? dayjs(newValue) : null);
+            }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={2}>
           <DatePicker
-            label="Date Picker"
+            label="終止時間"
             format="YYYY/MM/DD"
             defaultValue={dayjs().endOf('month')}
+            onChange={(newValue) => {
+              setEndDate(newValue ? dayjs(newValue) : null);
+            }}
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={clinics}
             getOptionLabel={(option) => option.label}
-            renderInput={(params) => <TextField {...params} label="Clinic" />}
+            renderInput={(params) => <TextField {...params} label="院區" />}
             onChange={(event, value) =>
               setClinicId(value ? value.id : undefined)
             }
             value={clinics.find((clinic) => clinic.id === clinicId) || null}
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={timePeriodOptions}
             getOptionLabel={(option) => option.label}
-            renderInput={(params) => (
-              <TextField {...params} label="Time Period" />
-            )}
+            renderInput={(params) => <TextField {...params} label="時段" />}
             onChange={(event, value) =>
               setTimePeriod(value?.value || undefined)
             }
@@ -133,12 +194,12 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
             }
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={durationOptions}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
-              <TextField {...params} label="Min Duration" variant="outlined" />
+              <TextField {...params} label="最小總時長" variant="outlined" />
             )}
             onChange={(event, value) =>
               setTotalDurationMin(value ? value.value : undefined)
@@ -150,12 +211,12 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
             }
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={durationOptions}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
-              <TextField {...params} label="Max Duration" variant="outlined" />
+              <TextField {...params} label="最大總時長" variant="outlined" />
             )}
             onChange={(event, value) =>
               setTotalDurationMax(value ? value.value : undefined)
@@ -167,11 +228,11 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
             }
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={doctors}
             getOptionLabel={(option) => option.label}
-            renderInput={(params) => <TextField {...params} label="Doctor" />}
+            renderInput={(params) => <TextField {...params} label="醫師" />}
             onChange={(event, value) =>
               setDoctorId(value ? value.id : undefined)
             }
@@ -180,23 +241,49 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
         </Grid>
         <Grid item xs={12} sm={3}>
           <Autocomplete
-            options={patients}
-            getOptionLabel={(option) => option.label}
-            renderInput={(params) => <TextField {...params} label="Patient" />}
-            onChange={(event, value) =>
-              setPatientId(value ? value.id : undefined)
+            freeSolo
+            loading={loading}
+            options={options}
+            getOptionLabel={(option) =>
+              typeof option === 'string' ? option : option.fullName
             }
-            value={patients.find((patient) => patient.id === patientId) || null}
+            inputValue={patientName}
+            onInputChange={(event, newInputValue, reason) => {
+              if (reason === 'input') setPatientName(newInputValue);
+            }}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
+            onChange={(event, newValue) => {
+              if (typeof newValue === 'string') {
+                setPatientName(newValue);
+              } else if ((newValue as any).inputValue) {
+                setPatientName((newValue as any).inputValue);
+              } else {
+                setPatientName(newValue ? newValue.fullName : '');
+              }
+            }}
+            filterOptions={(x) => x}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search Patient"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
           />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleApplyFilters}
-          >
-            Apply Filters
-          </Button>
         </Grid>
       </Grid>
     </LocalizationProvider>

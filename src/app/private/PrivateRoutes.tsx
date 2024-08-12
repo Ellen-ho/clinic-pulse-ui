@@ -12,7 +12,7 @@ const PrivateRoutes = () => {
       <Outlet />
     </Layout>
   ) : (
-    <Navigate to="/dashboard" replace={true} state={{ from: location }} />
+    <Navigate to="/signin" replace={true} state={{ from: location }} />
   );
 };
 

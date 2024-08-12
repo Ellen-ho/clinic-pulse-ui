@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { Container, Typography } from '@mui/material';
-import ConsultationListFilters from '../components/ConsultationListFilters';
-import ConsultationList from '../components/ConsultationList';
+
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import FeedbackList from '../components/FeedbackList';
+import FeedbackListFilters from '../components/FeedbackListFilters';
+import { TimePeriodType } from '../../../../../types/Share';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -13,16 +15,15 @@ interface FilterValues {
   startDate: string;
   endDate: string;
   clinicId?: string;
-  timePeriod?: string;
-  totalDurationMin?: number;
-  totalDurationMax?: number;
-  patientId?: string;
+  timePeriod?: TimePeriodType;
   doctorId?: string;
+  patientId?: string;
+  feedbackRating?: number;
   page?: number;
   limit?: number;
 }
 
-const ConsultationListPage: React.FC = () => {
+const FeedbackListPage: React.FC = () => {
   const initialStartDate = dayjs().startOf('month').format('YYYY-MM-DD');
   const initialEndDate = dayjs().endOf('month').format('YYYY-MM-DD');
   const defaultClinicId = '16458ab0-4bb6-4141-9bf0-6d7398942d9b';
@@ -31,10 +32,9 @@ const ConsultationListPage: React.FC = () => {
     endDate: initialEndDate,
     clinicId: defaultClinicId,
     timePeriod: undefined,
-    totalDurationMin: undefined,
-    totalDurationMax: undefined,
-    patientId: undefined,
     doctorId: undefined,
+    patientId: undefined,
+    feedbackRating: undefined,
     page: 1,
     limit: 20,
   });
@@ -49,12 +49,12 @@ const ConsultationListPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>
-        門診列表
+        反饋列表
       </Typography>
-      <ConsultationListFilters onApply={handleApplyFilters} />
-      <ConsultationList {...filters} />
+      <FeedbackListFilters onApply={handleApplyFilters} />
+      <FeedbackList {...filters} />
     </Container>
   );
 };
 
-export default ConsultationListPage;
+export default FeedbackListPage;

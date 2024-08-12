@@ -1,22 +1,21 @@
-import React from 'react';
-import { Box, Typography, Divider } from '@mui/material';
-import BasicCard from '../../../../../components/card/BasicCard';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { getSingleConsultation } from '../../../../../services/ConsultationService';
+import BasicCard from '../../../../../components/card/BasicCard';
+import { Box, Divider, Typography } from '@mui/material';
+import { getSingleFeedback } from '../../../../../services/FeedbackService';
 
-const ConsultationDetail: React.FC = () => {
+const FeedbackDetail: React.FC = () => {
   const { id } = useParams();
 
-  const { data, isLoading } = useSWR('getSingleConsultation', () =>
-    getSingleConsultation({
-      consultationId: id as string,
+  const { data, isLoading } = useSWR('getSingleFeedback', () =>
+    getSingleFeedback({
+      feedbackId: id as string,
     }),
   );
 
   if (isLoading) {
     return (
-      <BasicCard title="Consultation Details">
+      <BasicCard title="反饋詳情">
         <Typography>Loading...</Typography>
       </BasicCard>
     );
@@ -24,37 +23,42 @@ const ConsultationDetail: React.FC = () => {
 
   if (!data) {
     return (
-      <BasicCard title="Consultation Details">
+      <BasicCard title="反饋詳情">
         <Typography>No data available.</Typography>
       </BasicCard>
     );
   }
 
   return (
-    <BasicCard title="門診詳情">
+    <BasicCard title="反饋詳情">
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        <Typography variant="body1">反饋日期: {data.receivedDate}</Typography>
+        <Typography variant="body1">反饋星等: {data.feedbackRating}</Typography>
         <Typography variant="body1">
-          看診日期: {data.consultationDate}
+          反饋選項: {data.selectedContent}
         </Typography>
         <Typography variant="body1">
-          看診時段: {data.consultationTimePeriod}
+          反饋內容: {data.detailedContent}
         </Typography>
         <Typography variant="body1">
-          看診號碼: {data.consultationNumber}
+          看診日期: {data.consultation.consultationDate}
         </Typography>
-        {data.onsiteCancelAt && (
+        <Typography variant="body1">
+          看診時段: {data.consultation.consultationTimePeriod}
+        </Typography>
+        {data.consultation.onsiteCancelAt && (
           <Typography variant="body1" sx={{ color: 'red' }}>
             退掛
           </Typography>
         )}
-        {data.onsiteCancelReason && (
+        {data.consultation.onsiteCancelReason && (
           <Typography variant="body1">
-            退掛原因: {data.onsiteCancelReason}
+            退掛原因: {data.consultation.onsiteCancelReason}
           </Typography>
         )}
-        {data.treatmentType !== 'NO_TREATMENT' && (
+        {data.consultation.treatmentType !== 'NO_TREATMENT' && (
           <Typography variant="body1">
-            當次治療: {data.treatmentType}
+            當次治療: {data.consultation.treatmentType}
           </Typography>
         )}
         <Divider />
@@ -64,8 +68,7 @@ const ConsultationDetail: React.FC = () => {
             color: data.patient.gender === 'FEMALE' ? 'pink' : 'lightblue',
           }}
         >
-          患者:{' '}
-          {`${data.patient.firstName} ${data.patient.lastName} (${data.patient.age}歲)`}
+          患者: {`${data.patient.firstName} ${data.patient.lastName}`}
         </Typography>
         <Typography
           variant="body1"
@@ -78,4 +81,4 @@ const ConsultationDetail: React.FC = () => {
   );
 };
 
-export default ConsultationDetail;
+export default FeedbackDetail;

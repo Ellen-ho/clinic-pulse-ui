@@ -1,6 +1,11 @@
 import queryString from 'query-string';
 import api from './ApiService';
-import { GenderType, TimePeriodType, TreatmentType } from '../types/Share';
+import {
+  GenderType,
+  Granularity,
+  TimePeriodType,
+  TreatmentType,
+} from '../types/Share';
 import { OnsiteCancelReasonType } from '../types/Consultation';
 
 export interface IGetSingleConsultationRequest {
@@ -51,6 +56,7 @@ export interface IGetConsultationListRequest {
     timePeriod?: TimePeriodType;
     totalDurationMin?: number;
     totalDurationMax?: number;
+    patientName?: string;
     patientId?: string;
     doctorId?: string;
     page: number;
@@ -89,6 +95,27 @@ export interface IGetConsultationListResponse {
   totalCounts: number;
 }
 
+export interface IGetAverageConsultationCountRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  doctorId?: string;
+  timePeriod?: TimePeriodType;
+  granularity?: Granularity;
+}
+
+export interface IGetAverageConsultationCountResponse {
+  totalConsultations: number;
+  totalSlots: number;
+  averagePatientPerSlot: number;
+  data: Array<{
+    date: string;
+    consultationCount: number;
+    timeSlotCount: number;
+    averageCount: number;
+  }>;
+}
+
 export const getConsultationList = async ({
   queryString,
 }: {
@@ -103,6 +130,17 @@ export const getSingleConsultation = async ({
 }: IGetSingleConsultationRequest): Promise<IGetSingleConsultationResponse> => {
   const response = await api.get<IGetSingleConsultationResponse>(
     `/consultations/${consultationId}`,
+  );
+  return response.data;
+};
+
+export const getAverageConsultationCount = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetAverageConsultationCountResponse> => {
+  const response = await api.get<IGetAverageConsultationCountResponse>(
+    `/consultations/average_counts?${queryString}`,
   );
   return response.data;
 };
