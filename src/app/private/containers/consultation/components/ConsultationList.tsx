@@ -15,7 +15,7 @@ interface IConsultationListProps {
   timePeriod?: string;
   totalDurationMin?: number;
   totalDurationMax?: number;
-  patientId?: string;
+  patientName?: string;
   doctorId?: string;
 }
 
@@ -55,7 +55,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
   totalDurationMin,
   totalDurationMax,
   doctorId,
-  patientId,
+  patientName,
 }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
@@ -73,7 +73,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     if (totalDurationMax !== undefined)
       params.set('totalDurationMax', String(totalDurationMax));
     if (doctorId) params.set('doctorId', doctorId);
-    if (patientId) params.set('patientId', patientId);
+    if (patientName) params.set('patientName', patientName);
     params.set('page', String(page));
     params.set('limit', String(rowsPerPage));
 
@@ -86,7 +86,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     totalDurationMin,
     totalDurationMax,
     doctorId,
-    patientId,
+    patientName,
     page,
     rowsPerPage,
   ]);
