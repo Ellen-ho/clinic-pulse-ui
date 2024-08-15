@@ -204,6 +204,24 @@ export interface IGetAverageWaitingTimeResponse {
   }>;
 }
 
+export interface IGetConsultationRealTimeCountRequest {
+  query: {
+    clinicId?: string;
+    consultationRoomNumber?: string;
+    doctorId?: string;
+  };
+}
+
+export interface IGetConsultationRealTimeCountResponse {
+  timeSlotId: string | Array<{ id: string }>;
+  waitForConsultationCount: number;
+  waitForBedAssignedCount: number;
+  waitForAcupunctureTreatmentCount: number;
+  waitForNeedleRemovedCount: number;
+  waitForMedicineCount: number;
+  completedCount: number;
+}
+
 export const getConsultationList = async ({
   queryString,
 }: {
@@ -263,6 +281,16 @@ export const getAverageWaitingTime = async ({
 }): Promise<IGetAverageWaitingTimeResponse> => {
   const response = await api.get<IGetAverageWaitingTimeResponse>(
     `/consultations/average_waiting_time?${queryString}`,
+  );
+  return response.data;
+};
+
+export const getConsultationRealTimeCount = async (
+  data: IGetConsultationRealTimeCountRequest,
+): Promise<IGetConsultationRealTimeCountResponse> => {
+  const queries = queryString.stringify(data.query);
+  const response = await api.get<IGetConsultationRealTimeCountResponse>(
+    `/consultations/real_time_counts${queries}`,
   );
   return response.data;
 };
