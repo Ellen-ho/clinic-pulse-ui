@@ -177,10 +177,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
             />
             <ButtonAreaWrapper>
               <Button type="submit" variant="contained" color="primary">
-                Sign Up
-              </Button>
-              <Button variant="text" onClick={() => navigate('/signin')}>
-                Sign In
+                註冊
               </Button>
             </ButtonAreaWrapper>
           </FormWrapper>
