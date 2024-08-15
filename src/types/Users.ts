@@ -1,4 +1,5 @@
 export enum UserRoleType {
-  PATIENT = 'PATIENT',
+  ADMIN = 'ADMIN',
   DOCTOR = 'DOCTOR',
+  ASSISTANT = 'ASSISTANT',
 }
