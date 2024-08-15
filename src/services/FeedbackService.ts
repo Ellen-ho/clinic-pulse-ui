@@ -1,6 +1,11 @@
 import { OnsiteCancelReasonType } from '../types/Consultation';
 import { SelectedContent } from '../types/Feedback';
-import { GenderType, TimePeriodType, TreatmentType } from '../types/Share';
+import {
+  GenderType,
+  Granularity,
+  TimePeriodType,
+  TreatmentType,
+} from '../types/Share';
 import api from './ApiService';
 
 export interface IGetSingleFeedbackRequest {
@@ -77,6 +82,43 @@ export interface IGetFeedbackListResponse {
   totalCounts: number;
 }
 
+export interface IGetFeedbackCountAndRateRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  timePeriod?: TimePeriodType;
+  doctorId?: string;
+  granularity?: Granularity;
+}
+
+export interface IGetFeedbackCountAndRateResponse {
+  totalFeedbacks: number;
+  oneStarFeedbackCount: number;
+  twoStarFeedbackCount: number;
+  threeStarFeedbackCount: number;
+  fourStarFeedbackCount: number;
+  fiveStarFeedbackCount: number;
+  oneStarFeedbackRate: number;
+  twoStarFeedbackRate: number;
+  threeStarFeedbackRate: number;
+  fourStarFeedbackRate: number;
+  fiveStarFeedbackRate: number;
+  data: Array<{
+    date: string;
+    feedbackCount: number;
+    oneStarFeedbackCount: number;
+    twoStarFeedbackCount: number;
+    threeStarFeedbackCount: number;
+    fourStarFeedbackCount: number;
+    fiveStarFeedbackCount: number;
+    oneStarFeedbackRate: number;
+    twoStarFeedbackRate: number;
+    threeStarFeedbackRate: number;
+    fourStarFeedbackRate: number;
+    fiveStarFeedbackRate: number;
+  }>;
+}
+
 export const getFeedbackList = async ({
   queryString,
 }: {
@@ -92,5 +134,14 @@ export const getSingleFeedback = async ({
   const response = await api.get<IGetSingleFeedbackResponse>(
     `/feedbacks/${feedbackId}`,
   );
+  return response.data;
+};
+
+export const getFeedbackCountAndRate = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetFeedbackCountAndRateResponse> => {
+  const response = await api.get(`/feedbacks/related_ratios?${queryString}`);
   return response.data;
 };
