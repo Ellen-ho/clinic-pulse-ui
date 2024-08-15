@@ -18,6 +18,7 @@ import { FormWrapper } from '../../../../components/form/Index.styled';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import { ButtonAreaWrapper } from '../../../layout/CommonWrapper.styled';
 import { signinUser } from '../../../../services/UserService';
+import { UserRoleType } from '../../../../types/Users';
 
 interface ISignInFormInputs {
   email: string;
@@ -56,7 +57,7 @@ const SignIn: React.FC = () => {
         token: response.token,
         currentUser: {
           id: response.user.id,
-          role: response.user.role,
+          role: response.user.role as UserRoleType,
         },
         doctorId: response.doctorId,
       },
@@ -103,11 +104,7 @@ const SignIn: React.FC = () => {
                 container
                 justifyContent="space-between"
                 alignItems="center"
-              >
-                <Button variant="text" onClick={() => navigate('/signup')}>
-                  Sign Up
-                </Button>
-              </Grid>
+              ></Grid>
             </FormWrapper>
           </CardContent>
         </Card>
