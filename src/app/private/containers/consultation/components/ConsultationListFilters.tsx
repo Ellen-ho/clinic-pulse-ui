@@ -36,16 +36,20 @@ interface IPatientOption {
 const doctors = [
   { label: 'ann', id: '008ce240-3f25-4e2a-a3e2-d62f5e20fe71' },
   { label: '111', id: 'c2d88a24-ffa8-4083-bd04-2f2715f244e3' },
-  { label: '張月嵐', id: '3' },
-  { label: '黃千華', id: '4' },
-  { label: '李嘉芳', id: '5' },
+  { label: '張俊傑', id: '0b0067a4-b7cd-4798-a75c-453f6a780440' },
+  { label: '林俊宏', id: '266ff4c0-87a8-4445-b56c-72a72c5d9f58' },
+  { label: '李美玲', id: 'b0f4439b-314f-4495-b928-18fa9dbfa6d5' },
+  { label: '林怡芬', id: 'bb8f4d80-b457-4d6f-8bfa-1f0d5e55143c' },
+  { label: '鍾婉儀', id: 'f45714bc-e519-4753-a638-be15bc2aab93' },
+  { label: '陳志明', id: 'fee86a36-6260-4252-afe8-7820c069589f' },
 ];
 
 const clinics = [
-  { label: '台北院區', id: '1' },
+  { label: '台北院區', id: '690d0ea3-9f8d-4143-b160-0661a003bf08' },
   { label: '台中院區', id: '16458ab0-4bb6-4141-9bf0-6d7398942d9b' },
-  { label: '高雄院區', id: '3' },
+  { label: '高雄院區', id: 'bf51c88e-9587-479e-994a-d15ec484c333' },
 ];
+
 const timePeriodMappings = {
   早診: 'MORNING_SESSION',
   午診: 'AFTERNOON_SESSION',
