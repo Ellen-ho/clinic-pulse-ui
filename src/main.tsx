@@ -7,14 +7,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from './styles/theme';
+import { FiltersProvider } from './context/FiltersProvider';
 
 ReactDOM.createRoot(document.getElementById('app') as HTMLElement).render(
   <React.StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <App />
-          <Toaster position="bottom-center" />
+          <FiltersProvider>
+            <App />
+            <Toaster position="bottom-center" />
+          </FiltersProvider>
         </ThemeProvider>
       </BrowserRouter>
     </AuthProvider>
