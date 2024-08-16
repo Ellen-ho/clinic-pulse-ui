@@ -17,23 +17,22 @@ interface FilterValues {
   clinicId?: string;
   timePeriod?: TimePeriodType;
   doctorId?: string;
-  patientId?: string;
+  patientName?: string;
   feedbackRating?: number;
   page?: number;
   limit?: number;
 }
 
 const FeedbackListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('month').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('month').format('YYYY-MM-DD');
-  const defaultClinicId = '16458ab0-4bb6-4141-9bf0-6d7398942d9b';
+  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
+  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
   const [filters, setFilters] = useState<FilterValues>({
     startDate: initialStartDate,
     endDate: initialEndDate,
-    clinicId: defaultClinicId,
+    clinicId: undefined,
     timePeriod: undefined,
     doctorId: undefined,
-    patientId: undefined,
+    patientName: undefined,
     feedbackRating: undefined,
     page: 1,
     limit: 20,
@@ -47,7 +46,14 @@ const FeedbackListPage: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="lg">
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         反饋列表
       </Typography>
