@@ -23,13 +23,12 @@ interface FilterValues {
 }
 
 const ConsultationListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('month').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('month').format('YYYY-MM-DD');
-  const defaultClinicId = '16458ab0-4bb6-4141-9bf0-6d7398942d9b';
+  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
+  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
   const [filters, setFilters] = useState<FilterValues>({
     startDate: initialStartDate,
     endDate: initialEndDate,
-    clinicId: defaultClinicId,
+    clinicId: undefined,
     timePeriod: undefined,
     totalDurationMin: undefined,
     totalDurationMax: undefined,
@@ -47,9 +46,16 @@ const ConsultationListPage: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="lg">
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}
+    >
       <Typography variant="h4" gutterBottom>
-        門診列表
+        看診紀錄列表
       </Typography>
       <ConsultationListFilters onApply={handleApplyFilters} />
       <ConsultationList {...filters} />
