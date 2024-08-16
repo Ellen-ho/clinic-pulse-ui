@@ -13,6 +13,7 @@ import {
 import useSWR from 'swr';
 import { getConsultationOnsiteCanceledAndBooking } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
+import CenterText from '../../../../../components/box/CenterText';
 
 interface ICanceledAndBookingChartData {
   date: string;
@@ -87,12 +88,27 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
     }
   }, [data]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
-  if (message) return <p>{message}</p>;
+  if (loading)
+    return (
+      <CenterText>
+        <>{'Loading...'}</>
+      </CenterText>
+    );
+  if (error)
+    return (
+      <CenterText>
+        <>{'Error loading data'}</>
+      </CenterText>
+    );
+  if (message)
+    return (
+      <CenterText>
+        <>{message}</>
+      </CenterText>
+    );
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
         data={chartData}
         margin={{ top: 20, right: 30, left: 20, bottom: 0 }}

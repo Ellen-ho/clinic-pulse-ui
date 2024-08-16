@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import CenterText from '../../../../../components/box/CenterText';
 
 interface IAverageWaitingTimeChartData {
   date: string;
@@ -88,26 +89,48 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
     // setYAxisDomain([minCount, maxCount + 5]);
   }, [data]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
-  if (message) return <p>{message}</p>;
+  if (loading)
+    return (
+      <CenterText>
+        <>{'Loading...'}</>
+      </CenterText>
+    );
+  if (error)
+    return (
+      <CenterText>
+        <>{'Error loading data'}</>
+      </CenterText>
+    );
+  if (message)
+    return (
+      <CenterText>
+        <>{message}</>
+      </CenterText>
+    );
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height="100%">
       <BarChart
         data={chartData}
         margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis />
+        <YAxis
+          label={{
+            value: '分鐘',
+            angle: -90,
+            position: 'insideLeft',
+            offset: -5,
+          }}
+        />
         <Tooltip />
         <Legend />
         <Bar dataKey="averageConsultationWait" stackId="a" fill="#8884d8" />
         <Bar dataKey="averageBedAssignmentWait" stackId="a" fill="#82ca9d" />
         <Bar dataKey="averageAcupunctureWait" stackId="a" fill="#ffc658" />
         <Bar dataKey="averageNeedleRemovalWait" stackId="a" fill="#ff7f50" />
-        <Bar dataKey="averageMedicationWait" stackId="a" fill="#6a0dad" />
+        <Bar dataKey="averageMedicationWait" stackId="a" fill="#507dc0" />
       </BarChart>
     </ResponsiveContainer>
   );

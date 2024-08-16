@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import CenterText from '../../../../../components/box/CenterText';
 
 interface IFeedbackChartData {
   date: string;
@@ -88,12 +89,27 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
     }
   }, [data]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
-  if (message) return <p>{message}</p>;
+  if (loading)
+    return (
+      <CenterText>
+        <>{'Loading...'}</>
+      </CenterText>
+    );
+  if (error)
+    return (
+      <CenterText>
+        <>{'Error loading data'}</>
+      </CenterText>
+    );
+  if (message)
+    return (
+      <CenterText>
+        <>{message}</>
+      </CenterText>
+    );
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height="100%">
       <BarChart
         data={chartData}
         margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
