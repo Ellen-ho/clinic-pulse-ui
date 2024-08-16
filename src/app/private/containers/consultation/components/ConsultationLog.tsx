@@ -1,11 +1,8 @@
 import useSWR from 'swr';
 import { useParams } from 'react-router-dom';
 import { getSingleConsultation } from '../../../../../services/ConsultationService';
-import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
-import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import ConsultationTimeline from './ConsultationTimeLine';
-import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
-import { Card } from '@mui/material';
+import BasicCard from '../../../../../components/card/BasicCard';
 
 const ConsultationLog: React.FC = () => {
   const { id } = useParams();
@@ -17,13 +14,13 @@ const ConsultationLog: React.FC = () => {
   );
 
   return (
-    <Card>
+    <BasicCard title="時間紀錄">
       {isLoading || !data ? (
         <>Loading</>
       ) : (
         <ConsultationTimeline consultation={data} />
       )}
-    </Card>
+    </BasicCard>
   );
 };
 
