@@ -7,8 +7,11 @@ import { getConsultationList } from '../../../../../services/ConsultationService
 import StickyHeadTable, {
   IColumn,
 } from '../../../../../components/table/StickyHeadTable';
-import { TimePeriodType } from '../../../../../types/Share';
+import { GenderType, TimePeriodType } from '../../../../../types/Share';
 import { getFeedbackList } from '../../../../../services/FeedbackService';
+import GenderTag from '../../../../../components/tag/GenderTag';
+import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
+import RatingTag from '../../../../../components/tag/RatingTag';
 
 interface IFeedbackListProps {
   startDate: string;
@@ -16,7 +19,7 @@ interface IFeedbackListProps {
   clinicId?: string;
   timePeriod?: TimePeriodType;
   doctorId?: string;
-  patientId?: string;
+  patientName?: string;
   feedbackRating?: number;
 }
 
@@ -26,13 +29,32 @@ const columns: IColumn[] = [
     id: 'patient',
     minWidth: 120,
     render: (value: any) => {
-      return `${value.lastName}${value.firstName}`;
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {`${value.lastName}${value.firstName}`}
+          <GenderTag type={value.gender as GenderType} />{' '}
+        </div>
+      );
     },
   },
   { label: '反饋日期', id: 'receivedDate', minWidth: 120 },
   { label: '院區', id: 'clinicName', minWidth: 120 },
-  { label: '時段', id: 'consultationTimePeriod', minWidth: 120 },
-  { label: '反饋星等', id: 'feedbackRating', minWidth: 120 },
+  {
+    label: '時段',
+    id: 'consultationTimePeriod',
+    minWidth: 120,
+    render: (value: TimePeriodType) => {
+      return <ConsultationTimePeriodTag type={value} />;
+    },
+  },
+  {
+    label: '反饋星等',
+    id: 'feedbackRating',
+    minWidth: 120,
+    render: (value: number) => {
+      return <RatingTag value={value} />;
+    },
+  },
   {
     label: '醫師',
     id: 'doctor',
@@ -54,7 +76,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
   clinicId,
   timePeriod,
   doctorId,
-  patientId,
+  patientName,
   feedbackRating,
 }) => {
   const navigate = useNavigate();
@@ -70,7 +92,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     if (timePeriod) params.set('timePeriod', timePeriod);
     if (feedbackRating) params.set('feedbackRating', String(feedbackRating));
     if (doctorId) params.set('doctorId', doctorId);
-    if (patientId) params.set('patientId', patientId);
+    if (patientName) params.set('patientName', patientName);
     params.set('page', String(page));
     params.set('limit', String(rowsPerPage));
 
@@ -82,7 +104,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     timePeriod,
     feedbackRating,
     doctorId,
-    patientId,
+    patientName,
     page,
     rowsPerPage,
   ]);
