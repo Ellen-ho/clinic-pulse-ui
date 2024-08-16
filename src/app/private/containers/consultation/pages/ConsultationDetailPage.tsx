@@ -11,11 +11,11 @@ const ConsultationDetailPage: React.FC = () => {
     <PrimaryPageContent>
       <CommonWrapper>
         <SecondaryPageTop />
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={6}>
+        <Grid container spacing={1} sx={{ width: '100%' }}>
+          <Grid item xs={12} md={6} lg={7}>
             <ConsultationDetail />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={6} lg={5}>
             <ConsultationLog />
           </Grid>
         </Grid>
