@@ -1,11 +1,12 @@
 import { createContext } from 'react';
+import { UserRoleType } from '../types/Users';
 
 export interface AuthState {
   isSignedIn: boolean;
   token: string | null;
   currentUser: {
     id: string;
-    role: string;
+    role: UserRoleType;
   } | null;
   doctorId: string | null;
 }
@@ -17,7 +18,7 @@ export type AuthAction =
         token: string;
         currentUser: {
           id: string;
-          role: string;
+          role: UserRoleType;
         };
         doctorId: string;
       };
