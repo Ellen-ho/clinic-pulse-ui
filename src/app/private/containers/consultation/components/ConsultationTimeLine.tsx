@@ -45,7 +45,7 @@ const ConsultationTimeline: React.FC<ConsultationTimelineProps> = ({
   ];
 
   return (
-    <Timeline position="alternate">
+    <Timeline>
       {events.map((event, index) =>
         event.time ? (
           <TimelineItem key={index}>
