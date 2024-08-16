@@ -1,16 +1,15 @@
-import { Card, Grid } from '@mui/material';
-import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
-import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
-import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
-import { Granularity, TimePeriodType } from '../../../../../types/Share';
-import TimeFilters from '../components/TimeFilters';
-import { useState } from 'react';
 import dayjs from 'dayjs';
-import DifferentTreatmentsBarChart from '../components/DifferentTreatmentsConsultationBarChart';
+import { Granularity, TimePeriodType } from '../../../../../types/Share';
+import { useState } from 'react';
+import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
+import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
+import { Card, Grid } from '@mui/material';
+import TimeFilters from '../components/TimeFilters';
 import AverageWaitingTimeLineChart from '../components/AverageWaitingTimeBarChart';
-import FeedbackBarChart from '../components/FeedbackBarChart';
 import AverageConsultationCountLineChart from '../components/AverageConsultationCountLineChart';
-import CanceledAndBookingLineChart from '../components/CanceledAndBookingConsultationLineChart';
+import DifferentTreatmentsBarChart from '../components/DifferentTreatmentsConsultationBarChart';
+import FeedbackBarChart from '../components/FeedbackBarChart';
 
 interface IFilters {
   startDate: string;
@@ -61,43 +60,7 @@ const ConsultationReportPage: React.FC = () => {
           </Grid>
           <Grid item xs={12} md={12} lg={6}>
             <Card sx={cardStyle}>
-              <AverageConsultationCountLineChart
-                startDate={filters.startDate}
-                endDate={filters.endDate}
-                clinicId={filters.clinicId}
-                doctorId={filters.doctorId}
-                timePeriod={filters.timePeriod}
-                granularity={filters.granularity}
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={12} lg={6}>
-            <Card sx={cardStyle}>
-              <AverageWaitingTimeLineChart
-                startDate={filters.startDate}
-                endDate={filters.endDate}
-                clinicId={filters.clinicId}
-                doctorId={filters.doctorId}
-                timePeriod={filters.timePeriod}
-                granularity={filters.granularity}
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={12} lg={6}>
-            <Card sx={cardStyle}>
-              <CanceledAndBookingLineChart
-                startDate={filters.startDate}
-                endDate={filters.endDate}
-                clinicId={filters.clinicId}
-                doctorId={filters.doctorId}
-                timePeriod={filters.timePeriod}
-                granularity={filters.granularity}
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={12} lg={6}>
-            <Card sx={cardStyle}>
-              <DifferentTreatmentsBarChart
+              <FeedbackBarChart
                 startDate={filters.startDate}
                 endDate={filters.endDate}
                 clinicId={filters.clinicId}
