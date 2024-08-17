@@ -10,9 +10,6 @@ const FeedbackSelectedContentTag: React.FC<
   IFeedbackSelectedContentTagProps
 > = ({ type }) => {
   const label = SelectedContentMap[type];
-  console.log('Type:', type);
-  console.log('SelectedContentMap:', SelectedContentMap);
-  console.log('Label:', SelectedContentMap[type]);
   return (
     <Chip
       label={label}

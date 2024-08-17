@@ -1,3 +1,4 @@
+import { OnsiteCancelReasonType } from '../types/Consultation';
 import { GenderType, TimePeriodType, TreatmentType } from '../types/Share';
 
 export const ConsultationTimePeriodMap = {
@@ -17,4 +18,11 @@ export const TreatmentTypeMap = {
   [TreatmentType.MEDICINE_TREATMENT]: '藥物治療',
   [TreatmentType.BOTH_TREATMENT]: '針灸及藥物治療',
   [TreatmentType.NO_TREATMENT]: '無治療',
+};
+
+export const OnsiteCancelReasonMap = {
+  [OnsiteCancelReasonType.LONG_WAITING_TIME]: '等待時間太長',
+  [OnsiteCancelReasonType.SERVICE_DISSATISFACTION]: '診所人員態度不佳',
+  [OnsiteCancelReasonType.PERSONAL_EMERGENCY]: '個人急事',
+  [OnsiteCancelReasonType.NO_PARKING_SPACES]: '車子臨停',
 };
