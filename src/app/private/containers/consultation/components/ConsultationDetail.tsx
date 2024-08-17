@@ -6,6 +6,8 @@ import useSWR from 'swr';
 import { getSingleConsultation } from '../../../../../services/ConsultationService';
 import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
 import TreatmentTag from '../../../../../components/tag/TreatmentTag';
+import OnsiteCancelTag from '../../../../../components/tag/OnsiteCancelTag';
+import GenderTag from '../../../../../components/tag/GenderTag';
 
 const ConsultationDetail: React.FC = () => {
   const { id } = useParams();
@@ -35,25 +37,18 @@ const ConsultationDetail: React.FC = () => {
   return (
     <BasicCard title="看診詳情">
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-        <Typography
-          variant="body1"
-          sx={{
-            color: data.patient.gender === 'FEMALE' ? '#e42269' : '#5886b0',
-            fontWeight: 'bold',
-          }}
-        >
-          患者:{' '}
-          {`${data.patient.lastName}${data.patient.firstName} (${data.patient.age}歲)`}
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{
-            color: data.doctor.gender === 'FEMALE' ? '#e42269' : '#5886b0',
-            fontWeight: 'bold',
-          }}
-        >
-          醫師: {`${data.doctor.lastName}${data.doctor.firstName}`}
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body1">
+            患者: {`${data.patient.lastName}${data.patient.firstName}`}
+          </Typography>
+          <GenderTag type={data.patient.gender} />
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body1">
+            醫師: {`${data.doctor.lastName}${data.doctor.firstName}`}
+          </Typography>
+          <GenderTag type={data.doctor.gender} />
+        </Box>
         <Divider />
         <Typography variant="body1">
           看診日期: {data.consultationDate}
@@ -72,9 +67,10 @@ const ConsultationDetail: React.FC = () => {
           </Typography>
         )}
         {data.onsiteCancelReason && (
-          <Typography variant="body1">
-            退掛原因: {data.onsiteCancelReason}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body1">退掛原因:</Typography>
+            <OnsiteCancelTag type={data.onsiteCancelReason} />
+          </Box>
         )}
         {data.treatmentType !== 'NO_TREATMENT' && (
           <Typography variant="body1">

@@ -13,6 +13,8 @@ import { getSingleFeedback } from '../../../../../services/FeedbackService';
 import TreatmentTag from '../../../../../components/tag/TreatmentTag';
 import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
 import FeedbackSelectedContentTag from '../../../../../components/tag/FeedbackSelectedContentTag';
+import OnsiteCancelTag from '../../../../../components/tag/OnsiteCancelTag';
+import GenderTag from '../../../../../components/tag/GenderTag';
 
 const FeedbackDetail: React.FC = () => {
   const { id } = useParams();
@@ -44,6 +46,19 @@ const FeedbackDetail: React.FC = () => {
       <Grid item xs={12} md={8}>
         <BasicCard title="反饋詳情">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body1">
+                患者: {`${data.patient.lastName}${data.patient.firstName}`}
+              </Typography>
+              <GenderTag type={data.patient.gender} />
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body1">
+                醫師: {`${data.doctor.lastName}${data.doctor.firstName}`}
+              </Typography>
+              <GenderTag type={data.doctor.gender} />
+            </Box>
+            <Divider />
             <Typography variant="body1">
               反饋日期: {data.receivedDate}
             </Typography>
@@ -69,9 +84,10 @@ const FeedbackDetail: React.FC = () => {
               </Typography>
             )}
             {data.consultation.onsiteCancelReason && (
-              <Typography variant="body1">
-                退掛原因: {data.consultation.onsiteCancelReason}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body1">退掛原因:</Typography>
+                <OnsiteCancelTag type={data.consultation.onsiteCancelReason} />
+              </Box>
             )}
             {data.consultation.treatmentType !== 'NO_TREATMENT' && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -79,23 +95,6 @@ const FeedbackDetail: React.FC = () => {
                 <TreatmentTag type={data.consultation.treatmentType} />
               </Box>
             )}
-            <Divider />
-            <Typography
-              variant="body1"
-              sx={{
-                color: data.patient.gender === 'FEMALE' ? 'pink' : 'lightblue',
-              }}
-            >
-              患者: {`${data.patient.firstName} ${data.patient.lastName}`}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: data.doctor.gender === 'FEMALE' ? 'pink' : 'lightblue',
-              }}
-            >
-              醫師: {`${data.doctor.firstName} ${data.doctor.lastName}`}
-            </Typography>
           </Box>
         </BasicCard>
       </Grid>
