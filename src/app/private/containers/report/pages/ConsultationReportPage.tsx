@@ -29,14 +29,14 @@ const ConsultationReportPage: React.FC = () => {
   const currentWeek = dayjs().isoWeek().toString();
 
   const { state } = useContext(AuthContext);
-  const doctorId = state.doctorId;
+  const doctorId = state.doctorId || '';
   const isDoctor = state.doctorId != null;
 
   const [filters, setFilters] = useState<IFilters>({
     startDate: dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
     endDate: dayjs().format('YYYY-MM-DD'),
     clinicId: undefined,
-    doctorId: isDoctor ? doctorId ?? undefined : undefined,
+    doctorId: isDoctor ? doctorId : undefined,
     timePeriod: undefined,
     granularity: Granularity.DAY,
   });
