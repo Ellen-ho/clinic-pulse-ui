@@ -84,7 +84,9 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   const [totalDurationMax, setTotalDurationMax] = useState<number | undefined>(
     undefined,
   );
-  const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
+  const [doctorId, setDoctorId] = useState<string | undefined>(
+    state.doctorId || '',
+  );
   const [patientName, setPatientName] = useState('');
 
   const handleApplyFilters = () => {
@@ -96,7 +98,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
       totalDurationMin,
       totalDurationMax,
       patientName: patientName.trim() ? patientName : undefined,
-      doctorId: isDoctor ? doctorId ?? undefined : undefined,
+      doctorId,
     });
   };
 

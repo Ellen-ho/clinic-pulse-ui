@@ -72,7 +72,9 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [selectedWeek, setSelectedWeek] = useState(initialWeek);
   const [timePeriod, setTimePeriod] = useState<string | undefined>(undefined);
-  const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
+  const [doctorId, setDoctorId] = useState<string | undefined>(
+    state.doctorId || undefined,
+  );
   const [clinicId, setClinicId] = useState<string | undefined>(undefined);
   const currentYear = dayjs().year();
   const currentMonth = dayjs().month() + 1;
@@ -176,7 +178,7 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
       granularity,
       clinicId,
       timePeriod,
-      doctorId: isDoctor ? doctorId ?? undefined : undefined,
+      doctorId,
     });
   };
 

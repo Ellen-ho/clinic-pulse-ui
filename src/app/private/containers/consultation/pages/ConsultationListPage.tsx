@@ -28,7 +28,7 @@ const ConsultationListPage: React.FC = () => {
   const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
   const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
   const { state } = useContext(AuthContext);
-  const doctorId = state.doctorId;
+  const doctorId = state.doctorId || '';
   const isDoctor = state.doctorId != null;
 
   const [filters, setFilters] = useState<FilterValues>({
@@ -39,7 +39,7 @@ const ConsultationListPage: React.FC = () => {
     totalDurationMin: undefined,
     totalDurationMax: undefined,
     patientId: undefined,
-    doctorId: isDoctor ? doctorId ?? undefined : undefined,
+    doctorId: isDoctor ? doctorId : undefined,
     page: 1,
     limit: 20,
   });

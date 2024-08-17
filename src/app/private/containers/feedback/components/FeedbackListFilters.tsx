@@ -75,7 +75,9 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
     undefined,
   );
   const [rating, setRating] = useState<number | undefined>(undefined);
-  const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
+  const [doctorId, setDoctorId] = useState<string | undefined>(
+    state.doctorId || undefined,
+  );
   const [patientName, setPatientName] = useState('');
 
   const handleApplyFilters = () => {
@@ -84,7 +86,7 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
       endDate: endDate?.format('YYYY-MM-DD') || '',
       clinicId,
       timePeriod,
-      doctorId: isDoctor ? doctorId ?? undefined : undefined,
+      doctorId,
       patientName: patientName.trim() ? patientName : undefined,
       feedbackRating: rating,
     });
