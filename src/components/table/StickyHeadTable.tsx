@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  SxProps,
+  Theme,
 } from '@mui/material';
 
 export interface IColumn {
@@ -32,6 +34,7 @@ interface StickyHeadTableProps {
   onPageChange: (event: unknown, newPage: number) => void;
   onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onRowClick?: (id: string) => void;
+  sx?: SxProps<Theme>;
 }
 
 const StickyHeadTable: React.FC<StickyHeadTableProps> = ({
@@ -41,12 +44,13 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({
   page,
   rowsPerPage,
   rowsPerPageOptions = [10, 25, 100],
+  sx,
   onPageChange,
   onRowsPerPageChange,
   onRowClick,
 }) => {
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', overflow: 'hidden', ...sx }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -62,7 +66,7 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody sx={{ height: '100%' }}>
             {data.map((row, index) => (
               <TableRow
                 hover
