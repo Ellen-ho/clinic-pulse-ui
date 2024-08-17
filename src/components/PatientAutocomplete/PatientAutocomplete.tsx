@@ -55,7 +55,9 @@ const PatientAutocomplete: React.FC<IPatientAutocompleteProps> = ({
       }
       inputValue={value}
       onInputChange={(event, newInputValue, reason) => {
-        if (reason === 'input') onChange(newInputValue);
+        if (reason === 'input' || reason === 'clear') {
+          onChange(newInputValue);
+        }
       }}
       onCompositionStart={() => setIsComposing(true)}
       onCompositionEnd={() => setIsComposing(false)}
