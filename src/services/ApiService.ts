@@ -22,7 +22,6 @@ api.interceptors.response.use(
   (error) => {
     if (error.response) {
       toast.error(`${error.response.data.message}`);
-      console.table({ errorCause: error.response.data.cause });
     } else if (error.request) {
       toast.error('Request was made but no response was received');
     } else {
