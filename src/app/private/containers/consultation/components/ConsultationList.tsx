@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { IConsultationListItem } from '../../../../../types/Consultation';
 import { getConsultationList } from '../../../../../services/ConsultationService';
 import StickyHeadTable, {
   IColumn,
@@ -15,6 +14,7 @@ import {
 } from '../../../../../types/Share';
 import TreatmentTag from '../../../../../components/tag/TreatmentTag';
 import GenderTag from '../../../../../components/tag/GenderTag';
+import { Typography } from '@mui/material';
 
 interface IConsultationListProps {
   startDate: string;
@@ -70,6 +70,17 @@ const columns: IColumn[] = [
     minWidth: 120,
     render: (value: any) => {
       return `${value.lastName}${value.firstName}`;
+    },
+  },
+  {
+    label: '退掛',
+    id: 'isOnsiteCanceled',
+    minWidth: 120,
+    render: (value: boolean) => {
+      if (value) {
+        return <Typography sx={{ color: '#A40000' }}>退掛</Typography>;
+      }
+      return null;
     },
   },
 ];
