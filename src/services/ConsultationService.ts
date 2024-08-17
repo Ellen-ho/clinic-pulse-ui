@@ -285,16 +285,6 @@ export const getAverageWaitingTime = async ({
   return response.data;
 };
 
-// export const getConsultationRealTimeCount = async (
-//   data: IGetConsultationRealTimeCountRequest,
-// ): Promise<IGetConsultationRealTimeCountResponse> => {
-//   const queries = queryString.stringify(data.query);
-//   const response = await api.get<IGetConsultationRealTimeCountResponse>(
-//     `/consultations/real_time_counts${queries}`,
-//   );
-//   return response.data;
-// };
-
 export const getConsultationRealTimeCount = async (
   data: IGetConsultationRealTimeCountRequest,
 ): Promise<IGetConsultationRealTimeCountResponse> => {
