@@ -3,10 +3,11 @@ import { mq } from '../../../../styles/media-query';
 
 export const SignInWrapper = styled.div`
   ${mq({
+    paddingTop: '80px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
-    width: ['100%', '80%', '50%'],
+    width: ['100%', '40%', '40%'],
   })}
 `;
 
