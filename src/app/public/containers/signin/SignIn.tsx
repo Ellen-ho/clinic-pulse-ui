@@ -20,7 +20,7 @@ import PersonPinIcon from '@mui/icons-material/PersonPin';
 import { ButtonAreaWrapper } from '../../../layout/CommonWrapper.styled';
 import { signinUser } from '../../../../services/UserService';
 import { UserRoleType } from '../../../../types/Users';
-
+import signInBgUrl from '/src/assets/sign_in_bg.jpg';
 interface ISignInFormInputs {
   email: string;
   password: string;
@@ -75,7 +75,7 @@ const SignIn: React.FC = () => {
             left: '0',
             width: '100%',
             height: '100vh',
-            backgroundImage: `url("../src/assets/sign_in_bg.jpg")`,
+            backgroundImage: `url("${signInBgUrl}")`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
