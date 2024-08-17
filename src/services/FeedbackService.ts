@@ -71,6 +71,7 @@ export interface IGetFeedbackListResponse {
     clinicId: string;
     clinicName: string;
     consultationTimePeriod: TimePeriodType;
+    consultationId: string;
   }>;
   pagination: {
     pages: number[];

@@ -12,6 +12,7 @@ import { getFeedbackList } from '../../../../../services/FeedbackService';
 import GenderTag from '../../../../../components/tag/GenderTag';
 import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
 import RatingTag from '../../../../../components/tag/RatingTag';
+import { Typography } from '@mui/material';
 
 interface IFeedbackListProps {
   startDate: string;
@@ -22,53 +23,6 @@ interface IFeedbackListProps {
   patientName?: string;
   feedbackRating?: number;
 }
-
-const columns: IColumn[] = [
-  {
-    label: '患者',
-    id: 'patient',
-    minWidth: 120,
-    render: (value: any) => {
-      return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {`${value.lastName}${value.firstName}`}
-          <GenderTag type={value.gender as GenderType} />{' '}
-        </div>
-      );
-    },
-  },
-  { label: '反饋日期', id: 'receivedDate', minWidth: 120 },
-  { label: '院區', id: 'clinicName', minWidth: 120 },
-  {
-    label: '時段',
-    id: 'consultationTimePeriod',
-    minWidth: 120,
-    render: (value: TimePeriodType) => {
-      return <ConsultationTimePeriodTag type={value} />;
-    },
-  },
-  {
-    label: '反饋星等',
-    id: 'feedbackRating',
-    minWidth: 120,
-    render: (value: number) => {
-      return <RatingTag value={value} />;
-    },
-  },
-  {
-    label: '醫師',
-    id: 'doctor',
-    minWidth: 120,
-    render: (value: any) => {
-      return `${value.lastName}${value.firstName}`;
-    },
-  },
-  {
-    label: '當次門診',
-    id: 'consultation',
-    minWidth: 120,
-  },
-];
 
 const FeedbackList: React.FC<IFeedbackListProps> = ({
   startDate,
@@ -82,6 +36,74 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  const columns: IColumn[] = [
+    {
+      label: '患者',
+      id: 'patient',
+      minWidth: 120,
+      render: (value: any) => {
+        return (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {`${value.lastName}${value.firstName}`}
+            <GenderTag type={value.gender as GenderType} />{' '}
+          </div>
+        );
+      },
+    },
+    { label: '反饋日期', id: 'receivedDate', minWidth: 120 },
+    { label: '院區', id: 'clinicName', minWidth: 120 },
+    {
+      label: '時段',
+      id: 'consultationTimePeriod',
+      minWidth: 120,
+      render: (value: TimePeriodType) => {
+        return <ConsultationTimePeriodTag type={value} />;
+      },
+    },
+    {
+      label: '反饋星等',
+      id: 'feedbackRating',
+      minWidth: 120,
+      render: (value: number) => {
+        return <RatingTag value={value} />;
+      },
+    },
+    {
+      label: '醫師',
+      id: 'doctor',
+      minWidth: 120,
+      render: (value: any) => {
+        return `${value.lastName}${value.firstName}`;
+      },
+    },
+    {
+      label: '當次門診',
+      id: 'consultationId',
+      minWidth: 120,
+      render: (value: any) => {
+        return (
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'blue',
+              cursor: 'pointer',
+              '&:hover': {
+                textDecoration: 'underline',
+                color: 'darkblue',
+              },
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/consultation/${value}`);
+            }}
+          >
+            查看門診
+          </Typography>
+        );
+      },
+    },
+  ];
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
