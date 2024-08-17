@@ -154,6 +154,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
 
   return (
     <StickyHeadTable
+      sx={{ height: '100%' }}
       columns={columns}
       data={feedbacks || []}
       count={totalCounts || 0}
