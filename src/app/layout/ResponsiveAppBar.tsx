@@ -52,15 +52,15 @@ const topPages: IPage[] = [
     link: '',
     permission: [UserRoleType.ADMIN],
     subMenu: [
-      { title: '人員清單', link: '' },
+      // { title: '人員清單', link: '' },
       { title: '人員註冊', link: '/signup' },
     ],
   },
-  {
-    title: '帳號管理',
-    link: '/feedback',
-    permission: [UserRoleType.DOCTOR],
-  },
+  // {
+  //   title: '帳號管理',
+  //   link: '/account-management',
+  //   permission: [UserRoleType.DOCTOR],
+  // },
 ];
 
 const ResponsiveAppBar: React.FC = () => {
