@@ -3,11 +3,12 @@ import { mq } from '../../styles/media-query';
 
 export const CommonWrapper = styled.div`
   ${mq({
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: '1rem',
-    width: ['100%', '100%', '90%'],
+    width: ['100%', '100%', '100%'],
   })}
 `;
 
