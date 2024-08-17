@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import ConsultationListFilters from '../components/ConsultationListFilters';
 import ConsultationList from '../components/ConsultationList';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { AuthContext } from '../../../../../context/AuthContext';
-import { UserRoleType } from '../../../../../types/Users';
+import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
+import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -52,20 +53,21 @@ const ConsultationListPage: React.FC = () => {
   );
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        看診紀錄列表
-      </Typography>
-      <ConsultationListFilters onApply={handleApplyFilters} />
-      <ConsultationList {...filters} />
-    </Container>
+    <PrimaryPageContent>
+      <CommonWrapper>
+        <Typography variant="h4" gutterBottom>
+          看診紀錄列表
+        </Typography>
+        <ConsultationListFilters onApply={handleApplyFilters} />
+        <Box
+          sx={{
+            flexGrow: 1,
+          }}
+        >
+          <ConsultationList {...filters} />
+        </Box>
+      </CommonWrapper>
+    </PrimaryPageContent>
   );
 };
 

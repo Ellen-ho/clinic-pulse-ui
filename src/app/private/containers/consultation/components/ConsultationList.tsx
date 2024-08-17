@@ -152,6 +152,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
 
   return (
     <StickyHeadTable
+      sx={{ height: '100%' }}
       columns={columns}
       data={consultations || []}
       count={totalCounts || 0}

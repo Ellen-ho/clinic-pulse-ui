@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -10,6 +10,8 @@ import { TimePeriodType } from '../../../../../types/Share';
 import { AuthContext } from '../../../../../context/AuthContext';
 import { UserRoleType } from '../../../../../types/Users';
 import { useFiltersContext } from '../../../../../context/FiltersContext';
+import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
+import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -52,20 +54,21 @@ const FeedbackListPage: React.FC = () => {
   );
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        反饋列表
-      </Typography>
-      <FeedbackListFilters onApply={handleApplyFilters} />
-      <FeedbackList {...filters} />
-    </Container>
+    <PrimaryPageContent>
+      <CommonWrapper>
+        <Typography variant="h4" gutterBottom>
+          反饋列表
+        </Typography>
+        <FeedbackListFilters onApply={handleApplyFilters} />
+        <Box
+          sx={{
+            flexGrow: 1,
+          }}
+        >
+          <FeedbackList {...filters} />
+        </Box>
+      </CommonWrapper>
+    </PrimaryPageContent>
   );
 };
 

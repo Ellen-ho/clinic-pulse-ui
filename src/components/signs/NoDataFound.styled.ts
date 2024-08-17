@@ -1,17 +1,15 @@
 import styled from '@emotion/styled';
 
 export const NoDataFoundStyled = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  padding: 35px 0;
   color: #888;
   font-size: 15px;
   background-color: #fff;
   box-shadow: none;
-  border-radius: 8px;
-  border: 1px solid rgb(223, 224, 235);
   > span {
     margin-left: 3px;
   }

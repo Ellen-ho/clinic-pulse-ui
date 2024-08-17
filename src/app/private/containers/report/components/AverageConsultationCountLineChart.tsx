@@ -27,7 +27,7 @@ const AverageConsultationCountLineChart: React.FC<
   IAverageConsultationCountProps
 > = ({ startDate, endDate, clinicId, doctorId, timePeriod, granularity }) => {
   const [chartData, setChartData] = useState<
-    Array<{ name: string; averageCount: number }>
+    Array<{ date: string; averageCount: number }>
   >([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
@@ -62,7 +62,7 @@ const AverageConsultationCountLineChart: React.FC<
         const formattedData = data.data
           .filter((item: any) => item.date)
           .map((item: any) => ({
-            name: item.date,
+            date: item.date,
             averageCount: item.averageCount,
           }));
         setChartData(formattedData);
@@ -76,7 +76,7 @@ const AverageConsultationCountLineChart: React.FC<
         );
 
         // Added: Update Y-axis domain state
-        setYAxisDomain([minCount, maxCount]);
+        setYAxisDomain([minCount - 3, maxCount + 3]);
       }
       setLoading(false);
     }
@@ -105,15 +105,15 @@ const AverageConsultationCountLineChart: React.FC<
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
         data={chartData}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 30, left: 20, bottom: 10 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="date"
-          label={{
-            value: '時間',
-            position: 'insideBottomRight',
-          }}
+          // label={{
+          //   value: '時間',
+          //   position: 'insideBottomRight',
+          // }}
         />
         <YAxis
           domain={yAxisDomain}

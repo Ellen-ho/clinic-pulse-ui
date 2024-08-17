@@ -1,7 +1,8 @@
 * {
-    font-family: "Source Code Pro";
+  font-family: 'Source Code Pro';
+  box-sizing: border-box;
 }
 
 body {
-    background-color: #f6f7fa;
+  background-color: #f6f7fa;
 }
