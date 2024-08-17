@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import PrimaryPageContent from '../../../layout/PrimaryPageContent';
 import { SignInWrapper } from './SignIn.styled';
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -96,7 +97,7 @@ const SignIn: React.FC = () => {
               />
               <ButtonAreaWrapper>
                 <Button type="submit" variant="contained" color="primary">
-                  Sign In
+                  登入
                 </Button>
               </ButtonAreaWrapper>
 
