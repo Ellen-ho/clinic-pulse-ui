@@ -14,6 +14,7 @@ import FeedbackListPage from './app/private/containers/feedback/pages/FeedbackLi
 import FeedbackDetailPage from './app/private/containers/feedback/pages/FeedbackDetailPage';
 import ConsultationReportPage from './app/private/containers/report/pages/ConsultationReportPage';
 import DashboardPage from './app/private/containers/dashboard/pages/DashboardPage';
+import FeedbackReportPage from './app/private/containers/report/pages/FeedbackReportPage';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -26,7 +27,14 @@ const App: React.FC = () => {
     <Routes>
       <Route element={<PrivateRoutes />}>
         <Route element={<DashboardPage />} path="/dashboard" />
-        <Route element={<ConsultationReportPage />} path="/report-center" />
+        <Route
+          element={<ConsultationReportPage />}
+          path="/consultation-report-center"
+        />
+        <Route
+          element={<FeedbackReportPage />}
+          path="/feedback-report-center"
+        />
         <Route element={<ConsultationListPage />} path="/consultation" />
         <Route element={<ConsultationDetailPage />} path="/consultation/:id" />
         <Route element={<FeedbackListPage />} path="/feedback" />
@@ -36,7 +44,7 @@ const App: React.FC = () => {
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
       </Route>
-      <Route element={<Home />} path="/" />
+      <Route element={<SignIn />} path="/" />
       <Route element={<NotFound />} path="" />
     </Routes>
   );
