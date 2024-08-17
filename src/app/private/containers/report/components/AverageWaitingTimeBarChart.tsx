@@ -79,15 +79,14 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
         setLoading(false);
       }
     }
-    // Added: Compute min and max values for the y-axis
+
     const allChartData = chartData.map((item) =>
       Object.values(item).reduce((acc, cur) => acc + cur, 0),
     );
     const maxCount = Math.max(...allChartData) + 5;
     const minCount = Math.min(...allChartData);
 
-    // Added: Update Y-axis domain state
-    setYAxisDomain([minCount, maxCount]);
+    setYAxisDomain([minCount, maxCount + 10]);
   }, [data]);
 
   if (loading)

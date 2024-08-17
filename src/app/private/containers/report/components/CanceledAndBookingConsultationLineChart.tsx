@@ -95,7 +95,7 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
         const minCountRight = 0;
 
         setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
-        setYAxisDomainRight([minCountRight, maxCountRight]);
+        setYAxisDomainRight([minCountRight, maxCountRight + 5]);
       }
       setLoading(false);
     }
