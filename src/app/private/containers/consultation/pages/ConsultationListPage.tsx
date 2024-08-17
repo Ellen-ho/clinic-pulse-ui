@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { Container, Typography } from '@mui/material';
 import ConsultationListFilters from '../components/ConsultationListFilters';
 import ConsultationList from '../components/ConsultationList';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -23,18 +25,21 @@ interface FilterValues {
 }
 
 const ConsultationListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('month').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('month').format('YYYY-MM-DD');
-  const defaultClinicId = '16458ab0-4bb6-4141-9bf0-6d7398942d9b';
+  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
+  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
+  const { state } = useContext(AuthContext);
+  const doctorId = state.doctorId || '';
+  const isDoctor = state.doctorId != null;
+
   const [filters, setFilters] = useState<FilterValues>({
     startDate: initialStartDate,
     endDate: initialEndDate,
-    clinicId: defaultClinicId,
+    clinicId: undefined,
     timePeriod: undefined,
     totalDurationMin: undefined,
     totalDurationMax: undefined,
     patientId: undefined,
-    doctorId: undefined,
+    doctorId: isDoctor ? doctorId : undefined,
     page: 1,
     limit: 20,
   });
@@ -47,9 +52,16 @@ const ConsultationListPage: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="lg">
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}
+    >
       <Typography variant="h4" gutterBottom>
-        門診列表
+        看診紀錄列表
       </Typography>
       <ConsultationListFilters onApply={handleApplyFilters} />
       <ConsultationList {...filters} />

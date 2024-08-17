@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Grid,
   TextField,
@@ -11,10 +11,17 @@ import {
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-
+import _ from 'lodash';
 import dayjs from 'dayjs';
 import { TimePeriodType } from '../../../../../types/Share';
+import PatientAutocomplete from '../../../../../components/PatientAutocomplete/PatientAutocomplete';
+import { FiltersContext } from '../../../../../context/FiltersContext';
+import { IDoctors } from '../../../../../types/Doctors';
+import { IClinics } from '../../../../../types/Clinics';
+import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
+import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
 
 interface IFeedbackListFiltersProps {
   onApply: (filters: {
@@ -23,27 +30,11 @@ interface IFeedbackListFiltersProps {
     clinicId?: string;
     timePeriod?: TimePeriodType;
     doctorId?: string;
-    patientId?: string;
+    patientName?: string;
     feedbackRating?: number;
   }) => void;
 }
 
-const doctors = [
-  { label: 'ann', id: '008ce240-3f25-4e2a-a3e2-d62f5e20fe71' },
-  { label: '111', id: 'c2d88a24-ffa8-4083-bd04-2f2715f244e3' },
-  { label: '張月嵐', id: '3' },
-  { label: '黃千華', id: '4' },
-  { label: '李嘉芳', id: '5' },
-];
-const patients = [
-  { label: '林黃月', id: '1' },
-  { label: '趙偉健', id: '2' },
-];
-const clinics = [
-  { label: '台北院區', id: '1' },
-  { label: '台中院區', id: '16458ab0-4bb6-4141-9bf0-6d7398942d9b' },
-  { label: '高雄院區', id: '3' },
-];
 const timePeriodMappings = {
   早診: TimePeriodType.MORNING_SESSION,
   午診: TimePeriodType.AFTERNOON_SESSION,
@@ -64,24 +55,30 @@ const feedbackRatings = [
   { value: 5 },
 ];
 
-const defaultClinicId = '16458ab0-4bb6-4141-9bf0-6d7398942d9b';
-
 const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
   onApply,
 }) => {
+  const { state } = useContext(AuthContext);
+  const isDoctor = state.doctorId != null;
+  const { doctors: contextDoctors, clinics: contextClinics } =
+    useContext(FiltersContext) || {};
+  const [doctors, setDoctors] = useState<IDoctors[]>([]);
+  const [clinics, setClinics] = useState<IClinics[]>([]);
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(
-    dayjs().startOf('month'),
+    dayjs().startOf('isoWeek'),
   );
   const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(
-    dayjs().endOf('month'),
+    dayjs().endOf('isoWeek'),
   );
-  const [clinicId, setClinicId] = useState<string | undefined>(defaultClinicId);
+  const [clinicId, setClinicId] = useState<string | undefined>(undefined);
   const [timePeriod, setTimePeriod] = useState<TimePeriodType | undefined>(
     undefined,
   );
   const [rating, setRating] = useState<number | undefined>(undefined);
-  const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
-  const [patientId, setPatientId] = useState<string | undefined>(undefined);
+  const [doctorId, setDoctorId] = useState<string | undefined>(
+    state.doctorId || undefined,
+  );
+  const [patientName, setPatientName] = useState('');
 
   const handleApplyFilters = () => {
     onApply({
@@ -90,46 +87,86 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
       clinicId,
       timePeriod,
       doctorId,
-      patientId,
+      patientName: patientName.trim() ? patientName : undefined,
       feedbackRating: rating,
     });
   };
 
+  useEffect(() => {
+    const debouncedFetch = _.debounce(handleApplyFilters, 400);
+    debouncedFetch();
+
+    return () => {
+      debouncedFetch.cancel();
+    };
+  }, [startDate, endDate, clinicId, timePeriod, rating, doctorId, patientName]);
+
+  useEffect(() => {
+    const cachedDoctors = getDoctorsFromCache();
+    const cachedClinics = getClinicsFromCache();
+
+    if (
+      cachedDoctors &&
+      Array.isArray(cachedDoctors) &&
+      cachedDoctors.length > 0
+    ) {
+      setDoctors(cachedDoctors);
+    } else if (contextDoctors && contextDoctors.length > 0) {
+      setDoctors(contextDoctors);
+      localStorage.setItem('doctors', JSON.stringify(contextDoctors));
+    }
+
+    if (
+      cachedClinics &&
+      Array.isArray(cachedClinics) &&
+      cachedClinics.length > 0
+    ) {
+      setClinics(cachedClinics);
+    } else if (contextClinics && contextClinics.length > 0) {
+      setClinics(contextClinics);
+      localStorage.setItem('clinics', JSON.stringify(contextClinics));
+    }
+  }, [contextDoctors, contextClinics]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={6}>
+      <Grid container spacing={1} alignItems="center">
+        <Grid item xs={12} sm={2}>
           <DatePicker
-            label="Date Picker"
+            label="起始時間"
             format="YYYY/MM/DD"
-            defaultValue={dayjs().startOf('month')}
+            defaultValue={dayjs().startOf('isoWeek')}
+            onChange={(newValue) => {
+              setStartDate(newValue ? dayjs(newValue) : null);
+            }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={2}>
           <DatePicker
-            label="Date Picker"
+            label="終止時間"
             format="YYYY/MM/DD"
-            defaultValue={dayjs().endOf('month')}
+            defaultValue={dayjs().endOf('isoWeek')}
+            onChange={(newValue) => {
+              setEndDate(newValue ? dayjs(newValue) : null);
+            }}
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={clinics}
-            getOptionLabel={(option) => option.label}
-            renderInput={(params) => <TextField {...params} label="Clinic" />}
+            getOptionLabel={(option) => option.name}
+            renderInput={(params) => <TextField {...params} label="院區" />}
             onChange={(event, value) =>
               setClinicId(value ? value.id : undefined)
             }
             value={clinics.find((clinic) => clinic.id === clinicId) || null}
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={timePeriodOptions}
             getOptionLabel={(option) => option.label}
-            renderInput={(params) => (
-              <TextField {...params} label="Time Period" />
-            )}
+            renderInput={(params) => <TextField {...params} label="時段" />}
             onChange={(event, value) =>
               setTimePeriod(value?.value || undefined)
             }
@@ -139,7 +176,7 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
             }
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <Autocomplete
             options={feedbackRatings}
             getOptionLabel={(option) => `${option.value} 星`}
@@ -151,42 +188,28 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
                 </Box>
               );
             }}
-            renderInput={(params) => (
-              <TextField {...params} label="Feedback Rating" />
-            )}
+            renderInput={(params) => <TextField {...params} label="反饋星級" />}
             onChange={(event, newValue) => setRating(newValue?.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
-          <Autocomplete
-            options={doctors}
-            getOptionLabel={(option) => option.label}
-            renderInput={(params) => <TextField {...params} label="Doctor" />}
-            onChange={(event, value) =>
-              setDoctorId(value ? value.id : undefined)
-            }
-            value={doctors.find((doctor) => doctor.id === doctorId) || null}
+        {!isDoctor && (
+          <Grid item xs={12} sm={2}>
+            <Autocomplete
+              options={doctors}
+              getOptionLabel={(option) => option.fullName}
+              renderInput={(params) => <TextField {...params} label="醫師" />}
+              onChange={(event, value) =>
+                setDoctorId(value ? value.id : undefined)
+              }
+              value={doctors.find((doctor) => doctor.id === doctorId) || null}
+            />
+          </Grid>
+        )}
+        <Grid item xs={12} sm={2}>
+          <PatientAutocomplete
+            value={patientName}
+            onChange={(newValue) => setPatientName(newValue)}
           />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Autocomplete
-            options={patients}
-            getOptionLabel={(option) => option.label}
-            renderInput={(params) => <TextField {...params} label="Patient" />}
-            onChange={(event, value) =>
-              setPatientId(value ? value.id : undefined)
-            }
-            value={patients.find((patient) => patient.id === patientId) || null}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleApplyFilters}
-          >
-            Apply Filters
-          </Button>
         </Grid>
       </Grid>
     </LocalizationProvider>

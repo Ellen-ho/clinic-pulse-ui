@@ -95,7 +95,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
           </Typography>
           <FormWrapper onSubmit={handleSubmit(onSignUp)}>
             <FormControl>
-              <InputLabel>User Role</InputLabel>
+              <InputLabel>身份</InputLabel>
               <Select
                 label="User Role"
                 size="small"
@@ -103,38 +103,37 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
                 error={!!errors.role}
                 defaultValue=""
               >
-                <MenuItem value="ADMIN">ADMIN</MenuItem>
-                <MenuItem value="DOCTOR">Doctor</MenuItem>
+                <MenuItem value="ADMIN">管理者</MenuItem>
+                <MenuItem value="DOCTOR">醫師</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              label="FirstName"
-              type="firstName"
-              size="small"
-              {...register('firstName')}
-              error={!!errors.firstName}
-              helperText={<>{errors.firstName?.message}</>}
-            />
-            <TextField
-              label="LastName"
+              label="姓"
               type="lastName"
               size="small"
               {...register('lastName')}
               error={!!errors.lastName}
               helperText={<>{errors.lastName?.message}</>}
             />
+            <TextField
+              label="名"
+              type="firstName"
+              size="small"
+              {...register('firstName')}
+              error={!!errors.firstName}
+              helperText={<>{errors.firstName?.message}</>}
+            />
             <FormControl>
-              <InputLabel>Gender</InputLabel>
+              <InputLabel>性別</InputLabel>
               <Select
-                label="Gender"
+                label="性別"
                 size="small"
                 {...register('gender')}
                 error={!!errors.gender}
                 defaultValue=""
               >
-                <MenuItem value="MALE">MALE</MenuItem>
-                <MenuItem value="FEMALE">FEMALE</MenuItem>
-                <MenuItem value="NON_BINARY">NON_BINARY</MenuItem>
+                <MenuItem value="MALE">男性</MenuItem>
+                <MenuItem value="FEMALE">女性</MenuItem>
               </Select>
             </FormControl>
             <Controller
@@ -142,7 +141,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
               control={control}
               render={({ field }) => (
                 <DatePicker
-                  label="Birth Date"
+                  label="生日"
                   value={field.value}
                   onChange={field.onChange}
                 />
@@ -153,14 +152,14 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
               control={control}
               render={({ field }) => (
                 <DatePicker
-                  label="Onboard Date"
+                  label="入職日期"
                   value={field.value}
                   onChange={field.onChange}
                 />
               )}
             />
             <TextField
-              label="Email"
+              label="電子郵件"
               type="email"
               size="small"
               {...register('email')}
@@ -168,7 +167,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
               helperText={<>{errors.email?.message}</>}
             />
             <TextField
-              label="Password"
+              label="預設密碼"
               type="password"
               size="small"
               {...register('password')}
@@ -177,10 +176,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
             />
             <ButtonAreaWrapper>
               <Button type="submit" variant="contained" color="primary">
-                Sign Up
-              </Button>
-              <Button variant="text" onClick={() => navigate('/signin')}>
-                Sign In
+                註冊
               </Button>
             </ButtonAreaWrapper>
           </FormWrapper>

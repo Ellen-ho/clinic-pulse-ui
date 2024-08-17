@@ -12,6 +12,7 @@ import {
 import { getAverageConsultationCount } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import useSWR from 'swr';
+import CenterText from '../../../../../components/box/CenterText';
 
 interface IAverageConsultationCountProps {
   startDate: string;
@@ -81,20 +82,38 @@ const AverageConsultationCountLineChart: React.FC<
     }
   }, [data]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
-  if (message) return <p>{message}</p>;
+  if (loading)
+    return (
+      <CenterText>
+        <>{'Loading...'}</>
+      </CenterText>
+    );
+  if (error)
+    return (
+      <CenterText>
+        <>{'Error loading data'}</>
+      </CenterText>
+    );
+  if (message)
+    return (
+      <CenterText>
+        <>{message}</>
+      </CenterText>
+    );
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height="100%">
       <LineChart
         data={chartData}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
-          dataKey="name"
-          label={{ value: '時間', position: 'insideBottomRight', offset: -10 }}
+          dataKey="date"
+          label={{
+            value: '時間',
+            position: 'insideBottomRight',
+          }}
         />
         <YAxis
           domain={yAxisDomain}
@@ -107,7 +126,12 @@ const AverageConsultationCountLineChart: React.FC<
         />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="averageCount" stroke="#8884d8" />
+        <Line
+          type="monotone"
+          dataKey="averageCount"
+          name="每診平均人數"
+          stroke="#8884d8"
+        />
       </LineChart>
     </ResponsiveContainer>
   );

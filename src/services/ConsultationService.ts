@@ -116,6 +116,112 @@ export interface IGetAverageConsultationCountResponse {
   }>;
 }
 
+export interface IGetConsultationOnsiteCanceledAndBookingRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  doctorId?: string;
+  timePeriod?: TimePeriodType;
+  granularity?: Granularity;
+}
+
+export interface IGetConsultationOnsiteCanceledAndBookingResponse {
+  totalConsultations: number;
+  consultationWithOnlineBooking: number;
+  consultationWithOnsiteCancel: number;
+  onlineBookingRate: number;
+  onsiteCancelRate: number;
+  data: Array<{
+    date: string;
+    onlineBookingCount: number;
+    onsiteCancelCount: number;
+    consultationCount: number;
+    onlineBookingRate: number;
+    onsiteCancelRate: number;
+  }>;
+}
+
+export interface IGetDifferentTreatmentConsultationRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  doctorId?: string;
+  timePeriod?: TimePeriodType;
+  granularity?: Granularity;
+}
+
+export interface IGetDifferentTreatmentConsultationResponse {
+  totalConsultations: number;
+  totalConsultationWithAcupuncture: number;
+  totalConsultationWithMedicine: number;
+  totalConsultationWithBothTreatment: number;
+  totalOnlyAcupunctureCount: number;
+  totalOnlyMedicineCount: number;
+  totalAcupunctureRate: number;
+  totalMedicineRate: number;
+  totalOnlyAcupunctureRate: number;
+  totalOnlyMedicineRate: number;
+  totalBothTreatmentRate: number;
+  data: Array<{
+    date: string;
+    consultationCount: number;
+    consultationWithAcupuncture: number;
+    consultationWithMedicine: number;
+    consultationWithBothTreatment: number;
+    acupunctureRate: number;
+    medicineRate: number;
+    onlyAcupunctureCount: number;
+    onlyMedicineCount: number;
+    onlyAcupunctureRate: number;
+    onlyMedicineRate: number;
+    bothTreatmentRate: number;
+  }>;
+}
+
+export interface IGetAverageWaitingTimeRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  timePeriod?: TimePeriodType;
+  doctorId?: string;
+  patientId?: string;
+  granularity?: Granularity;
+}
+
+export interface IGetAverageWaitingTimeResponse {
+  totalAverageConsultationWait: number;
+  totalAverageBedAssignmentWait: number;
+  totalAverageAcupunctureWait: number;
+  totalAverageNeedleRemovalWait: number;
+  totalAverageMedicationWait: number;
+  data: Array<{
+    date: string;
+    averageConsultationWait: number;
+    averageBedAssignmentWait: number;
+    averageAcupunctureWait: number;
+    averageNeedleRemovalWait: number;
+    averageMedicationWait: number;
+  }>;
+}
+
+export interface IGetConsultationRealTimeCountRequest {
+  query: {
+    clinicId?: string;
+    consultationRoomNumber?: string;
+    doctorId?: string;
+  };
+}
+
+export interface IGetConsultationRealTimeCountResponse {
+  timeSlotId: string | Array<{ id: string }>;
+  waitForConsultationCount: number;
+  waitForBedAssignedCount: number;
+  waitForAcupunctureTreatmentCount: number;
+  waitForNeedleRemovedCount: number;
+  waitForMedicineCount: number;
+  completedCount: number;
+}
+
 export const getConsultationList = async ({
   queryString,
 }: {
@@ -141,6 +247,60 @@ export const getAverageConsultationCount = async ({
 }): Promise<IGetAverageConsultationCountResponse> => {
   const response = await api.get<IGetAverageConsultationCountResponse>(
     `/consultations/average_counts?${queryString}`,
+  );
+  return response.data;
+};
+
+export const getDifferentTreatmentConsultation = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetDifferentTreatmentConsultationResponse> => {
+  const response = await api.get<IGetDifferentTreatmentConsultationResponse>(
+    `/consultations/different_treatments?${queryString}`,
+  );
+  return response.data;
+};
+
+export const getConsultationOnsiteCanceledAndBooking = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetConsultationOnsiteCanceledAndBookingResponse> => {
+  const response =
+    await api.get<IGetConsultationOnsiteCanceledAndBookingResponse>(
+      `/consultations/canceled_and_booking?${queryString}`,
+    );
+  return response.data;
+};
+
+export const getAverageWaitingTime = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetAverageWaitingTimeResponse> => {
+  const response = await api.get<IGetAverageWaitingTimeResponse>(
+    `/consultations/average_waiting_time?${queryString}`,
+  );
+  return response.data;
+};
+
+// export const getConsultationRealTimeCount = async (
+//   data: IGetConsultationRealTimeCountRequest,
+// ): Promise<IGetConsultationRealTimeCountResponse> => {
+//   const queries = queryString.stringify(data.query);
+//   const response = await api.get<IGetConsultationRealTimeCountResponse>(
+//     `/consultations/real_time_counts${queries}`,
+//   );
+//   return response.data;
+// };
+
+export const getConsultationRealTimeCount = async (
+  data: IGetConsultationRealTimeCountRequest,
+): Promise<IGetConsultationRealTimeCountResponse> => {
+  const queries = queryString.stringify(data.query);
+  const response = await api.get<IGetConsultationRealTimeCountResponse>(
+    `/consultations/real_time_counts?${queries}`,
   );
   return response.data;
 };

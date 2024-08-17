@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { Container, Typography } from '@mui/material';
 
 import dayjs from 'dayjs';
@@ -7,6 +7,9 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import FeedbackList from '../components/FeedbackList';
 import FeedbackListFilters from '../components/FeedbackListFilters';
 import { TimePeriodType } from '../../../../../types/Share';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
+import { useFiltersContext } from '../../../../../context/FiltersContext';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -17,23 +20,25 @@ interface FilterValues {
   clinicId?: string;
   timePeriod?: TimePeriodType;
   doctorId?: string;
-  patientId?: string;
+  patientName?: string;
   feedbackRating?: number;
   page?: number;
   limit?: number;
 }
 
 const FeedbackListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('month').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('month').format('YYYY-MM-DD');
-  const defaultClinicId = '16458ab0-4bb6-4141-9bf0-6d7398942d9b';
+  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
+  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
+  const { state } = useContext(AuthContext);
+  const doctorId = state.doctorId || '';
+  const isDoctor = state.doctorId != null;
   const [filters, setFilters] = useState<FilterValues>({
     startDate: initialStartDate,
     endDate: initialEndDate,
-    clinicId: defaultClinicId,
+    clinicId: undefined,
     timePeriod: undefined,
-    doctorId: undefined,
-    patientId: undefined,
+    doctorId: isDoctor ? doctorId : undefined,
+    patientName: undefined,
     feedbackRating: undefined,
     page: 1,
     limit: 20,
@@ -47,7 +52,14 @@ const FeedbackListPage: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="lg">
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         反饋列表
       </Typography>

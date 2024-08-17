@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import _ from 'lodash';
 import {
   Grid,
@@ -9,11 +9,22 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Button,
+  Autocomplete,
+  TextField,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { Granularity } from '../../../../../types/Share';
+import { Granularity, TimePeriodType } from '../../../../../types/Share';
+import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
+import { IDoctors } from '../../../../../types/Doctors';
+import {
+  FiltersContext,
+  useFiltersContext,
+} from '../../../../../context/FiltersContext';
+import { IClinics } from '../../../../../types/Clinics';
+import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
+import { AuthContext } from '../../../../../context/AuthContext';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(isoWeek);
@@ -23,11 +34,26 @@ interface ITimeSelectionProps {
     startDate: string;
     endDate: string;
     granularity: Granularity;
+    clinicId?: string;
+    timePeriod?: string;
+    doctorId?: string;
   }) => void;
   initialYear: string;
   initialMonth: string;
   initialWeek: string;
 }
+
+const timePeriodMappings = {
+  早診: TimePeriodType.MORNING_SESSION,
+  午診: TimePeriodType.AFTERNOON_SESSION,
+  晚診: TimePeriodType.EVENING_SESSION,
+};
+
+const timePeriodOptions = [
+  { label: '早診', value: timePeriodMappings['早診'] },
+  { label: '午診', value: timePeriodMappings['午診'] },
+  { label: '晚診', value: timePeriodMappings['晚診'] },
+];
 
 const TimeFilters: React.FC<ITimeSelectionProps> = ({
   onApply,
@@ -35,11 +61,21 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
   initialMonth,
   initialWeek,
 }) => {
+  const { state } = useContext(AuthContext);
+  const isDoctor = state.doctorId != null;
+  const { doctors: contextDoctors, clinics: contextClinics } =
+    useContext(FiltersContext) || {};
+  const [doctors, setDoctors] = useState<IDoctors[]>([]);
+  const [clinics, setClinics] = useState<IClinics[]>([]);
   const [value, setValue] = useState<string | null>('week');
   const [selectedYear, setSelectedYear] = useState(initialYear);
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [selectedWeek, setSelectedWeek] = useState(initialWeek);
-
+  const [timePeriod, setTimePeriod] = useState<string | undefined>(undefined);
+  const [doctorId, setDoctorId] = useState<string | undefined>(
+    state.doctorId || undefined,
+  );
+  const [clinicId, setClinicId] = useState<string | undefined>(undefined);
   const currentYear = dayjs().year();
   const currentMonth = dayjs().month() + 1;
   const currentWeek = dayjs().isoWeek();
@@ -140,6 +176,9 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
       startDate,
       endDate,
       granularity,
+      clinicId,
+      timePeriod,
+      doctorId,
     });
   };
 
@@ -150,7 +189,42 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
     return () => {
       debouncedFetch.cancel();
     };
-  }, [value, selectedYear, selectedMonth, selectedWeek]);
+  }, [
+    value,
+    selectedYear,
+    selectedMonth,
+    selectedWeek,
+    clinicId,
+    timePeriod,
+    doctorId,
+  ]);
+
+  useEffect(() => {
+    const cachedDoctors = getDoctorsFromCache();
+    const cachedClinics = getClinicsFromCache();
+
+    if (
+      cachedDoctors &&
+      Array.isArray(cachedDoctors) &&
+      cachedDoctors.length > 0
+    ) {
+      setDoctors(cachedDoctors);
+    } else if (contextDoctors && contextDoctors.length > 0) {
+      setDoctors(contextDoctors);
+      localStorage.setItem('doctors', JSON.stringify(contextDoctors));
+    }
+
+    if (
+      cachedClinics &&
+      Array.isArray(cachedClinics) &&
+      cachedClinics.length > 0
+    ) {
+      setClinics(cachedClinics);
+    } else if (contextClinics && contextClinics.length > 0) {
+      setClinics(contextClinics);
+      localStorage.setItem('clinics', JSON.stringify(contextClinics));
+    }
+  }, [contextDoctors, contextClinics]);
 
   return (
     <Grid container spacing={2}>
@@ -161,14 +235,17 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
+          alignItems: 'center',
           gap: '10px',
         }}
       >
-        <ToggleButtonGroup value={value} exclusive onChange={handleChange}>
-          <ToggleButton value="year">年</ToggleButton>
-          <ToggleButton value="month">月</ToggleButton>
-          <ToggleButton value="week">週</ToggleButton>
-        </ToggleButtonGroup>
+        <div>
+          <ToggleButtonGroup value={value} exclusive onChange={handleChange}>
+            <ToggleButton value="year">年</ToggleButton>
+            <ToggleButton value="month">月</ToggleButton>
+            <ToggleButton value="week">週</ToggleButton>
+          </ToggleButtonGroup>
+        </div>
         <FormControl
           fullWidth
           margin="normal"
@@ -254,6 +331,40 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
           </FormControl>
         )}
       </Grid>
+      <Grid item xs={12} sm={2}>
+        <Autocomplete
+          options={clinics}
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => <TextField {...params} label="院區" />}
+          onChange={(event, value) => setClinicId(value ? value.id : undefined)}
+          value={clinics.find((clinic) => clinic.id === clinicId) || null}
+        />
+      </Grid>
+      <Grid item xs={12} sm={2}>
+        <Autocomplete
+          options={timePeriodOptions}
+          getOptionLabel={(option) => option.label}
+          renderInput={(params) => <TextField {...params} label="時段" />}
+          onChange={(event, value) => setTimePeriod(value?.value || undefined)}
+          value={
+            timePeriodOptions.find((option) => option.value === timePeriod) ||
+            null
+          }
+        />
+      </Grid>
+      {!isDoctor && (
+        <Grid item xs={12} sm={2}>
+          <Autocomplete
+            options={doctors}
+            getOptionLabel={(option) => option.fullName}
+            renderInput={(params) => <TextField {...params} label="醫師" />}
+            onChange={(event, value) =>
+              setDoctorId(value ? value.id : undefined)
+            }
+            value={doctors.find((doctor) => doctor.id === doctorId) || null}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

@@ -12,13 +12,10 @@ interface ISigninResponse {
   user: {
     id: string;
     createdAt: string;
-    displayName: string;
     role: string;
     avatar: string | null;
   };
-  patientId: string;
   doctorId: string;
-  hasProfile: boolean;
 }
 
 interface ISignupRequest {

@@ -2,11 +2,19 @@ import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { IConsultationListItem } from '../../../../../types/Consultation';
 import { getConsultationList } from '../../../../../services/ConsultationService';
 import StickyHeadTable, {
   IColumn,
 } from '../../../../../components/table/StickyHeadTable';
+import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
+import {
+  GenderType,
+  TimePeriodType,
+  TreatmentType,
+} from '../../../../../types/Share';
+import TreatmentTag from '../../../../../components/tag/TreatmentTag';
+import GenderTag from '../../../../../components/tag/GenderTag';
+import { Typography } from '@mui/material';
 
 interface IConsultationListProps {
   startDate: string;
@@ -25,13 +33,32 @@ const columns: IColumn[] = [
     id: 'patient',
     minWidth: 120,
     render: (value: any) => {
-      return `${value.lastName}${value.firstName}`;
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {`${value.lastName}${value.firstName}`}
+          <GenderTag type={value.gender as GenderType} />{' '}
+        </div>
+      );
     },
   },
   { label: '日期', id: 'consultationDate', minWidth: 120 },
-  { label: '時段', id: 'consultationTimePeriod', minWidth: 120 },
+  {
+    label: '時段',
+    id: 'consultationTimePeriod',
+    minWidth: 120,
+    render: (value: TimePeriodType) => {
+      return <ConsultationTimePeriodTag type={value} />;
+    },
+  },
   { label: '號碼', id: 'consultationNumber', minWidth: 120 },
-  { label: '治療', id: 'treatmentType', minWidth: 120 },
+  {
+    label: '治療',
+    id: 'treatmentType',
+    minWidth: 120,
+    render: (value: TreatmentType) => {
+      return <TreatmentTag type={value} />;
+    },
+  },
   {
     label: '總時長(分鐘)',
     id: 'totalDuration',
@@ -43,6 +70,17 @@ const columns: IColumn[] = [
     minWidth: 120,
     render: (value: any) => {
       return `${value.lastName}${value.firstName}`;
+    },
+  },
+  {
+    label: '退掛',
+    id: 'isOnsiteCanceled',
+    minWidth: 120,
+    render: (value: boolean) => {
+      if (value) {
+        return <Typography sx={{ color: '#A40000' }}>退掛</Typography>;
+      }
+      return null;
     },
   },
 ];

@@ -7,7 +7,7 @@ export const CommonWrapper = styled.div`
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: '1rem',
-    width: ['100%', '100%', '70%'],
+    width: ['100%', '100%', '90%'],
   })}
 `;
 
