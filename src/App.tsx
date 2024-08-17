@@ -15,6 +15,7 @@ import FeedbackDetailPage from './app/private/containers/feedback/pages/Feedback
 import ConsultationReportPage from './app/private/containers/report/pages/ConsultationReportPage';
 import DashboardPage from './app/private/containers/dashboard/pages/DashboardPage';
 import FeedbackReportPage from './app/private/containers/report/pages/FeedbackReportPage';
+import AccountManagementPage from './app/private/containers/account/pages/AccountManagementPage';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -39,6 +40,7 @@ const App: React.FC = () => {
         <Route element={<ConsultationDetailPage />} path="/consultation/:id" />
         <Route element={<FeedbackListPage />} path="/feedback" />
         <Route element={<FeedbackDetailPage />} path="/feedback/:id" />
+        <Route element={<AccountManagementPage />} path="/account-management" />
         <Route element={<SignUp />} path="/signup" />
       </Route>
       <Route element={<PublicRoutes />}>
