@@ -116,17 +116,42 @@ const DifferentTreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
         data={chartData}
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
+        <XAxis
+          dataKey="date"
+          label={{
+            value: '時間',
+            position: 'insideBottomRight',
+          }}
+        />
+        <YAxis
+          domain={yAxisDomain}
+          label={{
+            value: '人數',
+            angle: -90,
+            position: 'insideLeft',
+            offset: -5,
+          }}
+        />
         <Tooltip />
         <Legend />
-        <Bar dataKey="onlyAcupunctureCount" stackId="a" fill="#8884d8" />
-        <Bar dataKey="onlyMedicineCount" stackId="a" fill="#82ca9d" />
+        <Bar
+          dataKey="onlyAcupunctureCount"
+          name="純針灸治療"
+          stackId="a"
+          fill="#8884d8"
+        />
+        <Bar
+          dataKey="onlyMedicineCount"
+          name="純藥物治療"
+          stackId="a"
+          fill="#82ca9d"
+        />
         <Bar
           dataKey="consultationWithBothTreatment"
+          name="針灸及藥物治療"
           stackId="a"
           fill="#ffc658"
         />

@@ -109,11 +109,10 @@ const AverageConsultationCountLineChart: React.FC<
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
-          dataKey="name"
+          dataKey="date"
           label={{
             value: '時間',
             position: 'insideBottomRight',
-            offset: -10,
           }}
         />
         <YAxis
@@ -127,7 +126,12 @@ const AverageConsultationCountLineChart: React.FC<
         />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="averageCount" stroke="#8884d8" />
+        <Line
+          type="monotone"
+          dataKey="averageCount"
+          name="每診平均人數"
+          stroke="#8884d8"
+        />
       </LineChart>
     </ResponsiveContainer>
   );

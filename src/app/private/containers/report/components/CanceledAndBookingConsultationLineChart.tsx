@@ -46,7 +46,12 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
   );
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
-  const [yAxisDomain, setYAxisDomain] = useState<[number, number]>([0, 0]);
+  const [yAxisDomainLeft, setYAxisDomainLeft] = useState<[number, number]>([
+    0, 0,
+  ]);
+  const [yAxisDomainRight, setYAxisDomainRight] = useState<[number, number]>([
+    0, 0,
+  ]);
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
@@ -75,14 +80,22 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
       } else {
         setChartData(data.data);
 
-        const maxCount = Math.max(
+        const maxCountLeft = Math.max(
           ...data.data.map((item) =>
             Math.max(item.onlineBookingCount, item.onsiteCancelCount),
           ),
         );
-        const minCount = 0;
+        const minCountLeft = 0;
 
-        setYAxisDomain([minCount, maxCount + 5]);
+        const maxCountRight = Math.max(
+          ...data.data.map((item) =>
+            Math.max(item.onlineBookingRate, item.onsiteCancelRate),
+          ),
+        );
+        const minCountRight = 0;
+
+        setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
+        setYAxisDomainRight([minCountRight, maxCountRight]);
       }
       setLoading(false);
     }
@@ -111,36 +124,71 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart
         data={chartData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 0 }}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid stroke="#f5f5f5" />
-        <XAxis dataKey="date" />
-        <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-        <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+        <XAxis
+          dataKey="date"
+          label={{
+            value: '時間',
+            position: 'insideBottomRight',
+          }}
+        />
+        <YAxis
+          domain={yAxisDomainLeft}
+          label={{
+            value: '人數',
+            angle: -90,
+            position: 'insideLeft',
+            offset: -5,
+          }}
+          yAxisId="left"
+          orientation="left"
+          stroke="#8884d8"
+        />
+        <YAxis
+          domain={yAxisDomainRight}
+          label={{
+            value: '百分率',
+            angle: -90,
+            position: 'insideRight',
+            offset: -5,
+          }}
+          yAxisId="right"
+          orientation="right"
+          stroke="#82ca9d"
+        />
+
+        {/* <YAxis yAxisId="left" orientation="left" stroke="#8884d8" /> */}
+        {/* <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" /> */}
         <Tooltip />
         <Legend />
         <Bar
           yAxisId="left"
           dataKey="onlineBookingCount"
+          name="線上預約人數"
           barSize={20}
           fill="#413ea0"
         />
         <Bar
           yAxisId="left"
           dataKey="onsiteCancelCount"
+          name="退掛號人數"
           barSize={20}
-          fill="#ff7300"
+          fill="#009596"
         />
         <Line
           yAxisId="right"
           type="monotone"
           dataKey="onlineBookingRate"
+          name="線上預約率"
           stroke="#8884d8"
         />
         <Line
           yAxisId="right"
           type="monotone"
           dataKey="onsiteCancelRate"
+          name="退掛號率"
           stroke="#82ca9d"
         />
       </ComposedChart>

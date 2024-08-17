@@ -46,7 +46,7 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
 
-  // const [yAxisDomain, setYAxisDomain] = useState<[number, number]>([0, 0]);
+  const [yAxisDomain, setYAxisDomain] = useState<[number, number]>([0, 0]);
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
@@ -79,14 +79,15 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
         setLoading(false);
       }
     }
-    // const maxCount = Math.max(
-    //   ...data.data.map((item) => item.),
-    // );
-    // const minCount = Math.min(
-    //   ...data.data.map((item) => item.consultationCount),
-    // );
+    // Added: Compute min and max values for the y-axis
+    const allChartData = chartData.map((item) =>
+      Object.values(item).reduce((acc, cur) => acc + cur, 0),
+    );
+    const maxCount = Math.max(...allChartData) + 5;
+    const minCount = Math.min(...allChartData);
 
-    // setYAxisDomain([minCount, maxCount + 5]);
+    // Added: Update Y-axis domain state
+    setYAxisDomain([minCount, maxCount]);
   }, [data]);
 
   if (loading)
@@ -110,13 +111,17 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        data={chartData}
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-      >
+      <BarChart data={chartData} margin={{ top: 5, left: 20, right: 10 }}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
+        <XAxis
+          dataKey="date"
+          label={{
+            value: '時間',
+            position: 'insideBottomRight',
+          }}
+        />
         <YAxis
+          domain={yAxisDomain}
           label={{
             value: '分鐘',
             angle: -90,
@@ -126,11 +131,36 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
         />
         <Tooltip />
         <Legend />
-        <Bar dataKey="averageConsultationWait" stackId="a" fill="#8884d8" />
-        <Bar dataKey="averageBedAssignmentWait" stackId="a" fill="#82ca9d" />
-        <Bar dataKey="averageAcupunctureWait" stackId="a" fill="#ffc658" />
-        <Bar dataKey="averageNeedleRemovalWait" stackId="a" fill="#ff7f50" />
-        <Bar dataKey="averageMedicationWait" stackId="a" fill="#507dc0" />
+        <Bar
+          dataKey="averageConsultationWait"
+          name="看診平均等待時間"
+          stackId="a"
+          fill="#2A265F"
+        />
+        <Bar
+          dataKey="averageBedAssignmentWait"
+          name="治療床平均等待時間"
+          stackId="a"
+          fill="#3C3D99"
+        />
+        <Bar
+          dataKey="averageAcupunctureWait"
+          name="針灸平均等待時間"
+          stackId="a"
+          fill="#5752D1"
+        />
+        <Bar
+          dataKey="averageNeedleRemovalWait"
+          name="取針平均等待時間"
+          stackId="a"
+          fill="#8481DD"
+        />
+        <Bar
+          dataKey="averageMedicationWait"
+          name="取藥平均等待時間"
+          stackId="a"
+          fill="#B2B0EA"
+        />
       </BarChart>
     </ResponsiveContainer>
   );
