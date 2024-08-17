@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { UserRoleType } from '../../types/Users';
 import { Menu, MenuItem } from '@mui/material';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 
 interface IPageItem {
   title: string;
@@ -57,7 +58,7 @@ const topPages: IPage[] = [
   },
   {
     title: '帳號管理',
-    link: '',
+    link: '/feedback',
     permission: [UserRoleType.DOCTOR],
   },
 ];
@@ -109,6 +110,12 @@ const ResponsiveAppBar: React.FC = () => {
           sx={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', color: '#fff' }}>
+            <HealthAndSafetyIcon
+              onClick={() => navigate(isSignedIn ? '/dashboard' : '/')}
+              sx={{
+                mr: 1,
+              }}
+            />
             <Typography
               variant="h6"
               noWrap
