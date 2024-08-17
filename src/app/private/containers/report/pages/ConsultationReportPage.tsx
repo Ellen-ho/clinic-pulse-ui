@@ -4,13 +4,14 @@ import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import TimeFilters from '../components/TimeFilters';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import dayjs from 'dayjs';
 import DifferentTreatmentsBarChart from '../components/DifferentTreatmentsConsultationBarChart';
 import AverageWaitingTimeLineChart from '../components/AverageWaitingTimeBarChart';
 import FeedbackBarChart from '../components/FeedbackBarChart';
 import AverageConsultationCountLineChart from '../components/AverageConsultationCountLineChart';
 import CanceledAndBookingLineChart from '../components/CanceledAndBookingConsultationLineChart';
+import { AuthContext } from '../../../../../context/AuthContext';
 
 interface IFilters {
   startDate: string;
@@ -27,11 +28,15 @@ const ConsultationReportPage: React.FC = () => {
   const currentMonth = (dayjs().month() + 1).toString().padStart(2, '0');
   const currentWeek = dayjs().isoWeek().toString();
 
+  const { state } = useContext(AuthContext);
+  const doctorId = state.doctorId;
+  const isDoctor = state.doctorId != null;
+
   const [filters, setFilters] = useState<IFilters>({
     startDate: dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
     endDate: dayjs().format('YYYY-MM-DD'),
     clinicId: undefined,
-    doctorId: undefined,
+    doctorId: isDoctor ? doctorId ?? undefined : undefined,
     timePeriod: undefined,
     granularity: Granularity.DAY,
   });

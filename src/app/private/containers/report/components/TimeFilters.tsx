@@ -24,6 +24,7 @@ import {
 } from '../../../../../context/FiltersContext';
 import { IClinics } from '../../../../../types/Clinics';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
+import { AuthContext } from '../../../../../context/AuthContext';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(isoWeek);
@@ -60,6 +61,8 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
   initialMonth,
   initialWeek,
 }) => {
+  const { state } = useContext(AuthContext);
+  const isDoctor = state.doctorId != null;
   const { doctors: contextDoctors, clinics: contextClinics } =
     useContext(FiltersContext) || {};
   const [doctors, setDoctors] = useState<IDoctors[]>([]);
@@ -173,7 +176,7 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
       granularity,
       clinicId,
       timePeriod,
-      doctorId,
+      doctorId: isDoctor ? doctorId ?? undefined : undefined,
     });
   };
 
@@ -347,23 +350,19 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
           }
         />
       </Grid>
-      <Grid item xs={12} sm={2}>
-        <Autocomplete
-          options={doctors || []}
-          getOptionLabel={(option) => option.fullName}
-          renderInput={(params) => <TextField {...params} label="醫師" />}
-          onChange={(event, newValue) => {
-            setDoctorId(newValue ? newValue.id : undefined);
-          }}
-          value={doctors.find((doctor) => doctor.id === doctorId) || null}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          renderOption={(props, option) => (
-            <li {...props} key={option.id}>
-              {option.fullName}
-            </li>
-          )}
-        />
-      </Grid>
+      {!isDoctor && (
+        <Grid item xs={12} sm={2}>
+          <Autocomplete
+            options={doctors}
+            getOptionLabel={(option) => option.fullName}
+            renderInput={(params) => <TextField {...params} label="醫師" />}
+            onChange={(event, value) =>
+              setDoctorId(value ? value.id : undefined)
+            }
+            value={doctors.find((doctor) => doctor.id === doctorId) || null}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

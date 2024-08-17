@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { Container, Typography } from '@mui/material';
 import ConsultationListFilters from '../components/ConsultationListFilters';
 import ConsultationList from '../components/ConsultationList';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -25,6 +27,10 @@ interface FilterValues {
 const ConsultationListPage: React.FC = () => {
   const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
   const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
+  const { state } = useContext(AuthContext);
+  const doctorId = state.doctorId;
+  const isDoctor = state.doctorId != null;
+
   const [filters, setFilters] = useState<FilterValues>({
     startDate: initialStartDate,
     endDate: initialEndDate,
@@ -33,7 +39,7 @@ const ConsultationListPage: React.FC = () => {
     totalDurationMin: undefined,
     totalDurationMax: undefined,
     patientId: undefined,
-    doctorId: undefined,
+    doctorId: isDoctor ? doctorId ?? undefined : undefined,
     page: 1,
     limit: 20,
   });

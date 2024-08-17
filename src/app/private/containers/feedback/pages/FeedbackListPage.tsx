@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { Container, Typography } from '@mui/material';
 
 import dayjs from 'dayjs';
@@ -7,6 +7,9 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import FeedbackList from '../components/FeedbackList';
 import FeedbackListFilters from '../components/FeedbackListFilters';
 import { TimePeriodType } from '../../../../../types/Share';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
+import { useFiltersContext } from '../../../../../context/FiltersContext';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -26,12 +29,15 @@ interface FilterValues {
 const FeedbackListPage: React.FC = () => {
   const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
   const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
+  const { state } = useContext(AuthContext);
+  const doctorId = state.doctorId;
+  const isDoctor = state.doctorId != null;
   const [filters, setFilters] = useState<FilterValues>({
     startDate: initialStartDate,
     endDate: initialEndDate,
     clinicId: undefined,
     timePeriod: undefined,
-    doctorId: undefined,
+    doctorId: isDoctor ? doctorId ?? undefined : undefined,
     patientName: undefined,
     feedbackRating: undefined,
     page: 1,

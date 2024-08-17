@@ -20,6 +20,8 @@ import { IDoctors } from '../../../../../types/Doctors';
 import { IClinics } from '../../../../../types/Clinics';
 import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
 
 interface IFeedbackListFiltersProps {
   onApply: (filters: {
@@ -56,6 +58,8 @@ const feedbackRatings = [
 const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
   onApply,
 }) => {
+  const { state } = useContext(AuthContext);
+  const isDoctor = state.doctorId != null;
   const { doctors: contextDoctors, clinics: contextClinics } =
     useContext(FiltersContext) || {};
   const [doctors, setDoctors] = useState<IDoctors[]>([]);
@@ -80,7 +84,7 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
       endDate: endDate?.format('YYYY-MM-DD') || '',
       clinicId,
       timePeriod,
-      doctorId,
+      doctorId: isDoctor ? doctorId ?? undefined : undefined,
       patientName: patientName.trim() ? patientName : undefined,
       feedbackRating: rating,
     });
@@ -186,17 +190,19 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
             onChange={(event, newValue) => setRating(newValue?.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
-          <Autocomplete
-            options={doctors}
-            getOptionLabel={(option) => option.fullName}
-            renderInput={(params) => <TextField {...params} label="醫師" />}
-            onChange={(event, value) =>
-              setDoctorId(value ? value.id : undefined)
-            }
-            value={doctors.find((doctor) => doctor.id === doctorId) || null}
-          />
-        </Grid>
+        {!isDoctor && (
+          <Grid item xs={12} sm={2}>
+            <Autocomplete
+              options={doctors}
+              getOptionLabel={(option) => option.fullName}
+              renderInput={(params) => <TextField {...params} label="醫師" />}
+              onChange={(event, value) =>
+                setDoctorId(value ? value.id : undefined)
+              }
+              value={doctors.find((doctor) => doctor.id === doctorId) || null}
+            />
+          </Grid>
+        )}
         <Grid item xs={12} sm={2}>
           <PatientAutocomplete
             value={patientName}

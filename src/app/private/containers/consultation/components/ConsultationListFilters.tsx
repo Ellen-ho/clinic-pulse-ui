@@ -21,6 +21,8 @@ import { IDoctors } from '../../../../../types/Doctors';
 import { IClinics } from '../../../../../types/Clinics';
 import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
+import { AuthContext } from '../../../../../context/AuthContext';
+import { UserRoleType } from '../../../../../types/Users';
 
 interface IConsultationListFiltersProps {
   onApply: (filters: {
@@ -62,6 +64,8 @@ const durationOptions = [
 const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   onApply,
 }) => {
+  const { state } = useContext(AuthContext);
+  const isDoctor = state.doctorId != null;
   const { doctors: contextDoctors, clinics: contextClinics } =
     useContext(FiltersContext) || {};
   const [doctors, setDoctors] = useState<IDoctors[]>([]);
@@ -92,7 +96,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
       totalDurationMin,
       totalDurationMax,
       patientName: patientName.trim() ? patientName : undefined,
-      doctorId,
+      doctorId: isDoctor ? doctorId ?? undefined : undefined,
     });
   };
 
@@ -223,17 +227,19 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
             }
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
-          <Autocomplete
-            options={doctors}
-            getOptionLabel={(option) => option.fullName}
-            renderInput={(params) => <TextField {...params} label="醫師" />}
-            onChange={(event, value) =>
-              setDoctorId(value ? value.id : undefined)
-            }
-            value={doctors.find((doctor) => doctor.id === doctorId) || null}
-          />
-        </Grid>
+        {!isDoctor && (
+          <Grid item xs={12} sm={2}>
+            <Autocomplete
+              options={doctors}
+              getOptionLabel={(option) => option.fullName}
+              renderInput={(params) => <TextField {...params} label="醫師" />}
+              onChange={(event, value) =>
+                setDoctorId(value ? value.id : undefined)
+              }
+              value={doctors.find((doctor) => doctor.id === doctorId) || null}
+            />
+          </Grid>
+        )}
         <Grid item xs={12} sm={2}>
           <PatientAutocomplete
             value={patientName}
