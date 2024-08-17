@@ -51,7 +51,7 @@ const topPages: IPage[] = [
     link: '',
     permission: [UserRoleType.ADMIN],
     subMenu: [
-      { title: '人員清單', link: '/staff-list' },
+      { title: '人員清單', link: '' },
       { title: '人員註冊', link: '/signup' },
     ],
   },
