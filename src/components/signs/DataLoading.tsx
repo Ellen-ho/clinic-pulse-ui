@@ -1,12 +1,17 @@
 import React, { ReactNode } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, SxProps, Theme } from '@mui/material';
 
 interface IDataLoading {
   label?: string;
   children?: ReactNode;
+  sx?: SxProps<Theme>;
 }
 
-const DataLoading: React.FC<IDataLoading> = ({ label = '', children = '' }) => {
+const DataLoading: React.FC<IDataLoading> = ({
+  label = '',
+  children = '',
+  sx = {},
+}) => {
   return (
     <Box
       sx={{
@@ -20,6 +25,7 @@ const DataLoading: React.FC<IDataLoading> = ({ label = '', children = '' }) => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#ffffff66',
+        ...sx,
       }}
     >
       <CircularProgress /> <span>{label}</span>
