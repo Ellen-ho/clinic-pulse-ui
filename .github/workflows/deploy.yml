@@ -15,7 +15,7 @@ jobs:
 
       - name: Install dependencies and build
         env:
-          VITE_APP_SERVER_URL: $VITE_APP_SERVER_URL
+          VITE_APP_SERVER_URL: ${{ vars.VITE_APP_SERVER_URL }}
         run: |
           yarn install
           yarn build
