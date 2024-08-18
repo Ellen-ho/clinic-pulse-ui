@@ -78,6 +78,7 @@ const PatientAutocomplete: React.FC<IPatientAutocompleteProps> = ({
         <TextField
           {...params}
           label="病患"
+          placeholder="請輸入姓名"
           InputProps={{
             ...params.InputProps,
             endAdornment: (

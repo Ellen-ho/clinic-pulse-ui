@@ -13,6 +13,8 @@ import {
   YAxis,
 } from 'recharts';
 import CenterText from '../../../../../components/box/CenterText';
+import { Box } from '@mui/material';
+import DataLoading from '../../../../../components/signs/DataLoading';
 
 interface IFeedbackChartData {
   date: string;
@@ -91,9 +93,9 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
 
   if (loading)
     return (
-      <CenterText>
-        <>{'Loading...'}</>
-      </CenterText>
+      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+        <DataLoading />
+      </Box>
     );
   if (error)
     return (

@@ -133,6 +133,7 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
       <Grid container spacing={1} alignItems="center">
         <Grid item xs={12} sm={2}>
           <DatePicker
+            sx={{ width: '100%' }}
             label="起始時間"
             format="YYYY/MM/DD"
             defaultValue={dayjs().startOf('isoWeek')}
@@ -143,6 +144,7 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
         </Grid>
         <Grid item xs={12} sm={2}>
           <DatePicker
+            sx={{ width: '100%' }}
             label="終止時間"
             format="YYYY/MM/DD"
             defaultValue={dayjs().endOf('isoWeek')}

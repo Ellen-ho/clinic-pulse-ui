@@ -13,6 +13,8 @@ import { getAverageConsultationCount } from '../../../../../services/Consultatio
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import useSWR from 'swr';
 import CenterText from '../../../../../components/box/CenterText';
+import DataLoading from '../../../../../components/signs/DataLoading';
+import { Box } from '@mui/material';
 
 interface IAverageConsultationCountProps {
   startDate: string;
@@ -84,9 +86,9 @@ const AverageConsultationCountLineChart: React.FC<
 
   if (loading)
     return (
-      <CenterText>
-        <>{'Loading...'}</>
-      </CenterText>
+      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+        <DataLoading />
+      </Box>
     );
   if (error)
     return (

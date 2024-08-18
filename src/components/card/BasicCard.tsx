@@ -1,11 +1,19 @@
 import React from 'react';
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  SxProps,
+  Theme,
+  Typography,
+} from '@mui/material';
 
 interface IBasicCardProps {
   startTitleAdornment?: React.ReactNode;
   title?: string;
   titleRightElement?: React.ReactNode;
   children: React.ReactNode;
+  sx?: SxProps<Theme>;
 }
 
 const BasicCard: React.FC<IBasicCardProps> = ({
@@ -13,10 +21,11 @@ const BasicCard: React.FC<IBasicCardProps> = ({
   title,
   titleRightElement,
   children,
+  sx = {},
 }) => {
   const showHeader = title || titleRightElement || startTitleAdornment;
   return (
-    <Card>
+    <Card sx={{ ...sx }}>
       <CardContent>
         {showHeader && (
           <Box

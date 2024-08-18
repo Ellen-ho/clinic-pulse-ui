@@ -4,6 +4,8 @@ import RealConsultationStatistic from '../components/RealTimePatientCount';
 import RealTimeFilters from '../components/RealTimeFilters';
 import { UserRoleType } from '../../../../../types/Users';
 import { AuthContext } from '../../../../../context/AuthContext';
+import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
+import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 
 export const clinics = [
   { label: '台北院區', id: '690d0ea3-9f8d-4143-b160-0661a003bf08' },
@@ -42,20 +44,15 @@ const DashboardPage: React.FC = () => {
   );
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        看診紀錄列表
-      </Typography>
-      {!isDoctor && <RealTimeFilters onApply={handleApplyFilters} />}
-      <RealConsultationStatistic {...filters} />
-    </Container>
+    <PrimaryPageContent>
+      <CommonWrapper>
+        <Typography variant="h4" gutterBottom>
+          看診紀錄列表
+        </Typography>
+        {!isDoctor && <RealTimeFilters onApply={handleApplyFilters} />}
+        <RealConsultationStatistic {...filters} />
+      </CommonWrapper>
+    </PrimaryPageContent>
   );
 };
 

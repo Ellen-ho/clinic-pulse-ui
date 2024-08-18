@@ -13,6 +13,8 @@ import {
   YAxis,
 } from 'recharts';
 import CenterText from '../../../../../components/box/CenterText';
+import DataLoading from '../../../../../components/signs/DataLoading';
+import { Box } from '@mui/material';
 
 interface IAverageWaitingTimeChartData {
   date: string;
@@ -91,9 +93,9 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
 
   if (loading)
     return (
-      <CenterText>
-        <>{'Loading...'}</>
-      </CenterText>
+      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+        <DataLoading />
+      </Box>
     );
   if (error)
     return (
@@ -112,13 +114,7 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={chartData} margin={{ top: 5, left: 20, right: 10 }}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="date"
-          label={{
-            value: '時間',
-            position: 'insideBottomRight',
-          }}
-        />
+        <XAxis dataKey="date" />
         <YAxis
           domain={yAxisDomain}
           label={{

@@ -131,7 +131,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     rowsPerPage,
   ]);
 
-  const { data, error } = useSWR(`getFeedbackList?${queryString}`, () => {
+  const { data, isLoading } = useSWR(`getFeedbackList?${queryString}`, () => {
     return getFeedbackList({ queryString });
   });
 
@@ -160,6 +160,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
       count={totalCounts || 0}
       page={page}
       rowsPerPage={rowsPerPage}
+      isLoading={isLoading}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onRowClick={handleClickFeedback}

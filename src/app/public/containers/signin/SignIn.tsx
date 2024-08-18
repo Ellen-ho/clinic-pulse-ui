@@ -100,7 +100,7 @@ const SignIn: React.FC = () => {
                 helperText={<>{errors.email?.message}</>}
               />
               <TextField
-                label="Password"
+                label="密碼"
                 type="password"
                 size="small"
                 {...register('password')}

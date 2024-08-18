@@ -129,14 +129,16 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     rowsPerPage,
   ]);
 
-  const { data, error } = useSWR(`getConsultationList?${queryString}`, () => {
-    return getConsultationList({ queryString });
-  });
+  const { data, isLoading } = useSWR(
+    `getConsultationList?${queryString}`,
+    () => {
+      return getConsultationList({ queryString });
+    },
+  );
 
   const { data: consultations, totalCounts } = data || {};
 
   const handlePageChange = (event: unknown, newPage: number) => {
-    console.log(newPage);
     setPage(newPage);
   };
 
@@ -153,7 +155,6 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
 
   return (
     <StickyHeadTable
-      sx={{ height: '100%' }}
       columns={columns}
       data={consultations || []}
       count={totalCounts || 0}
@@ -162,6 +163,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onRowClick={handleClickConsultation}
+      isLoading={isLoading}
     />
   );
 };

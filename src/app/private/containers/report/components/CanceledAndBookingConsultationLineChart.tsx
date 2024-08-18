@@ -14,6 +14,8 @@ import useSWR from 'swr';
 import { getConsultationOnsiteCanceledAndBooking } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import CenterText from '../../../../../components/box/CenterText';
+import { Box } from '@mui/material';
+import DataLoading from '../../../../../components/signs/DataLoading';
 
 interface ICanceledAndBookingChartData {
   date: string;
@@ -103,9 +105,9 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
 
   if (loading)
     return (
-      <CenterText>
-        <>{'Loading...'}</>
-      </CenterText>
+      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+        <DataLoading />
+      </Box>
     );
   if (error)
     return (
@@ -127,13 +129,7 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid stroke="#f5f5f5" />
-        <XAxis
-          dataKey="date"
-          label={{
-            value: '時間',
-            position: 'insideBottomRight',
-          }}
-        />
+        <XAxis dataKey="date" />
         <YAxis
           domain={yAxisDomainLeft}
           label={{

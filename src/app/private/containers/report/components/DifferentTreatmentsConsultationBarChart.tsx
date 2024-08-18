@@ -13,6 +13,8 @@ import {
   YAxis,
 } from 'recharts';
 import CenterText from '../../../../../components/box/CenterText';
+import { Box } from '@mui/material';
+import DataLoading from '../../../../../components/signs/DataLoading';
 
 interface IDifferentTreatmentsChartData {
   date: string;
@@ -96,9 +98,9 @@ const DifferentTreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
 
   if (loading)
     return (
-      <CenterText>
-        <>{'Loading...'}</>
-      </CenterText>
+      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+        <DataLoading />
+      </Box>
     );
   if (error)
     return (
@@ -119,13 +121,7 @@ const DifferentTreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="date"
-          label={{
-            value: '時間',
-            position: 'insideBottomRight',
-          }}
-        />
+        <XAxis dataKey="date" />
         <YAxis
           domain={yAxisDomain}
           label={{

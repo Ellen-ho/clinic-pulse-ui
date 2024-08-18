@@ -63,6 +63,7 @@ const FeedbackListPage: React.FC = () => {
         <Box
           sx={{
             flexGrow: 1,
+            overflowY: 'hidden',
           }}
         >
           <FeedbackList {...filters} />

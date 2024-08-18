@@ -62,6 +62,7 @@ const ConsultationListPage: React.FC = () => {
         <Box
           sx={{
             flexGrow: 1,
+            overflowY: 'hidden',
           }}
         >
           <ConsultationList {...filters} />
