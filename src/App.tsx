@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import PrivateRoutes from './app/private/PrivateRoutes';
 import Home from './app/public/containers/home/Home';
 import SignIn from './app/public/containers/signin/SignIn';
@@ -46,8 +46,7 @@ const App: React.FC = () => {
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
       </Route>
-      {/* Redirect the root path "/" to "/signin" */}
-      <Route element={<Navigate to="/signin" />} path="/" />
+      <Route element={<SignIn />} path="/" />
       <Route element={<NotFound />} path="" />
     </Routes>
   );
