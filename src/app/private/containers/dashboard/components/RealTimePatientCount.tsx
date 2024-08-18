@@ -53,22 +53,24 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
 
   if (data?.timeSlotId.length === 0) {
     return (
-      <BasicCard title={title} sx={{ position: 'relative', height: '100%' }}>
-        <Typography variant="h6" color="textSecondary">
-          <NoDataFound
-            icon={
-              <FaRegCalendarTimes
-                size={60}
-                style={{
-                  transform: 'translateX(7px)',
-                  color: '#999',
-                }}
-              />
-            }
-            label="當前沒有門診"
-          />
-        </Typography>
-      </BasicCard>
+      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+        <BasicCard title={title} sx={{ position: 'relative', height: '100%' }}>
+          <Typography variant="h6" color="textSecondary">
+            <NoDataFound
+              icon={
+                <FaRegCalendarTimes
+                  size={60}
+                  style={{
+                    transform: 'translateX(7px)',
+                    color: '#999',
+                  }}
+                />
+              }
+              label="當前沒有門診"
+            />
+          </Typography>
+        </BasicCard>
+      </Box>
     );
   }
 

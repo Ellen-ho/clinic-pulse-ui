@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
@@ -23,6 +23,7 @@ import { ButtonAreaWrapper } from '../../../layout/CommonWrapper.styled';
 import { signinUser } from '../../../../services/UserService';
 import { UserRoleType } from '../../../../types/Users';
 import signInBgUrl from '/src/assets/sign_in_bg.jpg';
+import DataLoading from '../../../../components/signs/DataLoading';
 interface ISignInFormInputs {
   email: string;
   password: string;
@@ -36,6 +37,7 @@ const schema = yup
   .required();
 
 const SignIn: React.FC = () => {
+  const [isloading, setLoading] = useState<boolean>(false);
   const { dispatch } = useContext(AuthContext);
   const {
     register,
@@ -50,7 +52,7 @@ const SignIn: React.FC = () => {
       email: data.email,
       password: data.password,
     };
-
+    setLoading(true);
     const response = await signinUser(payload);
     dispatch({
       type: 'SIGN_IN',
@@ -63,6 +65,7 @@ const SignIn: React.FC = () => {
         doctorId: response.doctorId,
       },
     });
+    setLoading(false);
   };
 
   return (
@@ -80,7 +83,8 @@ const SignIn: React.FC = () => {
             backgroundPosition: 'center',
           }}
         ></Box>
-        <Card sx={{ zIndex: '1' }}>
+        <Card sx={{ position: 'relative', zIndex: '1' }}>
+          {isloading && <DataLoading sx={{ zIndex: '1' }} />}
           <CardContent>
             <Typography
               gutterBottom
