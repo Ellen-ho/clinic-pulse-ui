@@ -96,8 +96,8 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
   patientName,
 }) => {
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(1);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(25);
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
@@ -112,7 +112,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
       params.set('totalDurationMax', String(totalDurationMax));
     if (doctorId) params.set('doctorId', doctorId);
     if (patientName) params.set('patientName', patientName);
-    params.set('page', String(page));
+    params.set('page', String(page + 1));
     params.set('limit', String(rowsPerPage));
 
     return params.toString();
@@ -136,6 +136,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
   const { data: consultations, totalCounts } = data || {};
 
   const handlePageChange = (event: unknown, newPage: number) => {
+    console.log(newPage);
     setPage(newPage);
   };
 

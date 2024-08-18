@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import PrimaryPageContent from '../../../layout/PrimaryPageContent';
 import { SignInWrapper } from './SignIn.styled';
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Card,
@@ -34,8 +36,6 @@ const schema = yup
   .required();
 
 const SignIn: React.FC = () => {
-  const APP_SERVER_URL = import.meta.env.VITE_APP_SERVER_URL;
-  const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const {
     register,
@@ -113,11 +113,11 @@ const SignIn: React.FC = () => {
                 </Button>
               </ButtonAreaWrapper>
 
-              <Grid
-                container
-                justifyContent="space-between"
-                alignItems="center"
-              ></Grid>
+              <Alert severity="info">
+                <AlertTitle>測試帳號</AlertTitle>
+                <div>帳號：admin@example.com，密碼：123456</div>
+                <div>帳號：doctor_chou@example.com，密碼：123456</div>
+              </Alert>
             </FormWrapper>
           </CardContent>
         </Card>

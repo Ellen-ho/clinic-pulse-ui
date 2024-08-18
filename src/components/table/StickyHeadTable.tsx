@@ -43,7 +43,7 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({
   count,
   page,
   rowsPerPage,
-  rowsPerPageOptions = [10, 25, 100],
+  rowsPerPageOptions = [10, 25, 50, 100],
   sx,
   onPageChange,
   onRowsPerPageChange,
@@ -94,7 +94,7 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({
         component="div"
         count={count}
         rowsPerPage={rowsPerPage}
-        page={page - 1}
+        page={page}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
       />
