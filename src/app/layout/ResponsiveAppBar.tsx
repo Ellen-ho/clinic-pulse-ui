@@ -10,6 +10,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { UserRoleType } from '../../types/Users';
 import { Menu, MenuItem } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import { CommonWrapper } from './CommonWrapper.styled';
 
 interface IPageItem {
   title: string;
@@ -104,10 +105,14 @@ const ResponsiveAppBar: React.FC = () => {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <CommonWrapper>
         <Toolbar
           disableGutters
-          sx={{ display: 'flex', justifyContent: 'space-between' }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingX: '16px',
+          }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', color: '#fff' }}>
             <HealthAndSafetyIcon
@@ -170,7 +175,7 @@ const ResponsiveAppBar: React.FC = () => {
             )}
           </Box>
         </Toolbar>
-      </Container>
+      </CommonWrapper>
     </AppBar>
   );
 };
