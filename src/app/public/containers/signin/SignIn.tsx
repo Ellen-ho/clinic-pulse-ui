@@ -120,7 +120,7 @@ const SignIn: React.FC = () => {
               <Alert severity="info">
                 <AlertTitle>測試帳號</AlertTitle>
                 <div>帳號：admin@example.com，密碼：123456</div>
-                <div>帳號：doctor_chou@example.com，密碼：123456</div>
+                <div>帳號：doctor_zhang@example.com，密碼：123456</div>
               </Alert>
             </FormWrapper>
           </CardContent>
