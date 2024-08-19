@@ -47,7 +47,7 @@ const DashboardPage: React.FC = () => {
     <PrimaryPageContent>
       <CommonWrapper>
         <Typography variant="h4" gutterBottom>
-          看診紀錄列表
+          即時看診資訊
         </Typography>
         {!isDoctor && <RealTimeFilters onApply={handleApplyFilters} />}
         <RealConsultationStatistic {...filters} />
