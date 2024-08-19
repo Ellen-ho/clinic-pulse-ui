@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { AuthContext } from '../../../../../context/AuthContext';
 import useSWR from 'swr';
 import {
@@ -25,8 +25,12 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
   const { state } = useContext(AuthContext);
   const currentUser = state.currentUser;
 
+  const shouldFetch = clinicId !== undefined;
+
   const { data, isLoading } = useSWR(
-    ['getConsultationRealTimeCount', clinicId, consultationRoomNumber],
+    shouldFetch
+      ? ['getConsultationRealTimeCount', clinicId, consultationRoomNumber]
+      : null,
     () => {
       const query: any = {};
 

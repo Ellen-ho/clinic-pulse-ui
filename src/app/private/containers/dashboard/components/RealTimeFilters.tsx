@@ -30,9 +30,15 @@ const consultationRoomNumbers = [
   { label: '高雄二診', value: 'a662ecb1-6f06-4b07-9967-95171da4b61f' },
 ];
 
+const clinics = [
+  { label: '高雄院區', value: 'bf51c88e-9587-479e-994a-d15ec484c333' },
+  { label: '台北院區', value: '690d0ea3-9f8d-4143-b160-0661a003bf08' },
+  { label: '台中院區', value: '16458ab0-4bb6-4141-9bf0-6d7398942d9b' },
+];
+
 const RealTimeFilters: React.FC<IRealTimeFiltersProps> = ({ onApply }) => {
-  const { clinics: contextClinics } = useContext(FiltersContext) || {};
-  const [clinics, setClinics] = useState<IClinic[]>([]);
+  // const { clinics: contextClinics } = useContext(FiltersContext) || {};
+  // const [clinics, setClinics] = useState<IClinic[]>([]);
   const [clinicId, setClinicId] = useState<string | undefined>(
     '16458ab0-4bb6-4141-9bf0-6d7398942d9b',
   );
@@ -83,29 +89,32 @@ const RealTimeFilters: React.FC<IRealTimeFiltersProps> = ({ onApply }) => {
       debouncedFetch.cancel();
     };
   }, [clinicId, consultationRoomNumber]);
-
-  useEffect(() => {
-    const cachedClinics = localStorage.getItem('clinics');
-    if (cachedClinics) {
-      setClinics(JSON.parse(cachedClinics));
-    } else if (contextClinics && contextClinics.length > 0) {
-      setClinics(contextClinics);
-      localStorage.setItem('clinics', JSON.stringify(contextClinics));
-    }
-  }, [contextClinics]);
+  // TODO: add the config back later
+  // useEffect(() => {
+  //   const cachedClinics = localStorage.getItem('clinics');
+  //   if (cachedClinics) {
+  //     setClinics(JSON.parse(cachedClinics));
+  //   } else if (contextClinics && contextClinics.length > 0) {
+  //     setClinics(contextClinics);
+  //     localStorage.setItem('clinics', JSON.stringify(contextClinics));
+  //   }
+  // }, [contextClinics]);
 
   return (
     <Grid container spacing={1} alignItems="center">
       <Grid item xs={12} sm={2}>
         <Autocomplete
+          disableClearable={true}
           options={clinics}
-          getOptionLabel={(option) => option.name}
+          getOptionLabel={(option) => option.label}
           renderInput={(params) => <TextField {...params} label="院區" />}
           onChange={(event, value) => {
-            setClinicId(value ? value.id : undefined);
+            setClinicId(value ? value.value : undefined);
             setConsultationRoomNumber(undefined);
           }}
-          value={clinics.find((clinic) => clinic.id === clinicId) || null}
+          value={
+            clinics.find((clinic) => clinic.value === clinicId) || undefined
+          }
         />
       </Grid>
       <Grid item xs={12} sm={2}>
