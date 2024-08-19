@@ -103,6 +103,10 @@ const ResponsiveAppBar: React.FC = () => {
     navigate('/signin');
   };
 
+  if (!isSignedIn) {
+    return null;
+  }
+
   return (
     <AppBar position="static">
       <CommonWrapper>
