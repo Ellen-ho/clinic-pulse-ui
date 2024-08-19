@@ -24,6 +24,8 @@ import { GenderType } from '../../../../../types/Share';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import DataLoading from '../../../../../components/signs/DataLoading';
+import { useState } from 'react';
 
 interface ISignUpFormInputs {
   firstName: string;
@@ -54,6 +56,7 @@ interface ISingUpCard {
 }
 
 const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
+  const [isloading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
     register,
@@ -83,7 +86,17 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Card>
+        {isloading && <DataLoading sx={{ zIndex: '1' }} />}
         <CardContent>
+          <Typography
+            gutterBottom
+            variant="h4"
+            component="div"
+            align="center"
+            sx={{ marginBottom: '20px' }}
+          >
+            人員註冊
+          </Typography>
           <Typography
             gutterBottom
             variant="h5"
