@@ -34,7 +34,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
   feedbackRating,
 }) => {
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
   const columns: IColumn[] = [
@@ -115,7 +115,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     if (feedbackRating) params.set('feedbackRating', String(feedbackRating));
     if (doctorId) params.set('doctorId', doctorId);
     if (patientName) params.set('patientName', patientName);
-    params.set('page', String(page));
+    params.set('page', String(page + 1));
     params.set('limit', String(rowsPerPage));
 
     return params.toString();
@@ -145,7 +145,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(Number(event.target.value));
-    setPage(1);
+    setPage(0);
   };
 
   const handleClickFeedback = (id: string) => {
