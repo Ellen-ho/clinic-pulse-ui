@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../../../../../context/AuthContext';
 import useSWR from 'swr';
 import {
@@ -24,10 +24,9 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
   const title = '即時資料';
   const { state } = useContext(AuthContext);
   const currentUser = state.currentUser;
-  const [shouldFetchData, setShouldFetchData] = useState(false);
 
   const { data, isLoading } = useSWR(
-    shouldFetchData ? 'getConsultationRealTimeCount' : null,
+    ['getConsultationRealTimeCount', clinicId, consultationRoomNumber],
     () => {
       const query: any = {};
 
@@ -39,17 +38,8 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
         currentUser,
       } as IGetConsultationRealTimeCountRequest);
     },
+    { refreshInterval: 5000 },
   );
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShouldFetchData(true);
-    }, 500);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [clinicId, consultationRoomNumber]);
 
   if (data?.timeSlotId.length === 0) {
     return (

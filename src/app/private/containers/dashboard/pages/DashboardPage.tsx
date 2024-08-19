@@ -31,10 +31,7 @@ const DashboardPage: React.FC = () => {
   const { state } = useContext(AuthContext);
   const isDoctor = state.doctorId != null;
 
-  const [filters, setFilters] = useState<IDashboardFilterValues>({
-    clinicId: '16458ab0-4bb6-4141-9bf0-6d7398942d9b',
-    consultationRoomNumber: 'ffeaea79-b30f-4f62-87b4-acee6c747d18',
-  });
+  const [filters, setFilters] = useState<IDashboardFilterValues>({});
 
   const handleApplyFilters = useCallback(
     (newFilters: Partial<IDashboardFilterValues>) => {
