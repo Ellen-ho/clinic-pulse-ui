@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { UserRoleType } from '../../types/Users';
-import { Menu, MenuItem } from '@mui/material';
+import { Chip, Menu, MenuItem } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import { CommonWrapper } from './CommonWrapper.styled';
 
@@ -57,11 +57,11 @@ const topPages: IPage[] = [
       { title: '人員註冊', link: '/signup' },
     ],
   },
-  // {
-  //   title: '帳號管理',
-  //   link: '/account-management',
-  //   permission: [UserRoleType.DOCTOR],
-  // },
+  {
+    title: '帳號管理',
+    link: '/account-management',
+    permission: [UserRoleType.DOCTOR],
+  },
 ];
 
 const ResponsiveAppBar: React.FC = () => {
@@ -135,8 +135,23 @@ const ResponsiveAppBar: React.FC = () => {
             >
               Clinic Pulse
             </Typography>
+            {currentUserRole === UserRoleType.DOCTOR && (
+              <Chip
+                label="醫師"
+                variant="outlined"
+                size="small"
+                sx={{ color: '#fff' }}
+              />
+            )}
+            {currentUserRole === UserRoleType.ADMIN && (
+              <Chip
+                label="管理員"
+                variant="outlined"
+                size="small"
+                sx={{ color: '#fff' }}
+              />
+            )}
           </Box>
-
           <Box sx={{ display: { py: 2 } }}>
             {isSignedIn && (
               <Box sx={{ display: 'flex' }}>
