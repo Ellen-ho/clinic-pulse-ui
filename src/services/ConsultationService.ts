@@ -49,19 +49,17 @@ export interface IGetSingleConsultationResponse {
 }
 
 export interface IGetConsultationListRequest {
-  query: {
-    startDate: string;
-    endDate: string;
-    clinicId?: string;
-    timePeriod?: TimePeriodType;
-    totalDurationMin?: number;
-    totalDurationMax?: number;
-    patientName?: string;
-    patientId?: string;
-    doctorId?: string;
-    page: number;
-    limit: number;
-  };
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  timePeriod?: TimePeriodType;
+  totalDurationMin?: number;
+  totalDurationMax?: number;
+  patientName?: string;
+  patientId?: string;
+  doctorId?: string;
+  page: number;
+  limit: number;
 }
 
 export interface IGetConsultationListResponse {
