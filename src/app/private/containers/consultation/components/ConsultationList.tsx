@@ -15,6 +15,7 @@ import {
 import TreatmentTag from '../../../../../components/tag/TreatmentTag';
 import GenderTag from '../../../../../components/tag/GenderTag';
 import { Typography } from '@mui/material';
+import dayjs from 'dayjs';
 
 interface IConsultationListProps {
   startDate: string;
@@ -96,8 +97,13 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
   patientName,
 }) => {
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(25);
+  const queryParams = new URLSearchParams(location.search);
+  const [page, setPage] = useState<number>(
+    parseInt(queryParams.get('page') || '1', 10),
+  );
+  const [rowsPerPage, setRowsPerPage] = useState<number>(
+    parseInt(queryParams.get('limit') || '25', 10),
+  );
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
@@ -112,7 +118,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
       params.set('totalDurationMax', String(totalDurationMax));
     if (doctorId) params.set('doctorId', doctorId);
     if (patientName) params.set('patientName', patientName);
-    params.set('page', String(page + 1));
+    params.set('page', String(page));
     params.set('limit', String(rowsPerPage));
 
     return params.toString();
@@ -143,8 +149,11 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
 
   const { data: consultations, totalCounts } = data || {};
 
+  const maxPage = totalCounts ? Math.ceil(totalCounts / rowsPerPage) : 1;
+  const effectivePage = Math.max(0, Math.min(page - 1, maxPage - 1));
+
   const handlePageChange = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    setPage(newPage + 1);
   };
 
   const handleRowsPerPageChange = (
@@ -155,7 +164,14 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
   };
 
   const handleClickConsultation = (id: string) => {
-    navigate(`/consultation/${id}`);
+    navigate(`/consultation/${id}`, {
+      state: {
+        from: {
+          pathname: window.location.pathname,
+          search: window.location.search,
+        },
+      },
+    });
   };
 
   return (
@@ -163,7 +179,7 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
       columns={columns}
       data={consultations || []}
       count={totalCounts || 0}
-      page={page}
+      page={effectivePage}
       rowsPerPage={rowsPerPage}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import ConsultationListFilters from '../components/ConsultationListFilters';
 import ConsultationList from '../components/ConsultationList';
@@ -51,6 +51,38 @@ const ConsultationListPage: React.FC = () => {
     },
     [],
   );
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const newStartDate = params.get('startDate');
+    const newEndDate = params.get('endDate');
+    const newClinicId = params.get('clinicId');
+    const newTimePeriod = params.get('timePeriod');
+    const newTotalDurationMin = params.get('totalDurationMin');
+    const newTotalDurationMax = params.get('totalDurationMax');
+    const newDoctorId = params.get('doctorId');
+    const newPatientName = params.get('patientName');
+    const newPage = parseInt(params.get('page') || '1', 10);
+    const newLimit = parseInt(params.get('limit') || '25', 10);
+
+    setFilters((prev) => ({
+      ...prev,
+      startDate: newStartDate || prev.startDate,
+      endDate: newEndDate || prev.endDate,
+      clinicId: newClinicId || prev.clinicId,
+      timePeriod: newTimePeriod || prev.timePeriod,
+      totalDurationMin: newTotalDurationMin
+        ? parseInt(newTotalDurationMin, 10)
+        : prev.totalDurationMin,
+      totalDurationMax: newTotalDurationMax
+        ? parseInt(newTotalDurationMax, 10)
+        : prev.totalDurationMax,
+      doctorId: newDoctorId || prev.doctorId,
+      patientId: newPatientName || prev.patientId,
+      page: newPage || prev.page,
+      limit: newLimit || prev.limit,
+    }));
+  }, []);
 
   return (
     <PrimaryPageContent>

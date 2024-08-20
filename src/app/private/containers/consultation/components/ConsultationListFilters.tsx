@@ -165,6 +165,29 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     }
   }, [contextDoctors, contextClinics]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const initialStartDate = params.get('startDate');
+    const initialEndDate = params.get('endDate');
+    const initialClinicId = params.get('clinicId');
+    const initialTimePeriod = params.get('timePeriod');
+    const initialTotalDurationMin = params.get('totalDurationMin');
+    const initialTotalDurationMax = params.get('totalDurationMax');
+    const initialDoctorId = params.get('doctorId');
+    const initialPatientName = params.get('patientName');
+
+    if (initialStartDate) setStartDate(dayjs(initialStartDate));
+    if (initialEndDate) setEndDate(dayjs(initialEndDate));
+    if (initialClinicId) setClinicId(initialClinicId);
+    if (initialTimePeriod) setTimePeriod(initialTimePeriod);
+    if (initialTotalDurationMin)
+      setTotalDurationMin(parseInt(initialTotalDurationMin));
+    if (initialTotalDurationMax)
+      setTotalDurationMax(parseInt(initialTotalDurationMax));
+    if (initialDoctorId) setDoctorId(initialDoctorId);
+    if (initialPatientName) setPatientName(initialPatientName);
+  }, [location.search]);
+
   const filteredDurationOptionsForMax = useMemo(() => {
     return durationOptions.filter(
       (option) =>
