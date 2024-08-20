@@ -43,7 +43,7 @@ const FeedbackListPage: React.FC = () => {
     patientName: undefined,
     feedbackRating: undefined,
     page: 1,
-    limit: 20,
+    limit: 25,
   });
 
   const handleApplyFilters = useCallback(

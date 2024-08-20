@@ -42,7 +42,7 @@ const ConsultationListPage: React.FC = () => {
     patientId: undefined,
     doctorId: isDoctor ? doctorId : undefined,
     page: 1,
-    limit: 20,
+    limit: 25,
   });
 
   const handleApplyFilters = useCallback(
