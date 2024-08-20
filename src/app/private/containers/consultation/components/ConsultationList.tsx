@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
@@ -128,6 +128,11 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     page,
     rowsPerPage,
   ]);
+
+  useEffect(() => {
+    const newUrl = `${window.location.pathname}?${queryString}`;
+    navigate(newUrl, { replace: true });
+  }, [queryString, navigate]);
 
   const { data, isLoading } = useSWR(
     `getConsultationList?${queryString}`,
