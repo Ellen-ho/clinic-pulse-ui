@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Grid,
   TextField,
@@ -23,6 +23,7 @@ import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
 import { AuthContext } from '../../../../../context/AuthContext';
 import { UserRoleType } from '../../../../../types/Users';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface IConsultationListFiltersProps {
   onApply: (filters: {
@@ -88,9 +89,23 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     state.doctorId || '',
   );
   const [patientName, setPatientName] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const updateQueryParams = (filters: Record<string, any>) => {
+    const params = new URLSearchParams(location.search);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    navigate({ search: params.toString() }, { replace: true });
+  };
 
   const handleApplyFilters = () => {
-    onApply({
+    const filters = {
       startDate: startDate?.format('YYYY-MM-DD') || '',
       endDate: endDate?.format('YYYY-MM-DD') || '',
       clinicId,
@@ -99,7 +114,10 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
       totalDurationMax,
       patientName: patientName.trim() ? patientName : undefined,
       doctorId,
-    });
+    };
+
+    onApply(filters);
+    updateQueryParams(filters);
   };
 
   useEffect(() => {
@@ -146,6 +164,20 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
       localStorage.setItem('clinics', JSON.stringify(contextClinics));
     }
   }, [contextDoctors, contextClinics]);
+
+  const filteredDurationOptionsForMax = useMemo(() => {
+    return durationOptions.filter(
+      (option) =>
+        totalDurationMin === undefined || option.value > totalDurationMin,
+    );
+  }, [totalDurationMin]);
+
+  const filteredDurationOptionsForMin = useMemo(() => {
+    return durationOptions.filter(
+      (option) =>
+        totalDurationMax === undefined || option.value < totalDurationMax,
+    );
+  }, [totalDurationMax]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -199,7 +231,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
         </Grid>
         <Grid item xs={12} sm={2}>
           <Autocomplete
-            options={durationOptions}
+            options={filteredDurationOptionsForMin}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField {...params} label="最小總時長" variant="outlined" />
@@ -208,7 +240,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
               setTotalDurationMin(value ? value.value : undefined)
             }
             value={
-              durationOptions.find(
+              filteredDurationOptionsForMin.find(
                 (option) => option.value === totalDurationMin,
               ) || null
             }
@@ -216,7 +248,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
         </Grid>
         <Grid item xs={12} sm={2}>
           <Autocomplete
-            options={durationOptions}
+            options={filteredDurationOptionsForMax}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField {...params} label="最大總時長" variant="outlined" />
@@ -225,7 +257,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
               setTotalDurationMax(value ? value.value : undefined)
             }
             value={
-              durationOptions.find(
+              filteredDurationOptionsForMax.find(
                 (option) => option.value === totalDurationMax,
               ) || null
             }
