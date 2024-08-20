@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
@@ -34,8 +34,13 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
   feedbackRating,
 }) => {
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const queryParams = new URLSearchParams(location.search);
+  const [page, setPage] = useState<number>(
+    parseInt(queryParams.get('page') || '1', 10) - 1,
+  );
+  const [rowsPerPage, setRowsPerPage] = useState<number>(
+    parseInt(queryParams.get('limit') || '10', 10),
+  );
 
   const columns: IColumn[] = [
     {
@@ -130,6 +135,11 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     page,
     rowsPerPage,
   ]);
+
+  useEffect(() => {
+    const newUrl = `${window.location.pathname}?${queryString}`;
+    navigate(newUrl, { replace: true });
+  }, [queryString, navigate]);
 
   const { data, isLoading } = useSWR(`getFeedbackList?${queryString}`, () => {
     return getFeedbackList({ queryString });
