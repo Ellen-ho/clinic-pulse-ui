@@ -22,6 +22,7 @@ import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
 import { AuthContext } from '../../../../../context/AuthContext';
 import { UserRoleType } from '../../../../../types/Users';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface IFeedbackListFiltersProps {
   onApply: (filters: {
@@ -79,9 +80,23 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
     state.doctorId || undefined,
   );
   const [patientName, setPatientName] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const updateQueryParams = (filters: Record<string, any>) => {
+    const params = new URLSearchParams(location.search);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    navigate({ search: params.toString() }, { replace: true });
+  };
 
   const handleApplyFilters = () => {
-    onApply({
+    const filters = {
       startDate: startDate?.format('YYYY-MM-DD') || '',
       endDate: endDate?.format('YYYY-MM-DD') || '',
       clinicId,
@@ -89,7 +104,10 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
       doctorId,
       patientName: patientName.trim() ? patientName : undefined,
       feedbackRating: rating,
-    });
+    };
+
+    onApply(filters);
+    updateQueryParams(filters);
   };
 
   useEffect(() => {
