@@ -34,6 +34,19 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
         ...udpatedState,
       };
     }
+    case 'UPDATE_PROFILE': {
+      const udpatedState = {
+        ...state,
+        doctorId: action.payload.doctorId,
+      };
+      udpatedState.currentUser!.avatar = action.payload.avatar;
+
+      localStorage.setItem('auth', JSON.stringify(udpatedState));
+      return {
+        ...state,
+        ...udpatedState,
+      };
+    }
     default:
       return state;
   }

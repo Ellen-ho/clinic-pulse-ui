@@ -19,6 +19,7 @@ const useInitAuth = () => {
             token: cachedAuth.token as string,
             currentUser: cachedAuth.currentUser as {
               id: string;
+              avatar: string;
               role: UserRoleType;
             },
             doctorId: cachedAuth.doctorId as string,

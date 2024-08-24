@@ -7,6 +7,7 @@ export interface AuthState {
   currentUser: {
     id: string;
     role: UserRoleType;
+    avatar: string | null;
   } | null;
   doctorId: string | null;
 }
@@ -19,11 +20,19 @@ export type AuthAction =
         currentUser: {
           id: string;
           role: UserRoleType;
+          avatar: string | null;
         };
         doctorId: string;
       };
     }
-  | { type: 'SIGN_OUT' };
+  | { type: 'SIGN_OUT' }
+  | {
+      type: 'UPDATE_PROFILE';
+      payload: {
+        avatar: string | null;
+        doctorId: string | null;
+      };
+    };
 
 interface AuthContextProps {
   state: AuthState;
