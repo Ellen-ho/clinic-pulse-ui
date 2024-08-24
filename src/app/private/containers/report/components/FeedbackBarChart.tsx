@@ -114,18 +114,50 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
         data={chartData}
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis />
+        <YAxis
+          domain={yAxisDomain}
+          label={{
+            value: '人數',
+            angle: -90,
+            position: 'insideLeft',
+          }}
+        />
         <Tooltip />
         <Legend />
-        <Bar dataKey="oneStarFeedbackCount" stackId="a" fill="#8884d8" />
-        <Bar dataKey="twoStarFeedbackCount" stackId="a" fill="#82ca9d" />
-        <Bar dataKey="threeStarFeedbackCount" stackId="a" fill="#ffc658" />
-        <Bar dataKey="fourStarFeedbackCount" stackId="a" fill="#ff7f50" />
-        <Bar dataKey="fiveStarFeedbackCount" stackId="a" fill="#6a0dad" />
+        <Bar
+          dataKey="oneStarFeedbackCount"
+          name="一星評論人數"
+          stackId="a"
+          fill="#8884d8"
+        />
+        <Bar
+          dataKey="twoStarFeedbackCount"
+          name="二星評論人數"
+          stackId="a"
+          fill="#82ca9d"
+        />
+        <Bar
+          dataKey="threeStarFeedbackCount"
+          name="三星評論人數"
+          stackId="a"
+          fill="#ffc658"
+        />
+        <Bar
+          dataKey="fourStarFeedbackCount"
+          name="四星評論人數"
+          stackId="a"
+          fill="#ff7f50"
+        />
+        <Bar
+          dataKey="fiveStarFeedbackCount"
+          name="五星評論人數"
+          stackId="a"
+          fill="#6a0dad"
+        />
       </BarChart>
     </ResponsiveContainer>
   );
