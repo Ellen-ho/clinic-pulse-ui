@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 
 import dayjs from 'dayjs';
@@ -8,8 +8,6 @@ import FeedbackList from '../components/FeedbackList';
 import FeedbackListFilters from '../components/FeedbackListFilters';
 import { TimePeriodType } from '../../../../../types/Share';
 import { AuthContext } from '../../../../../context/AuthContext';
-import { UserRoleType } from '../../../../../types/Users';
-import { useFiltersContext } from '../../../../../context/FiltersContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 
@@ -53,6 +51,39 @@ const FeedbackListPage: React.FC = () => {
     [],
   );
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const newStartDate = params.get('startDate');
+    const newEndDate = params.get('endDate');
+    const newClinicId = params.get('clinicId');
+    const newTimePeriod = params.get('timePeriod') as
+      | TimePeriodType
+      | undefined;
+    const newDoctorId = params.get('doctorId');
+    const newPatientName = params.get('patientName');
+    const newFeedbackRating = params.get('feedbackRating')
+      ? parseInt(params.get('feedbackRating') as string, 10)
+      : undefined;
+    const newPage = parseInt(params.get('page') || '1', 10);
+    const newLimit = parseInt(params.get('limit') || '25', 10);
+
+    setFilters((prev) => ({
+      ...prev,
+      startDate: newStartDate || prev.startDate,
+      endDate: newEndDate || prev.endDate,
+      clinicId: newClinicId || prev.clinicId,
+      timePeriod: newTimePeriod || prev.timePeriod,
+      doctorId: newDoctorId || prev.doctorId,
+      patientName: newPatientName || prev.patientName,
+      feedbackRating:
+        newFeedbackRating !== undefined
+          ? newFeedbackRating
+          : prev.feedbackRating,
+      page: newPage || prev.page,
+      limit: newLimit || prev.limit,
+    }));
+  }, []);
+
   return (
     <PrimaryPageContent>
       <CommonWrapper>
@@ -65,9 +96,8 @@ const FeedbackListPage: React.FC = () => {
             flexGrow: 1,
             overflowY: 'hidden',
           }}
-        >
-          <FeedbackList {...filters} />
-        </Box>
+        ></Box>
+        <FeedbackList {...filters} />
       </CommonWrapper>
     </PrimaryPageContent>
   );
