@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { FilterValues } from '../pages/ConsultationListPage';
+import BasicDateRangePicker from '../../../../../components/dateRangePicker/BasicDateRangePicker';
 
 interface IConsultationListFiltersProps {
   onApply: (filters: FilterValues) => void;
@@ -98,6 +99,28 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     const filters = {
       startDate: dayjs(startDate).format('YYYY-MM-DD') || '',
       endDate: dayjs(endDate).format('YYYY-MM-DD') || '',
+      clinicId,
+      timePeriod,
+      totalDurationMin,
+      totalDurationMax,
+      patientName: patientName?.trim() ? patientName : undefined,
+      doctorId,
+    };
+
+    onApply(filters);
+    updateQueryParams(filters);
+  };
+
+  const handleStartAndEndDate = ({
+    from,
+    to,
+  }: {
+    from: string;
+    to: string;
+  }) => {
+    const filters = {
+      startDate: from,
+      endDate: to,
       clinicId,
       timePeriod,
       totalDurationMin,
@@ -195,7 +218,10 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={1} alignItems="center">
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={3}>
+          <BasicDateRangePicker setDateRange={handleStartAndEndDate} />
+        </Grid>
+        {/* <Grid item xs={12} sm={2}>
           <DatePicker
             sx={{ width: '100%' }}
             label="起始時間"
@@ -220,7 +246,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
               );
             }}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={2}>
           <Autocomplete
             options={clinics}

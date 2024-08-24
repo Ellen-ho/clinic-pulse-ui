@@ -6,3 +6,7 @@
 body {
   background-color: #f6f7fa;
 }
+
+.MuiPopper-root .MuiDateRangeCalendar-root > div:first-child {
+  display: none;
+}
