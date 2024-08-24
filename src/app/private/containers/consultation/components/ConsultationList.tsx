@@ -16,8 +16,10 @@ import TreatmentTag from '../../../../../components/tag/TreatmentTag';
 import GenderTag from '../../../../../components/tag/GenderTag';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
+import { FilterValues } from '../pages/ConsultationListPage';
 
 interface IConsultationListProps {
+  onApply: (filters: FilterValues) => void;
   startDate: string;
   endDate: string;
   clinicId?: string;
@@ -87,6 +89,7 @@ const columns: IColumn[] = [
 ];
 
 const ConsultationList: React.FC<IConsultationListProps> = ({
+  onApply,
   startDate,
   endDate,
   clinicId,
@@ -134,11 +137,6 @@ const ConsultationList: React.FC<IConsultationListProps> = ({
     page,
     rowsPerPage,
   ]);
-
-  useEffect(() => {
-    const newUrl = `${window.location.pathname}?${queryString}`;
-    navigate(newUrl, { replace: true });
-  }, [queryString, navigate]);
 
   const { data, isLoading } = useSWR(
     `getConsultationList?${queryString}`,

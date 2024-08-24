@@ -1,13 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import {
-  Grid,
-  TextField,
-  Button,
-  Autocomplete,
-  CircularProgress,
-  createFilterOptions,
-  Box,
-} from '@mui/material';
+import { Grid, TextField, Autocomplete } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
@@ -22,18 +14,11 @@ import { AuthContext } from '../../../../../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { FilterValues } from '../pages/ConsultationListPage';
 
 interface IConsultationListFiltersProps {
-  onApply: (filters: {
-    startDate: string;
-    endDate: string;
-    clinicId?: string;
-    timePeriod?: string;
-    totalDurationMin?: number;
-    totalDurationMax?: number;
-    patientName?: string;
-    doctorId?: string;
-  }) => void;
+  onApply: (filters: FilterValues) => void;
+  initFilters: FilterValues;
 }
 
 interface IPatientOption {
@@ -62,6 +47,7 @@ const durationOptions = [
 
 const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   onApply,
+  initFilters,
 }) => {
   const { state } = useContext(AuthContext);
   const isDoctor = state.doctorId != null;
@@ -69,24 +55,30 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     useContext(FiltersContext) || {};
   const [doctors, setDoctors] = useState<IDoctors[]>([]);
   const [clinics, setClinics] = useState<IClinics[]>([]);
-  const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(
-    dayjs().startOf('isoWeek'),
+  const [startDate, setStartDate] = useState<string | null>(
+    initFilters.startDate ?? dayjs().startOf('isoWeek'),
   );
-  const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(
-    dayjs().endOf('isoWeek'),
+  const [endDate, setEndDate] = useState<string | null>(
+    initFilters.endDate ?? dayjs().endOf('isoWeek'),
   );
-  const [clinicId, setClinicId] = useState<string | undefined>(undefined);
-  const [timePeriod, setTimePeriod] = useState<string | undefined>(undefined);
+  const [clinicId, setClinicId] = useState<string | undefined>(
+    initFilters.clinicId,
+  );
+  const [timePeriod, setTimePeriod] = useState<string | undefined>(
+    initFilters.timePeriod,
+  );
   const [totalDurationMin, setTotalDurationMin] = useState<number | undefined>(
-    undefined,
+    initFilters.totalDurationMin,
   );
   const [totalDurationMax, setTotalDurationMax] = useState<number | undefined>(
-    undefined,
+    initFilters.totalDurationMax,
   );
   const [doctorId, setDoctorId] = useState<string | undefined>(
-    state.doctorId || '',
+    initFilters.doctorId ?? state.doctorId ?? '',
   );
-  const [patientName, setPatientName] = useState('');
+  const [patientName, setPatientName] = useState<string | undefined>(
+    initFilters.patientName,
+  );
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -104,13 +96,13 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
 
   const handleApplyFilters = () => {
     const filters = {
-      startDate: startDate?.format('YYYY-MM-DD') || '',
-      endDate: endDate?.format('YYYY-MM-DD') || '',
+      startDate: dayjs(startDate).format('YYYY-MM-DD') || '',
+      endDate: dayjs(endDate).format('YYYY-MM-DD') || '',
       clinicId,
       timePeriod,
       totalDurationMin,
       totalDurationMax,
-      patientName: patientName.trim() ? patientName : undefined,
+      patientName: patientName?.trim() ? patientName : undefined,
       doctorId,
     };
 
@@ -163,28 +155,28 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     }
   }, [contextDoctors, contextClinics]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const initialStartDate = params.get('startDate');
-    const initialEndDate = params.get('endDate');
-    const initialClinicId = params.get('clinicId');
-    const initialTimePeriod = params.get('timePeriod');
-    const initialTotalDurationMin = params.get('totalDurationMin');
-    const initialTotalDurationMax = params.get('totalDurationMax');
-    const initialDoctorId = params.get('doctorId');
-    const initialPatientName = params.get('patientName');
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
+  //   const initialStartDate = params.get('startDate');
+  //   const initialEndDate = params.get('endDate');
+  //   const initialClinicId = params.get('clinicId');
+  //   const initialTimePeriod = params.get('timePeriod');
+  //   const initialTotalDurationMin = params.get('totalDurationMin');
+  //   const initialTotalDurationMax = params.get('totalDurationMax');
+  //   const initialDoctorId = params.get('doctorId');
+  //   const initialPatientName = params.get('patientName');
 
-    if (initialStartDate) setStartDate(dayjs(initialStartDate));
-    if (initialEndDate) setEndDate(dayjs(initialEndDate));
-    if (initialClinicId) setClinicId(initialClinicId);
-    if (initialTimePeriod) setTimePeriod(initialTimePeriod);
-    if (initialTotalDurationMin)
-      setTotalDurationMin(parseInt(initialTotalDurationMin));
-    if (initialTotalDurationMax)
-      setTotalDurationMax(parseInt(initialTotalDurationMax));
-    if (initialDoctorId) setDoctorId(initialDoctorId);
-    if (initialPatientName) setPatientName(initialPatientName);
-  }, [location.search]);
+  //   if (initialStartDate) setStartDate(dayjs(initialStartDate));
+  //   if (initialEndDate) setEndDate(dayjs(initialEndDate));
+  //   if (initialClinicId) setClinicId(initialClinicId);
+  //   if (initialTimePeriod) setTimePeriod(initialTimePeriod);
+  //   if (initialTotalDurationMin)
+  //     setTotalDurationMin(parseInt(initialTotalDurationMin));
+  //   if (initialTotalDurationMax)
+  //     setTotalDurationMax(parseInt(initialTotalDurationMax));
+  //   if (initialDoctorId) setDoctorId(initialDoctorId);
+  //   if (initialPatientName) setPatientName(initialPatientName);
+  // }, [location.search]);
 
   const filteredDurationOptionsForMax = useMemo(() => {
     return durationOptions.filter(
@@ -210,7 +202,9 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
             format="YYYY/MM/DD"
             defaultValue={dayjs().startOf('isoWeek')}
             onChange={(newValue) => {
-              setStartDate(newValue ? dayjs(newValue) : null);
+              setStartDate(
+                newValue ? dayjs(newValue).format('YYYY-MM-DD') : null,
+              );
             }}
           />
         </Grid>
@@ -221,7 +215,9 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
             format="YYYY/MM/DD"
             defaultValue={dayjs().endOf('isoWeek')}
             onChange={(newValue) => {
-              setEndDate(newValue ? dayjs(newValue) : null);
+              setEndDate(
+                newValue ? dayjs(newValue).format('YYYY-MM-DD') : null,
+              );
             }}
           />
         </Grid>
@@ -299,7 +295,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
         )}
         <Grid item xs={12} sm={2}>
           <PatientAutocomplete
-            value={patientName}
+            value={patientName || ''}
             onChange={(newValue) => setPatientName(newValue)}
           />
         </Grid>

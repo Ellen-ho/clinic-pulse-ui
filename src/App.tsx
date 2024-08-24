@@ -15,10 +15,15 @@ import FeedbackDetailPage from './app/private/containers/feedback/pages/Feedback
 import ConsultationReportPage from './app/private/containers/report/pages/ConsultationReportPage';
 import DashboardPage from './app/private/containers/dashboard/pages/DashboardPage';
 import FeedbackReportPage from './app/private/containers/report/pages/FeedbackReportPage';
-import AccountManagementPage from './app/private/containers/account/pages/AccountManagementPage';
+import AccountManagementPage from './app/private/containers/account/pages/ProfileAndAccountManagementPage';
+import ProfileAndAccountManagementPage from './app/private/containers/account/pages/ProfileAndAccountManagementPage';
+import useSocketNotification from './hooks/UseSocketNotification';
+import ReviewListPage from './app/private/containers/review/pages/ReviewListPage';
+import ReviewDetailPage from './app/private/containers/review/pages/ReviewDetailPage';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
+  useSocketNotification();
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -40,7 +45,12 @@ const App: React.FC = () => {
         <Route element={<ConsultationDetailPage />} path="/consultation/:id" />
         <Route element={<FeedbackListPage />} path="/feedback" />
         <Route element={<FeedbackDetailPage />} path="/feedback/:id" />
-        <Route element={<AccountManagementPage />} path="/account-management" />
+        <Route element={<ReviewListPage />} path="/review" />
+        <Route element={<ReviewDetailPage />} path="/review/:id" />
+        <Route
+          element={<ProfileAndAccountManagementPage />}
+          path="/account-management"
+        />
         <Route element={<SignUp />} path="/signup" />
       </Route>
       <Route element={<PublicRoutes />}>
@@ -48,6 +58,7 @@ const App: React.FC = () => {
       </Route>
       <Route element={<Navigate to="/signin" />} path="/" />
       <Route element={<NotFound />} path="" />
+      {/* <Route element={<Notification />} path="/notification/*" /> */}
     </Routes>
   );
 };

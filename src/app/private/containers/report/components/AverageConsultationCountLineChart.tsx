@@ -69,7 +69,6 @@ const AverageConsultationCountLineChart: React.FC<
           }));
         setChartData(formattedData);
 
-        // Added: Compute min and max values for the y-axis
         const maxCount = Math.max(
           ...formattedData.map((item) => item.averageCount),
         );
@@ -77,7 +76,6 @@ const AverageConsultationCountLineChart: React.FC<
           ...formattedData.map((item) => item.averageCount),
         );
 
-        // Added: Update Y-axis domain state
         setYAxisDomain([minCount - 3, maxCount + 3]);
       }
       setLoading(false);
