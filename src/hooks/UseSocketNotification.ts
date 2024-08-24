@@ -10,6 +10,9 @@ const useSocketNotification = () => {
   const APP_SERVER_URL = import.meta.env.VITE_APP_SERVER_URL;
 
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
     const socket = io(APP_SERVER_URL, {
       path: '/ws/notification',
       transports: ['websocket'],

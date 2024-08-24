@@ -45,7 +45,6 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
         currentUser,
       } as IGetConsultationRealTimeCountRequest);
     },
-    { refreshInterval: 5000 },
   );
 
   if (data?.timeSlotId.length === 0) {
