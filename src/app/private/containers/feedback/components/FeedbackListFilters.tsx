@@ -146,6 +146,27 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
     }
   }, [contextDoctors, contextClinics]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const initialStartDate = params.get('startDate');
+    const initialEndDate = params.get('endDate');
+    const initialClinicId = params.get('clinicId');
+    const initialTimePeriod = params.get('timePeriod') as
+      | TimePeriodType
+      | undefined;
+    const initialDoctorId = params.get('doctorId');
+    const initialPatientName = params.get('patientName');
+    const initialRating = params.get('feedbackRating');
+
+    if (initialStartDate) setStartDate(dayjs(initialStartDate));
+    if (initialEndDate) setEndDate(dayjs(initialEndDate));
+    if (initialClinicId) setClinicId(initialClinicId);
+    if (initialTimePeriod) setTimePeriod(initialTimePeriod);
+    if (initialDoctorId) setDoctorId(initialDoctorId);
+    if (initialPatientName) setPatientName(initialPatientName);
+    if (initialRating) setRating(parseInt(initialRating, 10));
+  }, [location.search]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={1} alignItems="center">
