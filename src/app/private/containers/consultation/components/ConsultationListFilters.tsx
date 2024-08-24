@@ -6,13 +6,10 @@ import {
   Autocomplete,
   CircularProgress,
   createFilterOptions,
+  Box,
 } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import dayjs from 'dayjs';
-import { getPatientNameAutoComplete } from '../../../../../services/PatientService';
+import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
 import PatientAutocomplete from '../../../../../components/PatientAutocomplete/PatientAutocomplete';
 import { TimePeriodType } from '../../../../../types/Share';
@@ -22,8 +19,9 @@ import { IClinics } from '../../../../../types/Clinics';
 import { getDoctorsFromCache } from '../../../../../utils/getDoctorsFromCache';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
 import { AuthContext } from '../../../../../context/AuthContext';
-import { UserRoleType } from '../../../../../types/Users';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 interface IConsultationListFiltersProps {
   onApply: (filters: {
