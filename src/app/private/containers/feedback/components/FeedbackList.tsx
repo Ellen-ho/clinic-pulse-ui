@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { IConsultationListItem } from '../../../../../types/Consultation';
-import { getConsultationList } from '../../../../../services/ConsultationService';
 import StickyHeadTable, {
   IColumn,
 } from '../../../../../components/table/StickyHeadTable';
@@ -36,7 +34,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [page, setPage] = useState<number>(
-    parseInt(queryParams.get('page') || '1', 10) - 1,
+    parseInt(queryParams.get('page') || '1', 10),
   );
   const [rowsPerPage, setRowsPerPage] = useState<number>(
     parseInt(queryParams.get('limit') || '10', 10),
@@ -120,7 +118,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     if (feedbackRating) params.set('feedbackRating', String(feedbackRating));
     if (doctorId) params.set('doctorId', doctorId);
     if (patientName) params.set('patientName', patientName);
-    params.set('page', String(page + 1));
+    params.set('page', String(page));
     params.set('limit', String(rowsPerPage));
 
     return params.toString();
@@ -147,19 +145,29 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
 
   const { data: feedbacks, totalCounts } = data || {};
 
+  const maxPage = totalCounts ? Math.ceil(totalCounts / rowsPerPage) : 1;
+  const effectivePage = Math.max(0, Math.min(page - 1, maxPage - 1));
+
   const handlePageChange = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    setPage(newPage + 1);
   };
 
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(Number(event.target.value));
-    setPage(0);
+    setPage(1);
   };
 
   const handleClickFeedback = (id: string) => {
-    navigate(`/feedback/${id}`);
+    navigate(`/feedback/${id}`, {
+      state: {
+        from: {
+          pathname: window.location.pathname,
+          search: window.location.search,
+        },
+      },
+    });
   };
 
   return (
@@ -168,7 +176,7 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
       columns={columns}
       data={feedbacks || []}
       count={totalCounts || 0}
-      page={page}
+      page={effectivePage}
       rowsPerPage={rowsPerPage}
       isLoading={isLoading}
       onPageChange={handlePageChange}
