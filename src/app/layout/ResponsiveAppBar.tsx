@@ -8,9 +8,15 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { UserRoleType } from '../../types/Users';
-import { Chip, Menu, MenuItem } from '@mui/material';
+import { Badge, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import { CommonWrapper } from './CommonWrapper.styled';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import ImageAvatar from '../../components/avatar/ImageAvatar';
+import MenuIcon from '@mui/icons-material/Menu';
+import { NotificationContext } from '../../context/NotificationContext';
+import { getNotificationHints } from '../../services/NotificationService';
+import useSWR from 'swr';
 
 interface IPageItem {
   title: string;
@@ -36,8 +42,12 @@ const topPages: IPage[] = [
   },
   {
     title: '反饋紀錄',
-    link: '/feedback',
+    link: '',
     permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
+    subMenu: [
+      { title: '問券反饋', link: '/feedback' },
+      { title: 'Google評論', link: '/review' },
+    ],
   },
   {
     title: '統計中心',
@@ -53,7 +63,7 @@ const topPages: IPage[] = [
     link: '',
     permission: [UserRoleType.ADMIN],
     subMenu: [
-      // { title: '人員清單', link: '' },
+      { title: '人員清單', link: '/account-management' },
       { title: '人員註冊', link: '/signup' },
     ],
   },
@@ -68,11 +78,16 @@ const ResponsiveAppBar: React.FC = () => {
   const { state, dispatch } = useContext(AuthContext);
   const isSignedIn = state.isSignedIn;
   const currentUserRole = state.currentUser?.role ?? UserRoleType.DOCTOR;
+  const avatar = state.currentUser?.avatar;
   const [currentMenu, setCurrentMenu] = useState<IPage | null>(null);
+  const { state: notificationState, dispatch: notificationDispatch } =
+    useContext(NotificationContext);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [profileMenuAnchorEl, setProfileMenuAnchorEl] =
+    useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleMenuClick = (
@@ -93,6 +108,14 @@ const ResponsiveAppBar: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchorEl(null);
+  };
+
   const handleNavigate = (link: string) => {
     navigate(link);
     handleClose();
@@ -106,6 +129,32 @@ const ResponsiveAppBar: React.FC = () => {
   if (!isSignedIn) {
     return null;
   }
+
+  const handleNotificationClick = async () => {
+    notificationDispatch({
+      type: 'UPDATE_NOTIFICATION',
+      payload: {
+        hasUnread: false,
+      },
+    });
+    navigate('/notification');
+  };
+
+  useSWR(
+    isSignedIn ? 'getNotificationHints' : null,
+    () => getNotificationHints(),
+    {
+      onSuccess: (data) => {
+        console.log(data.hasUnReadNotification);
+        notificationDispatch({
+          type: 'UPDATE_NOTIFICATION',
+          payload: {
+            hasUnread: data.hasUnReadNotification,
+          },
+        });
+      },
+    },
+  );
 
   return (
     <AppBar position="static">
@@ -186,10 +235,43 @@ const ResponsiveAppBar: React.FC = () => {
                     </MenuItem>
                   ))}
                 </Menu>
+                <IconButton
+                  sx={{ color: 'white' }}
+                  onClick={handleNotificationClick}
+                >
+                  <Badge
+                    color="warning"
+                    variant="dot"
+                    overlap="circular"
+                    invisible={!notificationState.hasUnread}
+                  >
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  sx={{ color: 'white' }}
+                  onClick={handleProfileMenuOpen}
+                >
+                  <ImageAvatar
+                    imageUrl={avatar}
+                    sx={{
+                      display: { xs: 'none', md: 'flex' },
+                    }}
+                  />
+                  <MenuIcon sx={{ display: { xs: 'flex', md: 'none' } }} />
+                </IconButton>
 
-                <Button onClick={handleSignOut} sx={{ color: 'white' }}>
+                <Menu
+                  anchorEl={profileMenuAnchorEl}
+                  open={Boolean(profileMenuAnchorEl)}
+                  onClose={handleProfileMenuClose}
+                >
+                  <MenuItem onClick={handleSignOut}>登出</MenuItem>
+                </Menu>
+
+                {/* <Button onClick={handleSignOut} sx={{ color: 'white' }}>
                   登出
-                </Button>
+                </Button> */}
               </Box>
             )}
           </Box>
