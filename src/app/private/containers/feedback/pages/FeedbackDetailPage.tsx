@@ -4,12 +4,24 @@ import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
 import FeedbackDetail from '../components/FeedbackDetail';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const FeedbackDetailPage: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { from } = location.state || {
+    from: { pathname: '/feedback', search: '' },
+  };
+
+  const handleBack = () => {
+    console.log('Navigating back to:', from.pathname + from.search);
+    navigate(from.pathname + from.search);
+  };
+
   return (
     <PrimaryPageContent>
       <CommonWrapper>
-        <SecondaryPageTop />
+        <SecondaryPageTop onBack={handleBack} />
         <Grid container spacing={2}>
           <Grid item xs={12} md={6} lg={6}>
             <FeedbackDetail />
