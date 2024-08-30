@@ -27,6 +27,10 @@ export interface IGetDoctorProfileResponse {
   updatedAt: Date;
 }
 
+interface IUploadAvatarImageResponse {
+  imageUrl: string;
+}
+
 export const getAllDoctors = async (): Promise<IGetAllDoctorsResponse> => {
   const response = await api.get<IGetAllDoctorsResponse>('/doctors');
   return response.data;
@@ -37,6 +41,25 @@ export const getDoctorProfile = async ({
 }: IGetDoctorProfileRequest): Promise<IGetDoctorProfileResponse> => {
   const response = await api.get<IGetDoctorProfileResponse>(
     `/doctors/${doctorId}`,
+  );
+  return response.data;
+};
+
+export const uploadAvatar = async (
+  imageFile: File,
+  doctorId: string,
+): Promise<IUploadAvatarImageResponse> => {
+  const formData = new FormData();
+  formData.append('avatar', imageFile);
+
+  const response = await api.post<IUploadAvatarImageResponse>(
+    `/doctors/upload-avatar/${doctorId}`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
   );
   return response.data;
 };
