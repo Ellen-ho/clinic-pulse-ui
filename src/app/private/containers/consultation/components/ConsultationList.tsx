@@ -15,7 +15,6 @@ import {
 import TreatmentTag from '../../../../../components/tag/TreatmentTag';
 import GenderTag from '../../../../../components/tag/GenderTag';
 import { Typography } from '@mui/material';
-import dayjs from 'dayjs';
 import { FilterValues } from '../pages/ConsultationListPage';
 
 interface IConsultationListProps {

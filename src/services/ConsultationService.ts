@@ -6,7 +6,11 @@ import {
   TimePeriodType,
   TreatmentType,
 } from '../types/Share';
-import { OnsiteCancelReasonType } from '../types/Consultation';
+import {
+  ConsultationStatus,
+  OnsiteCancelReasonType,
+} from '../types/Consultation';
+import { RoomNumberType } from '../types/ConsultationRoom';
 
 export interface IGetSingleConsultationRequest {
   consultationId: string;
@@ -205,7 +209,7 @@ export interface IGetAverageWaitingTimeResponse {
 export interface IGetConsultationRealTimeCountRequest {
   query: {
     clinicId?: string;
-    consultationRoomNumber?: string;
+    consultationRoomNumber?: RoomNumberType;
     doctorId?: string;
   };
 }
@@ -218,6 +222,51 @@ export interface IGetConsultationRealTimeCountResponse {
   waitForNeedleRemovedCount: number;
   waitForMedicineCount: number;
   completedCount: number;
+  onsiteCancelCount: number;
+  clinicId: string | Array<{ clinicId: string }>;
+  consultationRoomNumber:
+    | RoomNumberType
+    | Array<{ consultationRoomNumber: RoomNumberType }>;
+  timePeriod: TimePeriodType | Array<{ timePeriod: string }> | null;
+}
+
+export interface IGetConsultationRealTimeListRequest {
+  query: {
+    clinicId?: string;
+    consultationRoomNumber?: RoomNumberType;
+    page: number;
+    limit: number;
+  };
+}
+
+export interface IGetConsultationRealTimeListResponse {
+  data: Array<{
+    id: string;
+    isOnsiteCanceled: boolean;
+    consultationNumber: number;
+    doctor: {
+      firstName: string;
+      lastName: string;
+    };
+    patient: {
+      firstName: string;
+      lastName: string;
+      gender: GenderType;
+      age: number;
+    };
+    status: ConsultationStatus;
+    timeSlotId: string;
+    clinicId: string;
+    consultationRoomNumber: RoomNumberType;
+  }>;
+  pagination: {
+    pages: number[];
+    totalPage: number;
+    currentPage: number;
+    prev: number;
+    next: number;
+  };
+  totalCounts: number;
 }
 
 export const getConsultationList = async ({
@@ -289,6 +338,16 @@ export const getConsultationRealTimeCount = async (
   const queries = queryString.stringify(data.query);
   const response = await api.get<IGetConsultationRealTimeCountResponse>(
     `/consultations/real_time_counts?${queries}`,
+  );
+  return response.data;
+};
+
+export const getConsultationRealTimeList = async (
+  data: IGetConsultationRealTimeListRequest,
+): Promise<IGetConsultationRealTimeListResponse> => {
+  const queries = queryString.stringify(data.query);
+  const response = await api.get<IGetConsultationRealTimeListResponse>(
+    `/consultations/real_time_lists?${queries}`,
   );
   return response.data;
 };
