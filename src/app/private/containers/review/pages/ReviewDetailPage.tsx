@@ -14,7 +14,6 @@ const ReviewDetailPage: React.FC = () => {
   };
 
   const handleBack = () => {
-    console.log('Navigating back to:', from.pathname + from.search);
     navigate(from.pathname + from.search);
   };
 
