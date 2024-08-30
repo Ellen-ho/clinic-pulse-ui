@@ -1,9 +1,10 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { AuthContext } from '../../../../../context/AuthContext';
 import useSWR from 'swr';
 import {
   getConsultationRealTimeCount,
   IGetConsultationRealTimeCountRequest,
+  IGetConsultationRealTimeCountResponse,
 } from '../../../../../services/ConsultationService';
 import BasicCard from '../../../../../components/card/BasicCard';
 import { Box, Typography } from '@mui/material';
@@ -12,16 +13,34 @@ import NoDataFound from '../../../../../components/signs/NoDataFound';
 import { FaRegCalendarTimes } from 'react-icons/fa';
 import DataLoading from '../../../../../components/signs/DataLoading';
 import { UserRoleType } from '../../../../../types/Users';
+import useRealTimeSocket from '../../../../../hooks/UseRealTimeSocket';
+import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
+import { TimePeriodType } from '../../../../../types/Share';
+import { RoomNumberType } from '../../../../../types/ConsultationRoom';
 
 interface IRealConsultationStatisticProps {
   clinicId?: string;
-  consultationRoomNumber?: string;
+  consultationRoomNumber?: RoomNumberType;
 }
 
 const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
   clinicId,
   consultationRoomNumber,
 }) => {
+  const [realTimeData, setRealTimeData] =
+    useState<IGetConsultationRealTimeCountResponse>({
+      timeSlotId: [],
+      waitForConsultationCount: 0,
+      waitForBedAssignedCount: 0,
+      waitForAcupunctureTreatmentCount: 0,
+      waitForNeedleRemovedCount: 0,
+      waitForMedicineCount: 0,
+      completedCount: 0,
+      onsiteCancelCount: 0,
+      clinicId: [],
+      consultationRoomNumber: [],
+      timePeriod: null,
+    });
   const title = '即時資料';
   const { state } = useContext(AuthContext);
   const currentUser = state.currentUser;
@@ -30,7 +49,9 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
     currentUser?.role === UserRoleType.DOCTOR ||
     (currentUser?.role === UserRoleType.ADMIN && clinicId !== undefined);
 
-  const { data, isLoading } = useSWR(
+  useRealTimeSocket({ clinicId, consultationRoomNumber, setRealTimeData });
+
+  const { isLoading } = useSWR(
     shouldFetch
       ? ['getConsultationRealTimeCount', clinicId, consultationRoomNumber]
       : null,
@@ -45,9 +66,45 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
         currentUser,
       } as IGetConsultationRealTimeCountRequest);
     },
+    {
+      onSuccess: (data) => {
+        const {
+          timeSlotId,
+          waitForConsultationCount,
+          waitForBedAssignedCount,
+          waitForAcupunctureTreatmentCount,
+          waitForNeedleRemovedCount,
+          waitForMedicineCount,
+          completedCount,
+          onsiteCancelCount,
+          clinicId,
+          consultationRoomNumber,
+          timePeriod,
+        } = data;
+
+        const validTimePeriod =
+          Array.isArray(timePeriod) && timePeriod.length > 0
+            ? (timePeriod[0].timePeriod as TimePeriodType)
+            : (timePeriod as TimePeriodType);
+
+        setRealTimeData({
+          timeSlotId,
+          waitForConsultationCount,
+          waitForBedAssignedCount,
+          waitForAcupunctureTreatmentCount,
+          waitForNeedleRemovedCount,
+          waitForMedicineCount,
+          completedCount,
+          onsiteCancelCount,
+          clinicId,
+          consultationRoomNumber,
+          timePeriod: validTimePeriod,
+        });
+      },
+    },
   );
 
-  if (data?.timeSlotId.length === 0) {
+  if (realTimeData?.timeSlotId.length === 0) {
     return (
       <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
         <BasicCard title={title} sx={{ position: 'relative', height: '100%' }}>
@@ -73,7 +130,17 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
       <BasicCard title={title} sx={{ height: '100%' }}>
-        {!data ? (
+        {typeof realTimeData.timePeriod === 'string' && (
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}
+          >
+            <Typography variant="subtitle1" color="textSecondary">
+              當前門診時段：
+            </Typography>
+            <ConsultationTimePeriodTag type={realTimeData.timePeriod} />
+          </Box>
+        )}
+        {!realTimeData ? (
           <DataLoading />
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
@@ -92,7 +159,7 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               >
                 <CountUp
                   start={0}
-                  end={data?.waitForConsultationCount || 0}
+                  end={realTimeData?.waitForConsultationCount || 0}
                   duration={0.6}
                 />
               </Typography>
@@ -112,7 +179,7 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               >
                 <CountUp
                   start={0}
-                  end={data?.waitForBedAssignedCount || 0}
+                  end={realTimeData?.waitForBedAssignedCount || 0}
                   duration={0.5}
                 />
               </Typography>
@@ -132,7 +199,7 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               >
                 <CountUp
                   start={0}
-                  end={data?.waitForAcupunctureTreatmentCount || 0}
+                  end={realTimeData?.waitForAcupunctureTreatmentCount || 0}
                   duration={0.5}
                 />
               </Typography>
@@ -152,7 +219,7 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               >
                 <CountUp
                   start={0}
-                  end={data?.waitForNeedleRemovedCount || 0}
+                  end={realTimeData?.waitForNeedleRemovedCount || 0}
                   duration={0.6}
                 />
               </Typography>
@@ -172,7 +239,7 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               >
                 <CountUp
                   start={0}
-                  end={data?.waitForMedicineCount || 0}
+                  end={realTimeData?.waitForMedicineCount || 0}
                   duration={0.6}
                 />
               </Typography>
@@ -192,7 +259,27 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               >
                 <CountUp
                   start={0}
-                  end={data?.completedCount || 0}
+                  end={realTimeData?.completedCount || 0}
+                  duration={0.6}
+                />
+              </Typography>
+            </Box>
+            <Box>
+              <Typography
+                variant="subtitle1"
+                color={'text.secondary'}
+                lineHeight={'1rem'}
+              >
+                退掛人數
+              </Typography>
+              <Typography
+                variant="h3"
+                color={'text.primary'}
+                lineHeight={'3rem'}
+              >
+                <CountUp
+                  start={0}
+                  end={realTimeData?.onsiteCancelCount || 0}
                   duration={0.6}
                 />
               </Typography>

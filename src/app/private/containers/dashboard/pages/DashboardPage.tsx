@@ -6,6 +6,8 @@ import { UserRoleType } from '../../../../../types/Users';
 import { AuthContext } from '../../../../../context/AuthContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import RealTimeList from '../components/RealTimeList';
+import { RoomNumberType } from '../../../../../types/ConsultationRoom';
 
 export const clinics = [
   { label: '台北院區', id: '690d0ea3-9f8d-4143-b160-0661a003bf08' },
@@ -24,7 +26,7 @@ export const consultationRooms = [
 
 interface IDashboardFilterValues {
   clinicId?: string;
-  consultationRoomNumber?: string;
+  consultationRoomNumber?: RoomNumberType;
 }
 
 const DashboardPage: React.FC = () => {
@@ -48,6 +50,7 @@ const DashboardPage: React.FC = () => {
         </Typography>
         {!isDoctor && <RealTimeFilters onApply={handleApplyFilters} />}
         <RealConsultationStatistic {...filters} />
+        <RealTimeList {...filters} onApply={handleApplyFilters} />
       </CommonWrapper>
     </PrimaryPageContent>
   );
