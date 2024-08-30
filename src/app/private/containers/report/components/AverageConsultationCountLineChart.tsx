@@ -108,13 +108,7 @@ const AverageConsultationCountLineChart: React.FC<
         margin={{ top: 5, right: 30, left: 20, bottom: 10 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="date"
-          // label={{
-          //   value: '時間',
-          //   position: 'insideBottomRight',
-          // }}
-        />
+        <XAxis dataKey="date" />
         <YAxis
           domain={yAxisDomain}
           label={{
