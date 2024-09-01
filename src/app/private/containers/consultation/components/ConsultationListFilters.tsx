@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
 import PatientAutocomplete from '../../../../../components/PatientAutocomplete/PatientAutocomplete';
@@ -178,29 +177,6 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     }
   }, [contextDoctors, contextClinics]);
 
-  // useEffect(() => {
-  //   const params = new URLSearchParams(location.search);
-  //   const initialStartDate = params.get('startDate');
-  //   const initialEndDate = params.get('endDate');
-  //   const initialClinicId = params.get('clinicId');
-  //   const initialTimePeriod = params.get('timePeriod');
-  //   const initialTotalDurationMin = params.get('totalDurationMin');
-  //   const initialTotalDurationMax = params.get('totalDurationMax');
-  //   const initialDoctorId = params.get('doctorId');
-  //   const initialPatientName = params.get('patientName');
-
-  //   if (initialStartDate) setStartDate(dayjs(initialStartDate));
-  //   if (initialEndDate) setEndDate(dayjs(initialEndDate));
-  //   if (initialClinicId) setClinicId(initialClinicId);
-  //   if (initialTimePeriod) setTimePeriod(initialTimePeriod);
-  //   if (initialTotalDurationMin)
-  //     setTotalDurationMin(parseInt(initialTotalDurationMin));
-  //   if (initialTotalDurationMax)
-  //     setTotalDurationMax(parseInt(initialTotalDurationMax));
-  //   if (initialDoctorId) setDoctorId(initialDoctorId);
-  //   if (initialPatientName) setPatientName(initialPatientName);
-  // }, [location.search]);
-
   const filteredDurationOptionsForMax = useMemo(() => {
     return durationOptions.filter(
       (option) =>
@@ -218,35 +194,13 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={1} alignItems="center">
-        <Grid item xs={12} sm={3}>
-          <BasicDateRangePicker setDateRange={handleStartAndEndDate} />
-        </Grid>
-        {/* <Grid item xs={12} sm={2}>
-          <DatePicker
-            sx={{ width: '100%' }}
-            label="起始時間"
-            format="YYYY/MM/DD"
-            defaultValue={dayjs().startOf('isoWeek')}
-            onChange={(newValue) => {
-              setStartDate(
-                newValue ? dayjs(newValue).format('YYYY-MM-DD') : null,
-              );
-            }}
+        <Grid item xs={12} sm={4}>
+          <BasicDateRangePicker
+            setDateRange={handleStartAndEndDate}
+            initStart={dayjs().startOf('isoWeek')}
+            initEnd={dayjs().endOf('isoWeek')}
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
-          <DatePicker
-            sx={{ width: '100%' }}
-            label="終止時間"
-            format="YYYY/MM/DD"
-            defaultValue={dayjs().endOf('isoWeek')}
-            onChange={(newValue) => {
-              setEndDate(
-                newValue ? dayjs(newValue).format('YYYY-MM-DD') : null,
-              );
-            }}
-          />
-        </Grid> */}
         <Grid item xs={12} sm={2}>
           <Autocomplete
             options={clinics}

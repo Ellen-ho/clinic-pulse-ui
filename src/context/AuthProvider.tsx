@@ -13,6 +13,7 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
         isSignedIn: true,
         token: action.payload.token,
         currentUser: action.payload.currentUser,
+        permissions: action.payload.permissions,
         doctorId: action.payload.doctorId,
       };
       localStorage.setItem('auth', JSON.stringify(udpatedState));
@@ -26,6 +27,22 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
         isSignedIn: false,
         token: null,
         currentUser: null,
+        permissions: {
+          id: '',
+          role: 'DOCTOR',
+          dashboardRead: false,
+          consultationRead: false,
+          feedbackSurveyRead: false,
+          onlineReviewRead: false,
+          reportCenterRead: false,
+          timeSlotRead: false,
+          staffManagementRead: false,
+          staffManagementEdit: false,
+          profileRead: false,
+          profileEdit: false,
+          createdAt: '',
+          updatedAt: '',
+        },
         doctorId: null,
       };
       localStorage.setItem('auth', JSON.stringify(udpatedState));

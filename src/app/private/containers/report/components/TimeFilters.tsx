@@ -38,9 +38,6 @@ interface ITimeSelectionProps {
     timePeriod?: string;
     doctorId?: string;
   }) => void;
-  initialYear: string;
-  initialMonth: string;
-  initialWeek: string;
 }
 
 const timePeriodMappings = {
@@ -55,12 +52,10 @@ const timePeriodOptions = [
   { label: '晚診', value: timePeriodMappings['晚診'] },
 ];
 
-const TimeFilters: React.FC<ITimeSelectionProps> = ({
-  onApply,
-  initialYear,
-  initialMonth,
-  initialWeek,
-}) => {
+const TimeFilters: React.FC<ITimeSelectionProps> = ({ onApply }) => {
+  const currentYear = dayjs().year();
+  const currentMonth = dayjs().month() + 1;
+  const currentWeek = dayjs().isoWeek();
   const { state } = useContext(AuthContext);
   const isDoctor = state.doctorId != null;
   const { doctors: contextDoctors, clinics: contextClinics } =
@@ -68,17 +63,16 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
   const [doctors, setDoctors] = useState<IDoctors[]>([]);
   const [clinics, setClinics] = useState<IClinics[]>([]);
   const [value, setValue] = useState<string | null>('week');
-  const [selectedYear, setSelectedYear] = useState(initialYear);
-  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
-  const [selectedWeek, setSelectedWeek] = useState(initialWeek);
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  const [selectedMonth, setSelectedMonth] = useState(
+    currentMonth.toString().padStart(2, '0'),
+  );
+  const [selectedWeek, setSelectedWeek] = useState(currentWeek.toString());
   const [timePeriod, setTimePeriod] = useState<string | undefined>(undefined);
   const [doctorId, setDoctorId] = useState<string | undefined>(
     state.doctorId || undefined,
   );
   const [clinicId, setClinicId] = useState<string | undefined>(undefined);
-  const currentYear = dayjs().year();
-  const currentMonth = dayjs().month() + 1;
-  const currentWeek = dayjs().isoWeek();
 
   const years = Array.from(
     { length: currentYear - 2022 + 1 },
@@ -111,11 +105,12 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({
         setSelectedMonth('1');
         setSelectedWeek('1');
       } else if (newValue === 'month') {
+        setSelectedMonth(currentMonth.toString().padStart(2, '0'));
         setSelectedWeek('1');
       } else if (newValue === 'week') {
-        setSelectedYear(initialYear);
-        setSelectedMonth(initialMonth);
-        setSelectedWeek(initialWeek);
+        setSelectedYear(currentYear.toString());
+        setSelectedMonth(currentMonth.toString().padStart(2, '0'));
+        setSelectedWeek(currentWeek.toString());
       }
     }
   };

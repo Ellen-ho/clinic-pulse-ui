@@ -17,7 +17,10 @@ import {
 } from '@mui/material';
 import PrimaryPageTop from '../../../../layout/PrimaryPageTop';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
-import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import {
+  CommonWrapper,
+  NarrowCommonWrapper,
+} from '../../../../layout/CommonWrapper.styled';
 import { dateFormatter } from '../../../../../utils/dateFormatter';
 import useSWR from 'swr';
 import {
@@ -28,16 +31,13 @@ import {
   readAllNotifications,
 } from '../../../../../services/NotificationService';
 import React, { useContext, useState } from 'react';
-
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
 import NoDataFound from '../../../../../components/signs/NoDataFound';
 import { NotificationContext } from '../../../../../context/NotificationContext';
 import NotificationIcons from '../components/NotificationIcons';
 import { useNavigate } from 'react-router-dom';
 import { NotificationType } from '../../../../../types/Notifications';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MessageIcon from '@mui/icons-material/Message';
 
 const NotificationList: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -110,6 +110,11 @@ const NotificationList: React.FC = () => {
         navigate(`/review/${referenceId}`);
         break;
       case NotificationType.ONSITE_CANCELLATION:
+      case NotificationType.ABNORMAL_CONSULTATION_WAIT_TIME:
+      case NotificationType.ABNORMAL_BED_WAIT_TIME:
+      case NotificationType.ABNORMAL_ACUPUNCTURE_WAIT_TIME:
+      case NotificationType.ABNORMAL_NEEDLE_REMOVAL_WAIT_TIME:
+      case NotificationType.ABNORMAL_MEDICATION_WAIT_TIME:
         navigate(`/consultation/${referenceId}`);
         break;
     }
@@ -117,7 +122,7 @@ const NotificationList: React.FC = () => {
 
   return (
     <PrimaryPageContent>
-      <CommonWrapper>
+      <NarrowCommonWrapper>
         <PrimaryPageTop pageTitle={'通知列表'} />
         <Card>
           <CardContent>
@@ -148,14 +153,15 @@ const NotificationList: React.FC = () => {
                 </MenuItem>
               </Menu>
             </Box>
-            <List
-              sx={{
-                width: '100%',
-                bgcolor: 'background.paper',
-              }}
-            >
-              {data?.data && data?.data.length > 0 ? (
-                data?.data.map((notification) => (
+
+            {data?.data && data?.data.length > 0 ? (
+              <List
+                sx={{
+                  width: '100%',
+                  bgcolor: 'background.paper',
+                }}
+              >
+                {data?.data.map((notification) => (
                   <>
                     <Box
                       key={notification.id}
@@ -204,14 +210,13 @@ const NotificationList: React.FC = () => {
                       <Divider />
                     </Box>
                   </>
-                ))
-              ) : (
-                <NoDataFound
-                  icon={<MessageIcon />}
-                  label="目前沒有通知訊息"
-                ></NoDataFound>
-              )}
-            </List>
+                ))}
+              </List>
+            ) : (
+              <Box sx={{ position: 'relative', minHeight: '200px' }}>
+                <NoDataFound label="目前沒有通知訊息" />
+              </Box>
+            )}
           </CardContent>
         </Card>
         <div
@@ -229,7 +234,7 @@ const NotificationList: React.FC = () => {
             }}
           />
         </div>
-      </CommonWrapper>
+      </NarrowCommonWrapper>
     </PrimaryPageContent>
   );
 };

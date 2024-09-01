@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { UserRoleType } from '../types/Users';
+import { IPermission, UserRoleType } from '../types/Users';
 
 export interface AuthState {
   isSignedIn: boolean;
@@ -9,6 +9,7 @@ export interface AuthState {
     role: UserRoleType;
     avatar: string | null;
   } | null;
+  permissions: IPermission;
   doctorId: string | null;
 }
 
@@ -22,6 +23,7 @@ export type AuthAction =
           role: UserRoleType;
           avatar: string | null;
         };
+        permissions: IPermission;
         doctorId: string;
       };
     }
@@ -43,6 +45,22 @@ export const initialState = {
   isSignedIn: false,
   token: null,
   currentUser: null,
+  permissions: {
+    id: '',
+    role: 'DOCTOR',
+    dashboardRead: false,
+    consultationRead: false,
+    feedbackSurveyRead: false,
+    onlineReviewRead: false,
+    reportCenterRead: false,
+    timeSlotRead: false,
+    staffManagementRead: false,
+    staffManagementEdit: false,
+    profileRead: false,
+    profileEdit: false,
+    createdAt: '',
+    updatedAt: '',
+  },
   doctorId: null,
 };
 

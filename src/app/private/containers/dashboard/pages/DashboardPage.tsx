@@ -1,8 +1,7 @@
 import { useCallback, useContext, useState } from 'react';
-import { Container, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import RealConsultationStatistic from '../components/RealTimePatientCount';
 import RealTimeFilters from '../components/RealTimeFilters';
-import { UserRoleType } from '../../../../../types/Users';
 import { AuthContext } from '../../../../../context/AuthContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
@@ -49,8 +48,14 @@ const DashboardPage: React.FC = () => {
           即時看診資訊
         </Typography>
         {!isDoctor && <RealTimeFilters onApply={handleApplyFilters} />}
-        <RealConsultationStatistic {...filters} />
-        <RealTimeList {...filters} onApply={handleApplyFilters} />
+        <Grid container spacing={2} sx={{ height: '100%' }}>
+          <Grid item xs={12} md={12} lg={6}>
+            <RealConsultationStatistic {...filters} />
+          </Grid>
+          <Grid item xs={12} md={12} lg={6}>
+            <RealTimeList {...filters} onApply={handleApplyFilters} />
+          </Grid>
+        </Grid>
       </CommonWrapper>
     </PrimaryPageContent>
   );

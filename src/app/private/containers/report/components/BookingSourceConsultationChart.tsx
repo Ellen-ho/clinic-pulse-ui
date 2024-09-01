@@ -11,22 +11,23 @@ import {
   ComposedChart,
 } from 'recharts';
 import useSWR from 'swr';
-import { getConsultationOnsiteCanceledAndBooking } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import CenterText from '../../../../../components/box/CenterText';
 import { Box } from '@mui/material';
 import DataLoading from '../../../../../components/signs/DataLoading';
+import {
+  getConsultationBookingCountAndRate,
+  getConsultationOnsiteCanceledCountAndRate,
+} from '../../../../../services/ConsultationService';
 
-interface ICanceledAndBookingChartData {
+interface IBookingChartData {
   date: string;
   onlineBookingCount: number;
-  onsiteCancelCount: number;
   consultationCount: number;
   onlineBookingRate: number;
-  onsiteCancelRate: number;
 }
 
-interface ICanceledAndBookingProps {
+interface IBookingSourceConsultationChartProps {
   startDate: string;
   endDate: string;
   clinicId?: string;
@@ -35,17 +36,10 @@ interface ICanceledAndBookingProps {
   granularity?: Granularity;
 }
 
-const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
-  startDate,
-  endDate,
-  clinicId,
-  doctorId,
-  timePeriod,
-  granularity,
-}) => {
-  const [chartData, setChartData] = useState<ICanceledAndBookingChartData[]>(
-    [],
-  );
+const BookingSourceConsultationChart: React.FC<
+  IBookingSourceConsultationChartProps
+> = ({ startDate, endDate, clinicId, doctorId, timePeriod, granularity }) => {
+  const [chartData, setChartData] = useState<IBookingChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [yAxisDomainLeft, setYAxisDomainLeft] = useState<[number, number]>([
@@ -69,8 +63,8 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
   }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
   const { data, error } = useSWR(
-    `GetConsultationOnsiteCanceledAndBooking?${queryString}`,
-    () => getConsultationOnsiteCanceledAndBooking({ queryString }),
+    `GetConsultationBookingCountAndRate?${queryString}`,
+    () => getConsultationBookingCountAndRate({ queryString }),
   );
 
   useEffect(() => {
@@ -84,14 +78,14 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
 
         const maxCountLeft = Math.max(
           ...data.data.map((item) =>
-            Math.max(item.onlineBookingCount, item.onsiteCancelCount),
+            Math.max(item.onlineBookingCount, item.onlineBookingCount),
           ),
         );
         const minCountLeft = 0;
 
         const maxCountRight = Math.max(
           ...data.data.map((item) =>
-            Math.max(item.onlineBookingRate, item.onsiteCancelRate),
+            Math.max(item.onlineBookingRate, item.onlineBookingRate),
           ),
         );
         const minCountRight = 0;
@@ -154,22 +148,12 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
           orientation="right"
           stroke="#82ca9d"
         />
-
-        {/* <YAxis yAxisId="left" orientation="left" stroke="#8884d8" /> */}
-        {/* <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" /> */}
         <Tooltip />
         <Legend />
         <Bar
           yAxisId="left"
           dataKey="onlineBookingCount"
           name="線上預約人數"
-          barSize={20}
-          fill="#413ea0"
-        />
-        <Bar
-          yAxisId="left"
-          dataKey="onsiteCancelCount"
-          name="退掛號人數"
           barSize={20}
           fill="#009596"
         />
@@ -178,13 +162,6 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
           type="monotone"
           dataKey="onlineBookingRate"
           name="線上預約率"
-          stroke="#8884d8"
-        />
-        <Line
-          yAxisId="right"
-          type="monotone"
-          dataKey="onsiteCancelRate"
-          name="退掛號率"
           stroke="#82ca9d"
         />
       </ComposedChart>
@@ -192,4 +169,4 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
   );
 };
 
-export default CanceledAndBookingLineChart;
+export default BookingSourceConsultationChart;

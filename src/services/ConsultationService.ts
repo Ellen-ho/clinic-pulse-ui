@@ -107,6 +107,16 @@ export interface IGetAverageConsultationCountRequest {
 }
 
 export interface IGetAverageConsultationCountResponse {
+  lastTotalCount: number;
+  lastAverageCount: number;
+  lastTotalSlots: number;
+  compareTotalCount: number;
+  compareAverageCount: number;
+  compareSlots: number;
+  isTotalGetMore: boolean;
+  isAverageGetMore: boolean;
+  compareTotalRate: number;
+  compareAverageRate: number;
   totalConsultations: number;
   totalSlots: number;
   averagePatientPerSlot: number;
@@ -118,7 +128,7 @@ export interface IGetAverageConsultationCountResponse {
   }>;
 }
 
-export interface IGetConsultationOnsiteCanceledAndBookingRequest {
+export interface IGetConsultationOnsiteCanceledCountAndRateRequest {
   startDate: string;
   endDate: string;
   clinicId?: string;
@@ -127,19 +137,78 @@ export interface IGetConsultationOnsiteCanceledAndBookingRequest {
   granularity?: Granularity;
 }
 
-export interface IGetConsultationOnsiteCanceledAndBookingResponse {
+export interface IGetConsultationOnsiteCanceledCountAndRateResponse {
+  lastConsultations: number;
+  lastConsultationWithOnsiteCancel: number;
+  lastOnsiteCancelRate: number;
+  totalConsultations: number;
+  consultationWithOnsiteCancel: number;
+  onsiteCancelRate: number;
+  compareConsultations: number;
+  compareConsultationWithOnsiteCancel: number;
+  compareOsiteCancelRates: number;
+  isCutDown: boolean;
+  data: Array<{
+    date: string;
+    onsiteCancelCount: number;
+    consultationCount: number;
+    onsiteCancelRate: number;
+  }>;
+}
+
+export interface IGetConsultationBookingCountAndRateRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  doctorId?: string;
+  timePeriod?: TimePeriodType;
+  granularity?: Granularity;
+}
+
+export interface IGetConsultationBookingCountAndRateResponse {
+  lastConsultations: number;
+  lastConsultationWithBooking: number;
+  lastConsiteBookingRate: number;
   totalConsultations: number;
   consultationWithOnlineBooking: number;
-  consultationWithOnsiteCancel: number;
   onlineBookingRate: number;
-  onsiteCancelRate: number;
+  compareConsultations: number;
+  compareConsultationWithBooking: number;
+  compareBookingRates: number;
+  isGetMore: boolean;
   data: Array<{
     date: string;
     onlineBookingCount: number;
-    onsiteCancelCount: number;
     consultationCount: number;
     onlineBookingRate: number;
-    onsiteCancelRate: number;
+  }>;
+}
+
+export interface IGetFirstTimeConsultationCountAndRateRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  timePeriod?: TimePeriodType;
+  doctorId?: string;
+  granularity?: Granularity;
+}
+
+export interface IGetFirstTimeConsultationCountAndRateResponse {
+  lastConsultations: number;
+  lastFirstTimeConsultationCount: number;
+  lastFirstTimeConsultationRate: number;
+  firstTimeConsultationCount: number;
+  firstTimeConsultationRate: number;
+  totalConsultations: number;
+  compareConsultations: number;
+  compareFirstTimeConsultation: number;
+  compareFirstTimeRates: number;
+  isGetMore: boolean;
+  data: Array<{
+    date: string;
+    firstTimeCount: number;
+    consultationCount: number;
+    firstTimeRate: number;
   }>;
 }
 
@@ -153,6 +222,17 @@ export interface IGetDifferentTreatmentConsultationRequest {
 }
 
 export interface IGetDifferentTreatmentConsultationResponse {
+  lastTotalConsultations: number;
+  lastTotalConsultationWithAcupuncture: number;
+  lastTotalConsultationWithMedicine: number;
+  lastTotalConsultationWithBothTreatment: number;
+  lastTotalOnlyAcupunctureCount: number;
+  lastTotalOnlyMedicineCount: number;
+  lastTotalAcupunctureRate: number;
+  lastTotalMedicineRate: number;
+  lastOnlyAcupunctureRate: number;
+  lastOnlyMedicineRate: number;
+  lastBothTreatmentRate: number;
   totalConsultations: number;
   totalConsultationWithAcupuncture: number;
   totalConsultationWithMedicine: number;
@@ -164,6 +244,22 @@ export interface IGetDifferentTreatmentConsultationResponse {
   totalOnlyAcupunctureRate: number;
   totalOnlyMedicineRate: number;
   totalBothTreatmentRate: number;
+  compareTotalConsultations: number;
+  compareTotalConsultationWithAcupuncture: number;
+  compareTotalConsultationWithMedicine: number;
+  compareTotalConsultationWithBothTreatment: number;
+  compareTotalOnlyAcupunctureCount: number;
+  compareTotalOnlyMedicineCount: number;
+  compareTotalAcupunctureRate: number;
+  compareTotalMedicineRate: number;
+  compareTotalOnlyAcupunctureRate: number;
+  compareTotalOnlyMedicineRate: number;
+  compareTotalBothTreatmentRate: number;
+  isWithAcupunctureGetMore: boolean;
+  isWithMedicineGetMore: boolean;
+  isWithBothGetMore: boolean;
+  isOnlyAcupunctureGetMore: boolean;
+  isOnlyMedicineGetMore: boolean;
   data: Array<{
     date: string;
     consultationCount: number;
@@ -191,11 +287,31 @@ export interface IGetAverageWaitingTimeRequest {
 }
 
 export interface IGetAverageWaitingTimeResponse {
+  lastAverageConsultationWait: number;
+  lastAverageBedAssignmentWait: number;
+  lastAverageAcupunctureWait: number;
+  lastAverageNeedleRemovalWait: number;
+  lastAverageMedicationWait: number;
   totalAverageConsultationWait: number;
   totalAverageBedAssignmentWait: number;
   totalAverageAcupunctureWait: number;
   totalAverageNeedleRemovalWait: number;
   totalAverageMedicationWait: number;
+  compareAverageConsultationWait: number;
+  compareAverageBedAssignmentWait: number;
+  compareAverageAcupunctureWait: number;
+  compareAverageNeedleRemovalWait: number;
+  compareAverageMedicationWait: number;
+  isAverageConsultationWaitCutDown: boolean;
+  isAverageBedAssignmentWaitCutDown: boolean;
+  isAverageAcupunctureWaitCutDown: boolean;
+  isAverageNeedleRemovalWaitCutDown: boolean;
+  isAverageMedicationWaitCutDown: boolean;
+  compareAverageConsultationWaitRate: number;
+  compareAverageBedAssignmentWaitRate: number;
+  compareAverageAcupunctureWaitRate: number;
+  compareAverageNeedleRemovalWaitRate: number;
+  compareAverageMedicationWaitRate: number;
   data: Array<{
     date: string;
     averageConsultationWait: number;
@@ -309,15 +425,37 @@ export const getDifferentTreatmentConsultation = async ({
   return response.data;
 };
 
-export const getConsultationOnsiteCanceledAndBooking = async ({
+export const getConsultationOnsiteCanceledCountAndRate = async ({
   queryString,
 }: {
   queryString: string;
-}): Promise<IGetConsultationOnsiteCanceledAndBookingResponse> => {
+}): Promise<IGetConsultationOnsiteCanceledCountAndRateResponse> => {
   const response =
-    await api.get<IGetConsultationOnsiteCanceledAndBookingResponse>(
-      `/consultations/canceled_and_booking?${queryString}`,
+    await api.get<IGetConsultationOnsiteCanceledCountAndRateResponse>(
+      `/consultations/canceled?${queryString}`,
     );
+  return response.data;
+};
+
+export const getConsultationBookingCountAndRate = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetConsultationBookingCountAndRateResponse> => {
+  const response = await api.get<IGetConsultationBookingCountAndRateResponse>(
+    `/consultations/booking?${queryString}`,
+  );
+  return response.data;
+};
+
+export const getFirstTimeConsultationCountAndRate = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetFirstTimeConsultationCountAndRateResponse> => {
+  const response = await api.get<IGetFirstTimeConsultationCountAndRateResponse>(
+    `/consultations/first_time?${queryString}`,
+  );
   return response.data;
 };
 

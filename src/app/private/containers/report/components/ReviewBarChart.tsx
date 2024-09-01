@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Granularity, TimePeriodType } from '../../../../../types/Share';
-import { getAverageWaitingTime } from '../../../../../services/ConsultationService';
+import { Granularity } from '../../../../../types/Share';
+import { getReviewCountAndRate } from '../../../../../services/ReviewService';
 import useSWR from 'swr';
+import { Box } from '@mui/material';
+import DataLoading from '../../../../../components/signs/DataLoading';
+import CenterText from '../../../../../components/box/CenterText';
 import {
   Bar,
   BarChart,
@@ -12,39 +15,31 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import CenterText from '../../../../../components/box/CenterText';
-import DataLoading from '../../../../../components/signs/DataLoading';
-import { Box } from '@mui/material';
 
-interface IAverageWaitingTimeChartData {
+interface IReviewChartData {
   date: string;
-  averageConsultationWait: number;
-  averageBedAssignmentWait: number;
-  averageAcupunctureWait: number;
-  averageNeedleRemovalWait: number;
-  averageMedicationWait: number;
+  reviewCount: number;
+  oneStarReviewCount: number;
+  twoStarReviewCount: number;
+  threeStarReviewCount: number;
+  fourStarReviewCount: number;
+  fiveStarReviewCount: number;
 }
 
-interface IAverageWaitingTimeProps {
+interface IReviewProps {
   startDate: string;
   endDate: string;
   clinicId?: string;
-  doctorId?: string;
-  timePeriod?: TimePeriodType;
   granularity?: Granularity;
 }
 
-const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
+const ReviewLineChart: React.FC<IReviewProps> = ({
   startDate,
   endDate,
   clinicId,
-  doctorId,
-  timePeriod,
   granularity,
 }) => {
-  const [chartData, setChartData] = useState<IAverageWaitingTimeChartData[]>(
-    [],
-  );
+  const [chartData, setChartData] = useState<IReviewChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -54,17 +49,15 @@ const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
     const params = new URLSearchParams();
 
     if (clinicId) params.set('clinicId', clinicId);
-    if (timePeriod) params.set('timePeriod', timePeriod);
-    if (doctorId) params.set('doctorId', doctorId);
     if (granularity) params.set('granularity', granularity);
     params.set('startDate', startDate);
     params.set('endDate', endDate);
 
     return params.toString();
-  }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  }, [startDate, endDate, clinicId, granularity]);
 
-  const { data, error } = useSWR(`getAverageWaitingTime?${queryString}`, () =>
-    getAverageWaitingTime({ queryString }),
+  const { data, error } = useSWR(`getReviewCountAndRate?${queryString}`, () =>
+    getReviewCountAndRate({ queryString }),
   );
 
   useEffect(() => {
@@ -118,7 +111,7 @@ const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
         <YAxis
           domain={yAxisDomain}
           label={{
-            value: '分鐘',
+            value: '數量',
             angle: -90,
             position: 'insideLeft',
             offset: -5,
@@ -127,32 +120,32 @@ const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
         <Tooltip />
         <Legend />
         <Bar
-          dataKey="averageConsultationWait"
-          name="看診平均等待時間"
+          dataKey="oneStarReviewCount"
+          name="一星評論"
           stackId="a"
           fill="#2A265F"
         />
         <Bar
-          dataKey="averageBedAssignmentWait"
-          name="治療床平均等待時間"
+          dataKey="twoStarReviewCount"
+          name="兩星評論"
           stackId="a"
           fill="#3C3D99"
         />
         <Bar
-          dataKey="averageAcupunctureWait"
-          name="針灸平均等待時間"
+          dataKey="threeStarReviewCount"
+          name="三星評論"
           stackId="a"
           fill="#5752D1"
         />
         <Bar
-          dataKey="averageNeedleRemovalWait"
-          name="取針平均等待時間"
+          dataKey="fourStarReviewCount"
+          name="四星評論"
           stackId="a"
           fill="#8481DD"
         />
         <Bar
-          dataKey="averageMedicationWait"
-          name="取藥平均等待時間"
+          dataKey="fiveStarReviewCount"
+          name="五星評論"
           stackId="a"
           fill="#B2B0EA"
         />
@@ -161,4 +154,4 @@ const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
   );
 };
 
-export default AverageWaitingTimeBarChart;
+export default ReviewLineChart;

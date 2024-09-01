@@ -1,3 +1,4 @@
+import { Granularity } from '../types/Share';
 import api from './ApiService';
 
 export interface IGetSingleReviewRequest {
@@ -60,6 +61,41 @@ export interface IGetReviewListResponse {
   totalCounts: number;
 }
 
+export interface IGetReviewCountAndRateRequest {
+  startDate: string;
+  endDate: string;
+  clinicId?: string;
+  granularity?: Granularity;
+}
+
+export interface IGetReviewCountAndRateResponse {
+  totalReviews: number;
+  oneStarReviewCount: number;
+  twoStarReviewCount: number;
+  threeStarReviewCount: number;
+  fourStarReviewCount: number;
+  fiveStarReviewCount: number;
+  oneStarReviewRate: number;
+  twoStarReviewRate: number;
+  threeStarReviewRate: number;
+  fourStarReviewRate: number;
+  fiveStarReviewRate: number;
+  data: Array<{
+    date: string;
+    reviewCount: number;
+    oneStarReviewCount: number;
+    twoStarReviewCount: number;
+    threeStarReviewCount: number;
+    fourStarReviewCount: number;
+    fiveStarReviewCount: number;
+    oneStarReviewRate: number;
+    twoStarReviewRate: number;
+    threeStarReviewRate: number;
+    fourStarReviewRate: number;
+    fiveStarReviewRate: number;
+  }>;
+}
+
 export const getReviewList = async ({
   queryString,
 }: {
@@ -75,5 +111,14 @@ export const getSingleReview = async ({
   const response = await api.get<IGetSingleReviewResponse>(
     `/reviews/${reviewId}`,
   );
+  return response.data;
+};
+
+export const getReviewCountAndRate = async ({
+  queryString,
+}: {
+  queryString: string;
+}): Promise<IGetReviewCountAndRateResponse> => {
+  const response = await api.get(`/reviews/related_ratios?${queryString}`);
   return response.data;
 };

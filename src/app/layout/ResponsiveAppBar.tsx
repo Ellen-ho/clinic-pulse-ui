@@ -21,6 +21,7 @@ import {
   useFiltersContext,
 } from '../../context/FiltersContext';
 import { getDoctorProfile } from '../../services/DoctorService';
+import useNavMenu, { IPage } from '../../hooks/UseNavMenu';
 
 interface Doctor {
   id: string;
@@ -28,18 +29,8 @@ interface Doctor {
   lastName: string;
 }
 
-interface IPageItem {
-  title: string;
-  link: string;
-  permission?: UserRoleType[];
-  subMenu?: IPageItem[];
-}
-
-interface IPage extends IPageItem {
-  subMenu?: IPageItem[];
-}
-
 const ResponsiveAppBar: React.FC = () => {
+  const { menu } = useNavMenu();
   const { state, dispatch } = useContext(AuthContext);
   const isSignedIn = state.isSignedIn;
   const currentUserRole = state.currentUser?.role ?? UserRoleType.DOCTOR;
@@ -56,72 +47,6 @@ const ResponsiveAppBar: React.FC = () => {
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const doctorMenuOpen = Boolean(doctorMenuAnchorEl);
-
-  const topPages: IPage[] = [
-    {
-      title: '即時看板',
-      link: '/dashboard',
-      permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-    },
-    {
-      title: '看診紀錄',
-      link: '/consultation',
-      permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-    },
-    {
-      title: '反饋紀錄',
-      link: '',
-      permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-      subMenu: [
-        {
-          title: '問券反饋',
-          link: '/feedback',
-          permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-        },
-        {
-          title: 'Google評論',
-          link: '/review',
-          permission: [UserRoleType.ADMIN],
-        },
-      ],
-    },
-    {
-      title: '統計中心',
-      link: '',
-      permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-      subMenu: [
-        {
-          title: '門診統計中心',
-          link: '/consultation-report-center',
-          permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-        },
-        {
-          title: '反饋統計中心',
-          link: '/feedback-report-center',
-          permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-        },
-      ],
-    },
-    {
-      title: '門診表',
-      link: '/time-slot',
-      permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-    },
-    {
-      title: '人員管理',
-      link: '',
-      permission: [UserRoleType.ADMIN],
-      subMenu: [
-        { title: '人員清單', link: '/profile-management' },
-        { title: '人員註冊', link: '/signup' },
-      ],
-    },
-    {
-      title: '個人中心',
-      link: '/profile',
-      permission: [UserRoleType.DOCTOR],
-    },
-  ];
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -259,17 +184,15 @@ const ResponsiveAppBar: React.FC = () => {
           <Box sx={{ display: { py: 2 } }}>
             {isSignedIn && (
               <Box sx={{ display: 'flex' }}>
-                {topPages
-                  .filter((page) => page.permission?.includes(currentUserRole))
-                  .map((page) => (
-                    <Button
-                      key={page.title}
-                      onClick={(event) => handleMenuClick(event, page)}
-                      sx={{ color: 'white' }}
-                    >
-                      {page.title}
-                    </Button>
-                  ))}
+                {menu.map((page) => (
+                  <Button
+                    key={page.title}
+                    onClick={(event) => handleMenuClick(event, page)}
+                    sx={{ color: 'white' }}
+                  >
+                    {page.title}
+                  </Button>
+                ))}
 
                 <Menu
                   id="dynamic-menu"
@@ -277,43 +200,14 @@ const ResponsiveAppBar: React.FC = () => {
                   open={open}
                   onClose={handleClose}
                 >
-                  {currentMenu?.subMenu
-                    ?.filter((subPage) =>
-                      subPage.permission?.includes(currentUserRole),
-                    )
-                    .map((subPage) => (
-                      <MenuItem
-                        key={subPage.title}
-                        onClick={() => handleNavigate(subPage.link)}
-                        onMouseEnter={
-                          subPage.title === '人員清單'
-                            ? handleDoctorMenuClick
-                            : undefined
-                        }
-                      >
-                        {subPage.title}
-                      </MenuItem>
-                    ))}
-                  {/* 醫師子列表 */}
-                  {currentMenu?.title === '人員管理' && (
-                    <Menu
-                      anchorEl={doctorMenuAnchorEl}
-                      open={Boolean(doctorMenuAnchorEl)}
-                      onClose={handleDoctorMenuClose}
-                      MenuListProps={{
-                        onMouseLeave: handleDoctorMenuClose,
-                      }}
+                  {currentMenu?.subMenu?.map((subPage) => (
+                    <MenuItem
+                      key={subPage.title}
+                      onClick={() => handleNavigate(subPage.link)}
                     >
-                      {doctors.map((doctor) => (
-                        <MenuItem
-                          key={doctor.id}
-                          onClick={() => handleDoctorProfileClick(doctor.id)}
-                        >
-                          {doctor.fullName} {}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  )}
+                      {subPage.title}
+                    </MenuItem>
+                  ))}
                 </Menu>
                 <IconButton
                   sx={{ color: 'white' }}

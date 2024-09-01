@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
+import { getDifferentTreatmentConsultation } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import useSWR from 'swr';
-import { getFeedbackCountAndRate } from '../../../../../services/FeedbackService';
+import { Box } from '@mui/material';
+import DataLoading from '../../../../../components/signs/DataLoading';
+import CenterText from '../../../../../components/box/CenterText';
 import {
   Bar,
-  BarChart,
   CartesianGrid,
   ComposedChart,
   Legend,
@@ -14,46 +16,44 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import CenterText from '../../../../../components/box/CenterText';
-import { Box } from '@mui/material';
-import DataLoading from '../../../../../components/signs/DataLoading';
 
-interface IFeedbackChartData {
+interface IDifferentTreatmentsChartData {
   date: string;
-  feedbackCount: number;
-  oneStarFeedbackCount: number;
-  twoStarFeedbackCount: number;
-  threeStarFeedbackCount: number;
-  fourStarFeedbackCount: number;
-  fiveStarFeedbackCount: number;
-  waitAcupunctureReasonRate: number;
-  waitBedReasonRate: number;
-  waitConsultationReasonRate: number;
-  waitMedicineReasonRate: number;
-  doctorPoorAttitudeRate: number;
+  consultationCount: number;
+  consultationWithAcupuncture: number;
+  consultationWithMedicine: number;
+  consultationWithBothTreatment: number;
+  acupunctureRate: number;
+  medicineRate: number;
+  onlyAcupunctureCount: number;
+  onlyMedicineCount: number;
+  onlyAcupunctureRate: number;
+  onlyMedicineRate: number;
+  bothTreatmentRate: number;
 }
 
-interface IFeedbackProps {
+interface IDifferentTreatmentsProps {
   startDate: string;
   endDate: string;
   clinicId?: string;
-  timePeriod?: TimePeriodType;
   doctorId?: string;
+  timePeriod?: TimePeriodType;
   granularity?: Granularity;
 }
 
-const FeedbackBarChart: React.FC<IFeedbackProps> = ({
+const TreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
   startDate,
   endDate,
   clinicId,
-  timePeriod,
   doctorId,
+  timePeriod,
   granularity,
 }) => {
-  const [chartData, setChartData] = useState<IFeedbackChartData[]>([]);
+  const [chartData, setChartData] = useState<IDifferentTreatmentsChartData[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
-
   const [yAxisDomainLeft, setYAxisDomainLeft] = useState<[number, number]>([
     0, 0,
   ]);
@@ -63,56 +63,49 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
+
     if (clinicId) params.set('clinicId', clinicId);
     if (timePeriod) params.set('timePeriod', timePeriod);
     if (doctorId) params.set('doctorId', doctorId);
     if (granularity) params.set('granularity', granularity);
     params.set('startDate', startDate);
     params.set('endDate', endDate);
+
     return params.toString();
   }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  const { data, error } = useSWR(`getFeedbackCountAndRate?${queryString}`, () =>
-    getFeedbackCountAndRate({ queryString }),
+  const { data, error } = useSWR(
+    `GetDifferentTreatmentConsultation?${queryString}`,
+    () => getDifferentTreatmentConsultation({ queryString }),
   );
 
   useEffect(() => {
     setMessage(null);
     setLoading(true);
     if (data) {
-      if (data.data.length === 0) {
-        setMessage('選擇區間沒有反饋資料');
-        setLoading(false);
-        setChartData([]);
+      if (data.totalConsultations === 0) {
+        setMessage('選擇區間沒有門診資料');
       } else {
         setChartData(data.data);
-        setLoading(false);
-      }
-      const maxCountLeft = Math.max(
-        ...data.data.map((item) =>
-          Math.max(
-            item.oneStarFeedbackCount,
-            item.twoStarFeedbackCount,
-            item.threeStarFeedbackCount,
-            item.fourStarFeedbackCount,
-            item.fiveStarFeedbackCount,
-          ),
-        ),
-      );
-      const maxCountRight = Math.max(
-        ...data.data.map((item) =>
-          Math.max(
-            item.waitAcupunctureReasonRate,
-            item.waitBedReasonRate,
-            item.waitConsultationReasonRate,
-            item.waitMedicineReasonRate,
-            item.doctorPoorAttitudeRate,
-          ),
-        ),
-      );
 
-      setYAxisDomainLeft([0, maxCountLeft + 5]);
-      setYAxisDomainRight([0, maxCountRight + 5]);
+        const maxCountLeft = Math.max(
+          ...data.data.map((item) =>
+            Math.max(item.consultationCount, item.consultationCount),
+          ),
+        );
+        const minCountLeft = 0;
+
+        const maxCountRight = Math.max(
+          ...data.data.map((item) =>
+            Math.max(item.medicineRate, item.medicineRate),
+          ),
+        );
+        const minCountRight = 0;
+
+        setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
+        setYAxisDomainRight([minCountRight, maxCountRight + 5]);
+      }
+      setLoading(false);
     }
   }, [data]);
 
@@ -167,83 +160,56 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
           orientation="right"
           stroke="#82ca9d"
         />
+
+        {/* <YAxis yAxisId="left" orientation="left" stroke="#8884d8" /> */}
+        {/* <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" /> */}
         <Tooltip />
         <Legend />
-        {/* 条形图展示每个星级评论人数 */}
         <Bar
           yAxisId="left"
-          dataKey="oneStarFeedbackCount"
-          name="一星評論人數"
+          dataKey="onlyAcupunctureCount"
+          name="純針灸治療人數"
           barSize={20}
           fill="#413ea0"
         />
         <Bar
           yAxisId="left"
-          dataKey="twoStarFeedbackCount"
-          name="二星評論人數"
+          dataKey="onlyMedicineCount"
+          name="純藥物治療人數"
           barSize={20}
           fill="#009596"
         />
         <Bar
           yAxisId="left"
-          dataKey="threeStarFeedbackCount"
-          name="三星評論人數"
+          dataKey="consultationWithBothTreatment"
+          name="針灸及藥物治療人數"
           barSize={20}
           fill="#e28743"
         />
-        <Bar
-          yAxisId="left"
-          dataKey="fourStarFeedbackCount"
-          name="四星評論人數"
-          barSize={20}
-          fill="#ff7f50"
-        />
-        <Bar
-          yAxisId="left"
-          dataKey="fiveStarFeedbackCount"
-          name="五星評論人數"
-          barSize={20}
-          fill="#6a0dad"
-        />
-        {/* 折线图展示每个负面原因的比例 */}
         <Line
           yAxisId="right"
           type="monotone"
-          dataKey="waitAcupunctureReasonRate"
-          name="針灸等待時間長"
+          dataKey="onlyAcupunctureRate"
+          name="純針灸治療占比"
           stroke="#8884d8"
         />
         <Line
           yAxisId="right"
           type="monotone"
-          dataKey="waitBedReasonRate"
-          name="床位分配等待時間長"
+          dataKey="onlyMedicineRate"
+          name="純藥物治療占比"
           stroke="#82ca9d"
         />
         <Line
           yAxisId="right"
           type="monotone"
-          dataKey="waitConsultationReasonRate"
-          name="看診等待時間長"
+          dataKey="bothTreatmentRate"
+          name="針灸及藥物治療占比"
           stroke="#ffc658"
-        />
-        <Line
-          yAxisId="right"
-          type="monotone"
-          dataKey="waitMedicineReasonRate"
-          name="藥品等待時間長"
-          stroke="#ff00ff"
-        />
-        <Line
-          yAxisId="right"
-          type="monotone"
-          dataKey="doctorPoorAttitudeRate"
-          name="醫生態度差"
-          stroke="#00ffff"
         />
       </ComposedChart>
     </ResponsiveContainer>
   );
 };
 
-export default FeedbackBarChart;
+export default TreatmentsBarChart;

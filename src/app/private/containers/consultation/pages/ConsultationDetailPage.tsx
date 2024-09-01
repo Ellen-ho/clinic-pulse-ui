@@ -3,7 +3,10 @@ import { Grid } from '@mui/material';
 import ConsultationDetail from '../components/ConsultationDetail';
 import ConsultationLog from '../components/ConsultationLog';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
-import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import {
+  CommonWrapper,
+  NarrowCommonWrapper,
+} from '../../../../layout/CommonWrapper.styled';
 import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -20,7 +23,7 @@ const ConsultationDetailPage: React.FC = () => {
 
   return (
     <PrimaryPageContent>
-      <CommonWrapper>
+      <NarrowCommonWrapper>
         <SecondaryPageTop onBack={handleBack} />
         <Grid container spacing={1} sx={{ width: '100%' }}>
           <Grid item xs={12} md={6} lg={7}>
@@ -30,7 +33,7 @@ const ConsultationDetailPage: React.FC = () => {
             <ConsultationLog />
           </Grid>
         </Grid>
-      </CommonWrapper>
+      </NarrowCommonWrapper>
     </PrimaryPageContent>
   );
 };

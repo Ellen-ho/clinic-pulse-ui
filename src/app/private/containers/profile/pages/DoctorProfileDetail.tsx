@@ -66,6 +66,7 @@ const DoctorProfileDetail: React.FC = () => {
   const handleImageUpload = (imageUrl: string) => {
     setProfile((prev) => ({ ...prev, avatar: imageUrl }));
     setAvatarUploadDialogOpen(false);
+    mutate();
     toast.success('相片更新成功！');
   };
 

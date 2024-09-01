@@ -49,7 +49,8 @@ const App: React.FC = () => {
           path="/feedback-report-center"
         />
         <Route element={<Consultation />} path="/consultation/*" />
-        <Route element={<Feedback />} path="/feedback/*" />
+        <Route element={<FeedbackListPage />} path="/feedback" />
+        <Route element={<FeedbackDetailPage />} path="/feedback/:id" />
         <Route element={<Review />} path="/review/*" />
         <Route element={<Profile />} path="/profile" />
         <Route element={<SignUp />} path="/signup" />

@@ -7,7 +7,7 @@ import {
   IGetConsultationRealTimeCountResponse,
 } from '../../../../../services/ConsultationService';
 import BasicCard from '../../../../../components/card/BasicCard';
-import { Box, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import CountUp from 'react-countup';
 import NoDataFound from '../../../../../components/signs/NoDataFound';
 import { FaRegCalendarTimes } from 'react-icons/fa';
@@ -17,6 +17,29 @@ import useRealTimeSocket from '../../../../../hooks/UseRealTimeSocket';
 import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
 import { TimePeriodType } from '../../../../../types/Share';
 import { RoomNumberType } from '../../../../../types/ConsultationRoom';
+interface StatBoxProps {
+  title: string;
+  value: number;
+  duration: number;
+}
+const StatBox: React.FC<StatBoxProps> = ({ title, value, duration }) => (
+  <Box
+    sx={{
+      p: 2,
+      borderRadius: 2,
+      boxShadow: 1,
+      backgroundColor: 'background.paper',
+      width: '100%',
+    }}
+  >
+    <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1 }}>
+      {title}
+    </Typography>
+    <Typography variant="h3" color="text.primary" sx={{ mb: 1 }}>
+      <CountUp start={0} end={value} duration={duration} />
+    </Typography>
+  </Box>
+);
 
 interface IRealConsultationStatisticProps {
   clinicId?: string;
@@ -144,146 +167,57 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
           <DataLoading />
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                等待看診人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.waitForConsultationCount || 0}
+            <Grid container spacing={2} sx={{ height: '100%' }}>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="等待看診人數"
+                  value={realTimeData?.waitForConsultationCount || 0}
                   duration={0.6}
                 />
-              </Typography>
-            </Box>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                等待排治療床人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.waitForBedAssignedCount || 0}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="等待排治療床人數"
+                  value={realTimeData?.waitForBedAssignedCount || 0}
                   duration={0.5}
                 />
-              </Typography>
-            </Box>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                等待針灸治療人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.waitForAcupunctureTreatmentCount || 0}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="等待針灸治療人數"
+                  value={realTimeData?.waitForAcupunctureTreatmentCount || 0}
                   duration={0.5}
                 />
-              </Typography>
-            </Box>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                等待拔針人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.waitForNeedleRemovedCount || 0}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="等待拔針人數"
+                  value={realTimeData?.waitForNeedleRemovedCount || 0}
                   duration={0.6}
                 />
-              </Typography>
-            </Box>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                等待拿藥人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.waitForMedicineCount || 0}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="等待拿藥人數"
+                  value={realTimeData?.waitForMedicineCount || 0}
                   duration={0.6}
                 />
-              </Typography>
-            </Box>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                完成人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.completedCount || 0}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="完成人數"
+                  value={realTimeData?.completedCount || 0}
                   duration={0.6}
                 />
-              </Typography>
-            </Box>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                lineHeight={'1rem'}
-              >
-                退掛人數
-              </Typography>
-              <Typography
-                variant="h3"
-                color={'text.primary'}
-                lineHeight={'3rem'}
-              >
-                <CountUp
-                  start={0}
-                  end={realTimeData?.onsiteCancelCount || 0}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <StatBox
+                  title="退掛人數"
+                  value={realTimeData?.onsiteCancelCount || 0}
                   duration={0.6}
                 />
-              </Typography>
-            </Box>
+              </Grid>
+            </Grid>
           </Box>
         )}
       </BasicCard>

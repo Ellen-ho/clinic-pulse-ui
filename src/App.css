@@ -7,6 +7,11 @@ body {
   background-color: #f6f7fa;
 }
 
+/* date range style change */
 .MuiPopper-root .MuiDateRangeCalendar-root > div:first-child {
+  display: none;
+}
+
+.MuiTypography-root.MuiTypography-body1.MuiMultiInputDateRangeField-separator {
   display: none;
 }
