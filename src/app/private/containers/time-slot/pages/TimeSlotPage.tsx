@@ -29,12 +29,6 @@ const TimeSlotPage: React.FC = () => {
           門診表
         </Typography>
         <TimeSlotFilters onApply={handleApplyFilters} />
-        <Box
-          sx={{
-            flexGrow: 1,
-            overflowY: 'hidden',
-          }}
-        ></Box>
         <TimeSlotCalendar clinicId={filters.clinicId} />
       </CommonWrapper>
     </PrimaryPageContent>
