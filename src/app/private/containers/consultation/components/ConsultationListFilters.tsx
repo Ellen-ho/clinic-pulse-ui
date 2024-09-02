@@ -58,9 +58,14 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   const [startDate, setStartDate] = useState<string | null>(
     initFilters.startDate ?? dayjs().startOf('isoWeek'),
   );
-  const [endDate, setEndDate] = useState<string | null>(
-    initFilters.endDate ?? dayjs().endOf('isoWeek'),
-  );
+  const [endDate, setEndDate] = useState<string | null>(() => {
+    const today = dayjs();
+    const endOfWeek = dayjs().endOf('isoWeek');
+
+    return today.isSame(endOfWeek, 'day')
+      ? endOfWeek.format('YYYY-MM-DD')
+      : today.format('YYYY-MM-DD');
+  });
   const [clinicId, setClinicId] = useState<string | undefined>(
     initFilters.clinicId,
   );
@@ -198,7 +203,7 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
           <BasicDateRangePicker
             setDateRange={handleStartAndEndDate}
             initStart={dayjs().startOf('isoWeek')}
-            initEnd={dayjs().endOf('isoWeek')}
+            initEnd={endDate ? dayjs(endDate) : dayjs().endOf('isoWeek')}
           />
         </Grid>
         <Grid item xs={12} sm={2}>

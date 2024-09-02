@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getDifferentTreatmentConsultation } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import useSWR from 'swr';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import DataLoading from '../../../../../components/signs/DataLoading';
 import CenterText from '../../../../../components/box/CenterText';
 import {
@@ -33,20 +33,12 @@ interface IDifferentTreatmentsChartData {
 }
 
 interface IDifferentTreatmentsProps {
-  startDate: string;
-  endDate: string;
-  clinicId?: string;
-  doctorId?: string;
-  timePeriod?: TimePeriodType;
+  data: IDifferentTreatmentsChartData[];
   granularity?: Granularity;
 }
 
-const TreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
-  startDate,
-  endDate,
-  clinicId,
-  doctorId,
-  timePeriod,
+const DifferentTreatmentsChart: React.FC<IDifferentTreatmentsProps> = ({
+  data,
   granularity,
 }) => {
   const [chartData, setChartData] = useState<IDifferentTreatmentsChartData[]>(
@@ -61,49 +53,47 @@ const TreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
     0, 0,
   ]);
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
+  // const queryString = useMemo(() => {
+  //   const params = new URLSearchParams();
 
-    if (clinicId) params.set('clinicId', clinicId);
-    if (timePeriod) params.set('timePeriod', timePeriod);
-    if (doctorId) params.set('doctorId', doctorId);
-    if (granularity) params.set('granularity', granularity);
-    params.set('startDate', startDate);
-    params.set('endDate', endDate);
+  //   if (clinicId) params.set('clinicId', clinicId);
+  //   if (timePeriod) params.set('timePeriod', timePeriod);
+  //   if (doctorId) params.set('doctorId', doctorId);
+  //   if (granularity) params.set('granularity', granularity);
+  //   params.set('startDate', startDate);
+  //   params.set('endDate', endDate);
 
-    return params.toString();
-  }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  //   return params.toString();
+  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  const { data, error } = useSWR(
-    `GetDifferentTreatmentConsultation?${queryString}`,
-    () => getDifferentTreatmentConsultation({ queryString }),
-  );
+  // const { data, error } = useSWR(
+  //   `GetDifferentTreatmentConsultation?${queryString}`,
+  //   () => getDifferentTreatmentConsultation({ queryString }),
+  // );
 
   useEffect(() => {
     setMessage(null);
     setLoading(true);
     if (data) {
-      if (data.totalConsultations === 0) {
+      if (data.length === 0) {
         setMessage('選擇區間沒有門診資料');
       } else {
-        setChartData(data.data);
+        setChartData(data);
 
         const maxCountLeft = Math.max(
-          ...data.data.map((item) =>
+          ...data.map((item) =>
             Math.max(item.consultationCount, item.consultationCount),
           ),
         );
         const minCountLeft = 0;
 
         const maxCountRight = Math.max(
-          ...data.data.map((item) =>
-            Math.max(item.medicineRate, item.medicineRate),
-          ),
+          ...data.map((item) => Math.max(item.medicineRate, item.medicineRate)),
         );
         const minCountRight = 0;
 
         setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
-        setYAxisDomainRight([minCountRight, maxCountRight + 5]);
+        setYAxisDomainRight([minCountRight, maxCountRight]);
       }
       setLoading(false);
     }
@@ -115,17 +105,19 @@ const TreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
         <DataLoading />
       </Box>
     );
-  if (error)
-    return (
-      <CenterText>
-        <>{'Error loading data'}</>
-      </CenterText>
-    );
+
   if (message)
     return (
-      <CenterText>
-        <>{message}</>
-      </CenterText>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{message}</Typography>
+      </Box>
     );
 
   return (
@@ -212,4 +204,4 @@ const TreatmentsBarChart: React.FC<IDifferentTreatmentsProps> = ({
   );
 };
 
-export default TreatmentsBarChart;
+export default DifferentTreatmentsChart;

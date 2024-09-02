@@ -1,39 +1,39 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Bar,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ComposedChart,
-} from 'recharts';
-import useSWR from 'swr';
+import { useEffect, useMemo, useState } from 'react';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
-import CenterText from '../../../../../components/box/CenterText';
+import useSWR from 'swr';
+import { getFirstTimeConsultationCountAndRate } from '../../../../../services/ConsultationService';
 import { Box, Typography } from '@mui/material';
 import DataLoading from '../../../../../components/signs/DataLoading';
-import { getConsultationOnsiteCanceledCountAndRate } from '../../../../../services/ConsultationService';
+import CenterText from '../../../../../components/box/CenterText';
+import {
+  Bar,
+  CartesianGrid,
+  ComposedChart,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
-interface ICanceledChartData {
+interface IFirstTimeChartData {
   date: string;
-  onsiteCancelCount: number;
+  firstTimeCount: number;
   consultationCount: number;
-  onsiteCancelRate: number;
+  firstTimeRate: number;
 }
 
-interface ICanceledConsultationChartProps {
-  data: ICanceledChartData[];
+interface IFirstTimeChartProps {
+  data: IFirstTimeChartData[];
   granularity?: Granularity;
 }
 
-const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
+const FirstTimeChart: React.FC<IFirstTimeChartProps> = ({
   data,
   granularity,
 }) => {
-  const [chartData, setChartData] = useState<ICanceledChartData[]>([]);
+  const [chartData, setChartData] = useState<IFirstTimeChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [yAxisDomainLeft, setYAxisDomainLeft] = useState<[number, number]>([
@@ -43,23 +43,23 @@ const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
     0, 0,
   ]);
 
-  // const queryString = useMemo(() => {
-  //   const params = new URLSearchParams();
+  //   const queryString = useMemo(() => {
+  //     const params = new URLSearchParams();
 
-  //   if (clinicId) params.set('clinicId', clinicId);
-  //   if (timePeriod) params.set('timePeriod', timePeriod);
-  //   if (doctorId) params.set('doctorId', doctorId);
-  //   if (granularity) params.set('granularity', granularity);
-  //   params.set('startDate', startDate);
-  //   params.set('endDate', endDate);
+  //     if (clinicId) params.set('clinicId', clinicId);
+  //     if (timePeriod) params.set('timePeriod', timePeriod);
+  //     if (doctorId) params.set('doctorId', doctorId);
+  //     if (granularity) params.set('granularity', granularity);
+  //     params.set('startDate', startDate);
+  //     params.set('endDate', endDate);
 
-  //   return params.toString();
-  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  //     return params.toString();
+  //   }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  // const { data, error } = useSWR(
-  //   `GetConsultationOnsiteCanceledCountAndRate?${queryString}`,
-  //   () => getConsultationOnsiteCanceledCountAndRate({ queryString }),
-  // );
+  //   const { data, error } = useSWR(
+  //     `GetFirstTimeConsultationCountAndRate?${queryString}`,
+  //     () => getFirstTimeConsultationCountAndRate({ queryString }),
+  //   );
 
   useEffect(() => {
     setMessage(null);
@@ -72,14 +72,14 @@ const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
 
         const maxCountLeft = Math.max(
           ...data.map((item) =>
-            Math.max(item.onsiteCancelCount, item.onsiteCancelCount),
+            Math.max(item.firstTimeCount, item.firstTimeCount),
           ),
         );
         const minCountLeft = 0;
 
         const maxCountRight = Math.max(
           ...data.map((item) =>
-            Math.max(item.onsiteCancelRate, item.onsiteCancelRate),
+            Math.max(item.firstTimeRate, item.firstTimeRate),
           ),
         );
         const minCountRight = 0;
@@ -151,16 +151,16 @@ const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
         <Legend />
         <Bar
           yAxisId="left"
-          dataKey="onsiteCancelCount"
-          name="退掛號人數"
+          dataKey="firstTimeCount"
+          name="初診人數"
           barSize={20}
           fill="#009596"
         />
         <Line
           yAxisId="right"
           type="monotone"
-          dataKey="onsiteCancelRate"
-          name="退掛號率"
+          dataKey="firstTimeRate"
+          name="初診率"
           stroke="#82ca9d"
         />
       </ComposedChart>
@@ -168,4 +168,4 @@ const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
   );
 };
 
-export default CanceledConsultationChart;
+export default FirstTimeChart;

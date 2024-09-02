@@ -38,7 +38,9 @@ const ConsultationListPage: React.FC = () => {
       dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
     endDate:
       (parsed?.endDate as string) ??
-      dayjs().endOf('isoWeek').format('YYYY-MM-DD'),
+      (dayjs().isSame(dayjs().endOf('isoWeek'), 'day')
+        ? dayjs().endOf('isoWeek').format('YYYY-MM-DD')
+        : dayjs().format('YYYY-MM-DD')),
     clinicId: parsed?.clinicId as string,
     timePeriod: parsed?.timePeriod as string,
     totalDurationMin: parsed?.totalDurationMin

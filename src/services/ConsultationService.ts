@@ -117,6 +117,7 @@ export interface IGetAverageConsultationCountResponse {
   isAverageGetMore: boolean;
   compareTotalRate: number;
   compareAverageRate: number;
+  compareSlotRate: number;
   totalConsultations: number;
   totalSlots: number;
   averagePatientPerSlot: number;
@@ -434,6 +435,8 @@ export const getConsultationOnsiteCanceledCountAndRate = async ({
     await api.get<IGetConsultationOnsiteCanceledCountAndRateResponse>(
       `/consultations/canceled?${queryString}`,
     );
+
+  console.log(response.data);
   return response.data;
 };
 

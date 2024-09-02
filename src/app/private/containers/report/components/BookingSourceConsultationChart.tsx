@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Bar,
   Line,
@@ -10,15 +10,9 @@ import {
   ResponsiveContainer,
   ComposedChart,
 } from 'recharts';
-import useSWR from 'swr';
-import { Granularity, TimePeriodType } from '../../../../../types/Share';
-import CenterText from '../../../../../components/box/CenterText';
-import { Box } from '@mui/material';
+import { Granularity } from '../../../../../types/Share';
+import { Box, Typography } from '@mui/material';
 import DataLoading from '../../../../../components/signs/DataLoading';
-import {
-  getConsultationBookingCountAndRate,
-  getConsultationOnsiteCanceledCountAndRate,
-} from '../../../../../services/ConsultationService';
 
 interface IBookingChartData {
   date: string;
@@ -28,17 +22,13 @@ interface IBookingChartData {
 }
 
 interface IBookingSourceConsultationChartProps {
-  startDate: string;
-  endDate: string;
-  clinicId?: string;
-  doctorId?: string;
-  timePeriod?: TimePeriodType;
+  data: IBookingChartData[];
   granularity?: Granularity;
 }
 
 const BookingSourceConsultationChart: React.FC<
   IBookingSourceConsultationChartProps
-> = ({ startDate, endDate, clinicId, doctorId, timePeriod, granularity }) => {
+> = ({ data, granularity }) => {
   const [chartData, setChartData] = useState<IBookingChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
@@ -49,42 +39,42 @@ const BookingSourceConsultationChart: React.FC<
     0, 0,
   ]);
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
+  // const queryString = useMemo(() => {
+  //   const params = new URLSearchParams();
 
-    if (clinicId) params.set('clinicId', clinicId);
-    if (timePeriod) params.set('timePeriod', timePeriod);
-    if (doctorId) params.set('doctorId', doctorId);
-    if (granularity) params.set('granularity', granularity);
-    params.set('startDate', startDate);
-    params.set('endDate', endDate);
+  //   if (clinicId) params.set('clinicId', clinicId);
+  //   if (timePeriod) params.set('timePeriod', timePeriod);
+  //   if (doctorId) params.set('doctorId', doctorId);
+  //   if (granularity) params.set('granularity', granularity);
+  //   params.set('startDate', startDate);
+  //   params.set('endDate', endDate);
 
-    return params.toString();
-  }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  //   return params.toString();
+  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  const { data, error } = useSWR(
-    `GetConsultationBookingCountAndRate?${queryString}`,
-    () => getConsultationBookingCountAndRate({ queryString }),
-  );
+  // const { data, error } = useSWR(
+  //   `GetConsultationBookingCountAndRate?${queryString}`,
+  //   () => getConsultationBookingCountAndRate({ queryString }),
+  // );
 
   useEffect(() => {
     setMessage(null);
     setLoading(true);
     if (data) {
-      if (data.totalConsultations === 0) {
+      if (data.length === 0) {
         setMessage('選擇區間沒有門診資料');
       } else {
-        setChartData(data.data);
+        setChartData(data);
 
         const maxCountLeft = Math.max(
-          ...data.data.map((item) =>
+          ...data.map((item) =>
             Math.max(item.onlineBookingCount, item.onlineBookingCount),
           ),
         );
         const minCountLeft = 0;
 
         const maxCountRight = Math.max(
-          ...data.data.map((item) =>
+          ...data.map((item) =>
             Math.max(item.onlineBookingRate, item.onlineBookingRate),
           ),
         );
@@ -103,17 +93,19 @@ const BookingSourceConsultationChart: React.FC<
         <DataLoading />
       </Box>
     );
-  if (error)
-    return (
-      <CenterText>
-        <>{'Error loading data'}</>
-      </CenterText>
-    );
+
   if (message)
     return (
-      <CenterText>
-        <>{message}</>
-      </CenterText>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{message}</Typography>
+      </Box>
     );
 
   return (
