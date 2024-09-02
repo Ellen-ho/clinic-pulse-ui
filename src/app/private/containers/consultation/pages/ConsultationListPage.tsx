@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import ConsultationListFilters from '../components/ConsultationListFilters';
 import ConsultationList from '../components/ConsultationList';
@@ -8,41 +8,53 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { AuthContext } from '../../../../../context/AuthContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
 
-interface FilterValues {
+export interface FilterValues {
   startDate: string;
   endDate: string;
   clinicId?: string;
   timePeriod?: string;
   totalDurationMin?: number;
   totalDurationMax?: number;
-  patientId?: string;
+  patientName?: string;
   doctorId?: string;
   page?: number;
   limit?: number;
 }
 
 const ConsultationListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
   const { state } = useContext(AuthContext);
-  const doctorId = state.doctorId || '';
+  const parsed = queryString.parse(location.search);
+
   const isDoctor = state.doctorId != null;
 
   const [filters, setFilters] = useState<FilterValues>({
-    startDate: initialStartDate,
-    endDate: initialEndDate,
-    clinicId: undefined,
-    timePeriod: undefined,
-    totalDurationMin: undefined,
-    totalDurationMax: undefined,
-    patientId: undefined,
-    doctorId: isDoctor ? doctorId : undefined,
-    page: 1,
-    limit: 20,
+    startDate:
+      (parsed?.startDate as string) ??
+      dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
+    endDate:
+      (parsed?.endDate as string) ??
+      (dayjs().isSame(dayjs().endOf('isoWeek'), 'day')
+        ? dayjs().endOf('isoWeek').format('YYYY-MM-DD')
+        : dayjs().format('YYYY-MM-DD')),
+    clinicId: parsed?.clinicId as string,
+    timePeriod: parsed?.timePeriod as string,
+    totalDurationMin: parsed?.totalDurationMin
+      ? Number(parsed?.totalDurationMin as string)
+      : undefined,
+    totalDurationMax: parsed?.totalDurationMax
+      ? Number(parsed?.totalDurationMax as string)
+      : undefined,
+    patientName: parsed?.patientName as string,
+    doctorId: isDoctor
+      ? (state.doctorId as string)
+      : (parsed?.doctorId as string),
+    page: parsed?.page ? Number(parsed?.page as string) : 1,
+    limit: parsed?.limit ? Number(parsed?.limit as string) : 25,
   });
 
   const handleApplyFilters = useCallback(
@@ -58,14 +70,17 @@ const ConsultationListPage: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           看診紀錄列表
         </Typography>
-        <ConsultationListFilters onApply={handleApplyFilters} />
+        <ConsultationListFilters
+          onApply={handleApplyFilters}
+          initFilters={filters}
+        />
         <Box
           sx={{
             flexGrow: 1,
             overflowY: 'hidden',
           }}
         >
-          <ConsultationList {...filters} />
+          <ConsultationList {...filters} onApply={handleApplyFilters} />
         </Box>
       </CommonWrapper>
     </PrimaryPageContent>

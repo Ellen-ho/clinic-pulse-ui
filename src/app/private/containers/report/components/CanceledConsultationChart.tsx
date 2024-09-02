@@ -11,41 +11,29 @@ import {
   ComposedChart,
 } from 'recharts';
 import useSWR from 'swr';
-import { getConsultationOnsiteCanceledAndBooking } from '../../../../../services/ConsultationService';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
 import CenterText from '../../../../../components/box/CenterText';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import DataLoading from '../../../../../components/signs/DataLoading';
+import { getConsultationOnsiteCanceledCountAndRate } from '../../../../../services/ConsultationService';
 
-interface ICanceledAndBookingChartData {
+interface ICanceledChartData {
   date: string;
-  onlineBookingCount: number;
   onsiteCancelCount: number;
   consultationCount: number;
-  onlineBookingRate: number;
   onsiteCancelRate: number;
 }
 
-interface ICanceledAndBookingProps {
-  startDate: string;
-  endDate: string;
-  clinicId?: string;
-  doctorId?: string;
-  timePeriod?: TimePeriodType;
+interface ICanceledConsultationChartProps {
+  data: ICanceledChartData[];
   granularity?: Granularity;
 }
 
-const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
-  startDate,
-  endDate,
-  clinicId,
-  doctorId,
-  timePeriod,
+const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
+  data,
   granularity,
 }) => {
-  const [chartData, setChartData] = useState<ICanceledAndBookingChartData[]>(
-    [],
-  );
+  const [chartData, setChartData] = useState<ICanceledChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [yAxisDomainLeft, setYAxisDomainLeft] = useState<[number, number]>([
@@ -55,43 +43,43 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
     0, 0,
   ]);
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
+  // const queryString = useMemo(() => {
+  //   const params = new URLSearchParams();
 
-    if (clinicId) params.set('clinicId', clinicId);
-    if (timePeriod) params.set('timePeriod', timePeriod);
-    if (doctorId) params.set('doctorId', doctorId);
-    if (granularity) params.set('granularity', granularity);
-    params.set('startDate', startDate);
-    params.set('endDate', endDate);
+  //   if (clinicId) params.set('clinicId', clinicId);
+  //   if (timePeriod) params.set('timePeriod', timePeriod);
+  //   if (doctorId) params.set('doctorId', doctorId);
+  //   if (granularity) params.set('granularity', granularity);
+  //   params.set('startDate', startDate);
+  //   params.set('endDate', endDate);
 
-    return params.toString();
-  }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  //   return params.toString();
+  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  const { data, error } = useSWR(
-    `GetConsultationOnsiteCanceledAndBooking?${queryString}`,
-    () => getConsultationOnsiteCanceledAndBooking({ queryString }),
-  );
+  // const { data, error } = useSWR(
+  //   `GetConsultationOnsiteCanceledCountAndRate?${queryString}`,
+  //   () => getConsultationOnsiteCanceledCountAndRate({ queryString }),
+  // );
 
   useEffect(() => {
     setMessage(null);
     setLoading(true);
     if (data) {
-      if (data.totalConsultations === 0) {
+      if (data.length === 0) {
         setMessage('選擇區間沒有門診資料');
       } else {
-        setChartData(data.data);
+        setChartData(data);
 
         const maxCountLeft = Math.max(
-          ...data.data.map((item) =>
-            Math.max(item.onlineBookingCount, item.onsiteCancelCount),
+          ...data.map((item) =>
+            Math.max(item.onsiteCancelCount, item.onsiteCancelCount),
           ),
         );
         const minCountLeft = 0;
 
         const maxCountRight = Math.max(
-          ...data.data.map((item) =>
-            Math.max(item.onlineBookingRate, item.onsiteCancelRate),
+          ...data.map((item) =>
+            Math.max(item.onsiteCancelRate, item.onsiteCancelRate),
           ),
         );
         const minCountRight = 0;
@@ -109,17 +97,19 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
         <DataLoading />
       </Box>
     );
-  if (error)
-    return (
-      <CenterText>
-        <>{'Error loading data'}</>
-      </CenterText>
-    );
+
   if (message)
     return (
-      <CenterText>
-        <>{message}</>
-      </CenterText>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{message}</Typography>
+      </Box>
     );
 
   return (
@@ -161,24 +151,10 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
         <Legend />
         <Bar
           yAxisId="left"
-          dataKey="onlineBookingCount"
-          name="線上預約人數"
-          barSize={20}
-          fill="#413ea0"
-        />
-        <Bar
-          yAxisId="left"
           dataKey="onsiteCancelCount"
           name="退掛號人數"
           barSize={20}
           fill="#009596"
-        />
-        <Line
-          yAxisId="right"
-          type="monotone"
-          dataKey="onlineBookingRate"
-          name="線上預約率"
-          stroke="#8884d8"
         />
         <Line
           yAxisId="right"
@@ -192,4 +168,4 @@ const CanceledAndBookingLineChart: React.FC<ICanceledAndBookingProps> = ({
   );
 };
 
-export default CanceledAndBookingLineChart;
+export default CanceledConsultationChart;

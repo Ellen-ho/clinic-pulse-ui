@@ -6,7 +6,9 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  ComposedChart,
   Legend,
+  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -24,11 +26,11 @@ interface IFeedbackChartData {
   threeStarFeedbackCount: number;
   fourStarFeedbackCount: number;
   fiveStarFeedbackCount: number;
-  oneStarFeedbackRate: number;
-  twoStarFeedbackRate: number;
-  threeStarFeedbackRate: number;
-  fourStarFeedbackRate: number;
-  fiveStarFeedbackRate: number;
+  waitAcupunctureReasonRate: number;
+  waitBedReasonRate: number;
+  waitConsultationReasonRate: number;
+  waitMedicineReasonRate: number;
+  doctorPoorAttitudeRate: number;
 }
 
 interface IFeedbackProps {
@@ -52,18 +54,21 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [yAxisDomain, setYAxisDomain] = useState<[number, number]>([0, 0]);
+  const [yAxisDomainLeft, setYAxisDomainLeft] = useState<[number, number]>([
+    0, 0,
+  ]);
+  const [yAxisDomainRight, setYAxisDomainRight] = useState<[number, number]>([
+    0, 0,
+  ]);
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams();
-
     if (clinicId) params.set('clinicId', clinicId);
     if (timePeriod) params.set('timePeriod', timePeriod);
     if (doctorId) params.set('doctorId', doctorId);
     if (granularity) params.set('granularity', granularity);
     params.set('startDate', startDate);
     params.set('endDate', endDate);
-
     return params.toString();
   }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
@@ -74,7 +79,6 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
   useEffect(() => {
     setMessage(null);
     setLoading(true);
-
     if (data) {
       if (data.data.length === 0) {
         setMessage('選擇區間沒有反饋資料');
@@ -84,10 +88,31 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
         setChartData(data.data);
         setLoading(false);
       }
-      const maxCount = Math.max(...data.data.map((item) => item.feedbackCount));
-      const minCount = Math.min(...data.data.map((item) => item.feedbackCount));
+      const maxCountLeft = Math.max(
+        ...data.data.map((item) =>
+          Math.max(
+            item.oneStarFeedbackCount,
+            item.twoStarFeedbackCount,
+            item.threeStarFeedbackCount,
+            item.fourStarFeedbackCount,
+            item.fiveStarFeedbackCount,
+          ),
+        ),
+      );
+      const maxCountRight = Math.max(
+        ...data.data.map((item) =>
+          Math.max(
+            item.waitAcupunctureReasonRate,
+            item.waitBedReasonRate,
+            item.waitConsultationReasonRate,
+            item.waitMedicineReasonRate,
+            item.doctorPoorAttitudeRate,
+          ),
+        ),
+      );
 
-      setYAxisDomain([minCount, maxCount + 5]);
+      setYAxisDomainLeft([0, maxCountLeft + 5]);
+      setYAxisDomainRight([0, maxCountRight + 5]);
     }
   }, [data]);
 
@@ -112,21 +137,111 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
+      <ComposedChart
         data={chartData}
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid stroke="#f5f5f5" />
         <XAxis dataKey="date" />
-        <YAxis />
+        <YAxis
+          domain={yAxisDomainLeft}
+          label={{
+            value: '人數',
+            angle: -90,
+            position: 'insideLeft',
+            offset: -5,
+          }}
+          yAxisId="left"
+          orientation="left"
+          stroke="#8884d8"
+        />
+        <YAxis
+          domain={yAxisDomainRight}
+          label={{
+            value: '百分率',
+            angle: -90,
+            position: 'insideRight',
+            offset: -5,
+          }}
+          yAxisId="right"
+          orientation="right"
+          stroke="#82ca9d"
+        />
         <Tooltip />
         <Legend />
-        <Bar dataKey="oneStarFeedbackCount" stackId="a" fill="#8884d8" />
-        <Bar dataKey="twoStarFeedbackCount" stackId="a" fill="#82ca9d" />
-        <Bar dataKey="threeStarFeedbackCount" stackId="a" fill="#ffc658" />
-        <Bar dataKey="fourStarFeedbackCount" stackId="a" fill="#ff7f50" />
-        <Bar dataKey="fiveStarFeedbackCount" stackId="a" fill="#6a0dad" />
-      </BarChart>
+        {/* 条形图展示每个星级评论人数 */}
+        <Bar
+          yAxisId="left"
+          dataKey="oneStarFeedbackCount"
+          name="一星評論人數"
+          barSize={20}
+          fill="#413ea0"
+        />
+        <Bar
+          yAxisId="left"
+          dataKey="twoStarFeedbackCount"
+          name="二星評論人數"
+          barSize={20}
+          fill="#009596"
+        />
+        <Bar
+          yAxisId="left"
+          dataKey="threeStarFeedbackCount"
+          name="三星評論人數"
+          barSize={20}
+          fill="#e28743"
+        />
+        <Bar
+          yAxisId="left"
+          dataKey="fourStarFeedbackCount"
+          name="四星評論人數"
+          barSize={20}
+          fill="#ff7f50"
+        />
+        <Bar
+          yAxisId="left"
+          dataKey="fiveStarFeedbackCount"
+          name="五星評論人數"
+          barSize={20}
+          fill="#6a0dad"
+        />
+        {/* 折线图展示每个负面原因的比例 */}
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="waitAcupunctureReasonRate"
+          name="針灸等待時間長"
+          stroke="#8884d8"
+        />
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="waitBedReasonRate"
+          name="床位分配等待時間長"
+          stroke="#82ca9d"
+        />
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="waitConsultationReasonRate"
+          name="看診等待時間長"
+          stroke="#ffc658"
+        />
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="waitMedicineReasonRate"
+          name="藥品等待時間長"
+          stroke="#ff00ff"
+        />
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="doctorPoorAttitudeRate"
+          name="醫生態度差"
+          stroke="#00ffff"
+        />
+      </ComposedChart>
     </ResponsiveContainer>
   );
 };

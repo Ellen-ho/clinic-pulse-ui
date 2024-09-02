@@ -6,9 +6,6 @@ import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import SecondaryPageTop from '../../../../layout/SecondaryPageTop';
 import { Card, Grid } from '@mui/material';
 import TimeFilters from '../components/TimeFilters';
-import AverageWaitingTimeLineChart from '../components/AverageWaitingTimeBarChart';
-import AverageConsultationCountLineChart from '../components/AverageConsultationCountLineChart';
-import DifferentTreatmentsBarChart from '../components/DifferentTreatmentsConsultationBarChart';
 import FeedbackBarChart from '../components/FeedbackBarChart';
 import { AuthContext } from '../../../../../context/AuthContext';
 
@@ -22,7 +19,7 @@ interface IFilters {
 }
 
 const ConsultationReportPage: React.FC = () => {
-  const cardStyle = { height: '350px', padding: '20px' };
+  const cardStyle = { minHeight: '350px', padding: '20px' };
   const currentYear = dayjs().year().toString();
   const currentMonth = (dayjs().month() + 1).toString().padStart(2, '0');
   const currentWeek = dayjs().isoWeek().toString();
@@ -56,12 +53,7 @@ const ConsultationReportPage: React.FC = () => {
       <CommonWrapper>
         <Grid container spacing={1}>
           <Grid item xs={12} md={12} lg={12}>
-            <TimeFilters
-              onApply={handleApplyFilters}
-              initialYear={currentYear}
-              initialMonth={currentMonth}
-              initialWeek={currentWeek}
-            />
+            <TimeFilters onApply={handleApplyFilters} />
           </Grid>
           <Grid item xs={12} md={12} lg={6}>
             <Card sx={cardStyle}>

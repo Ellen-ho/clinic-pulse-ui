@@ -61,7 +61,9 @@ const SignIn: React.FC = () => {
         currentUser: {
           id: response.user.id,
           role: response.user.role as UserRoleType,
+          avatar: response.user.avatar,
         },
+        permissions: response.permissions,
         doctorId: response.doctorId,
       },
     });

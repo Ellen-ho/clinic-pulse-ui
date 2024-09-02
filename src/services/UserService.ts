@@ -1,5 +1,5 @@
 import { GenderType } from '../types/Share';
-import { UserRoleType } from '../types/Users';
+import { IPermission, UserRoleType } from '../types/Users';
 import api from './ApiService';
 
 interface ISigninRequest {
@@ -15,6 +15,7 @@ interface ISigninResponse {
     role: string;
     avatar: string | null;
   };
+  permissions: IPermission;
   doctorId: string;
 }
 

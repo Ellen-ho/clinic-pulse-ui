@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { getAuthFromCache } from '../utils/getAuthFromCache';
-import { UserRoleType } from '../types/Users';
+import { IPermission, UserRoleType } from '../types/Users';
 
 const useInitAuth = () => {
   const { dispatch } = useContext(AuthContext);
@@ -19,8 +19,10 @@ const useInitAuth = () => {
             token: cachedAuth.token as string,
             currentUser: cachedAuth.currentUser as {
               id: string;
+              avatar: string;
               role: UserRoleType;
             },
+            permissions: cachedAuth.permissions as IPermission,
             doctorId: cachedAuth.doctorId as string,
           },
         });

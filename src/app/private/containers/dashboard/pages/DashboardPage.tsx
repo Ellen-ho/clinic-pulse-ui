@@ -1,11 +1,12 @@
 import { useCallback, useContext, useState } from 'react';
-import { Container, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import RealConsultationStatistic from '../components/RealTimePatientCount';
 import RealTimeFilters from '../components/RealTimeFilters';
-import { UserRoleType } from '../../../../../types/Users';
 import { AuthContext } from '../../../../../context/AuthContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import RealTimeList from '../components/RealTimeList';
+import { RoomNumberType } from '../../../../../types/ConsultationRoom';
 
 export const clinics = [
   { label: '台北院區', id: '690d0ea3-9f8d-4143-b160-0661a003bf08' },
@@ -24,7 +25,7 @@ export const consultationRooms = [
 
 interface IDashboardFilterValues {
   clinicId?: string;
-  consultationRoomNumber?: string;
+  consultationRoomNumber?: RoomNumberType;
 }
 
 const DashboardPage: React.FC = () => {
@@ -47,7 +48,14 @@ const DashboardPage: React.FC = () => {
           即時看診資訊
         </Typography>
         {!isDoctor && <RealTimeFilters onApply={handleApplyFilters} />}
-        <RealConsultationStatistic {...filters} />
+        <Grid container spacing={2} sx={{ height: '100%' }}>
+          <Grid item xs={12} md={12} lg={6}>
+            <RealConsultationStatistic {...filters} />
+          </Grid>
+          <Grid item xs={12} md={12} lg={6}>
+            <RealTimeList {...filters} onApply={handleApplyFilters} />
+          </Grid>
+        </Grid>
       </CommonWrapper>
     </PrimaryPageContent>
   );

@@ -3,77 +3,50 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { UserRoleType } from '../../types/Users';
-import { Chip, Menu, MenuItem } from '@mui/material';
+import { Badge, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import { CommonWrapper } from './CommonWrapper.styled';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import ImageAvatar from '../../components/avatar/ImageAvatar';
+import MenuIcon from '@mui/icons-material/Menu';
+import { NotificationContext } from '../../context/NotificationContext';
+import { getNotificationHints } from '../../services/NotificationService';
+import useSWR from 'swr';
+import {
+  FiltersContext,
+  useFiltersContext,
+} from '../../context/FiltersContext';
+import { getDoctorProfile } from '../../services/DoctorService';
+import useNavMenu, { IPage } from '../../hooks/UseNavMenu';
 
-interface IPageItem {
-  title: string;
-  link: string;
-  permission?: UserRoleType[];
-  subMenu?: IPageItem[];
+interface Doctor {
+  id: string;
+  firstName: string;
+  lastName: string;
 }
-
-interface IPage extends IPageItem {
-  subMenu?: IPageItem[];
-}
-
-const topPages: IPage[] = [
-  {
-    title: '即時看板',
-    link: '/dashboard',
-    permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-  },
-  {
-    title: '看診紀錄',
-    link: '/consultation',
-    permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-  },
-  {
-    title: '反饋紀錄',
-    link: '/feedback',
-    permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-  },
-  {
-    title: '統計中心',
-    link: '',
-    permission: [UserRoleType.DOCTOR, UserRoleType.ADMIN],
-    subMenu: [
-      { title: '門診統計中心', link: '/consultation-report-center' },
-      { title: '反饋統計中心', link: '/feedback-report-center' },
-    ],
-  },
-  {
-    title: '人員管理',
-    link: '',
-    permission: [UserRoleType.ADMIN],
-    subMenu: [
-      // { title: '人員清單', link: '' },
-      { title: '人員註冊', link: '/signup' },
-    ],
-  },
-  {
-    title: '帳號管理',
-    link: '/account-management',
-    permission: [UserRoleType.DOCTOR],
-  },
-];
 
 const ResponsiveAppBar: React.FC = () => {
+  const { menu } = useNavMenu();
   const { state, dispatch } = useContext(AuthContext);
   const isSignedIn = state.isSignedIn;
   const currentUserRole = state.currentUser?.role ?? UserRoleType.DOCTOR;
+  const avatar = state.currentUser?.avatar;
+  const { doctors } = useFiltersContext();
   const [currentMenu, setCurrentMenu] = useState<IPage | null>(null);
-
-  const navigate = useNavigate();
-
+  const { state: notificationState, dispatch: notificationDispatch } =
+    useContext(NotificationContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [profileMenuAnchorEl, setProfileMenuAnchorEl] =
+    useState<null | HTMLElement>(null);
+  const [doctorMenuAnchorEl, setDoctorMenuAnchorEl] =
+    useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
+  const doctorMenuOpen = Boolean(doctorMenuAnchorEl);
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -89,8 +62,35 @@ const ResponsiveAppBar: React.FC = () => {
     }
   };
 
+  const handleDoctorMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setDoctorMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleDoctorMenuClose = () => {
+    setDoctorMenuAnchorEl(null);
+  };
+
+  const handleDoctorProfileClick = async (doctorId: string) => {
+    try {
+      const doctorProfile = await getDoctorProfile({ doctorId });
+      navigate(`/profile?doctorId=${doctorId}`);
+    } catch (error) {
+      console.error('Failed to fetch doctor profile:', error);
+    } finally {
+      handleDoctorMenuClose();
+    }
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchorEl(null);
   };
 
   const handleNavigate = (link: string) => {
@@ -106,6 +106,31 @@ const ResponsiveAppBar: React.FC = () => {
   if (!isSignedIn) {
     return null;
   }
+
+  const handleNotificationClick = async () => {
+    notificationDispatch({
+      type: 'UPDATE_NOTIFICATION',
+      payload: {
+        hasUnread: false,
+      },
+    });
+    navigate('/notification');
+  };
+
+  useSWR(
+    isSignedIn ? 'getNotificationHints' : null,
+    () => getNotificationHints(),
+    {
+      onSuccess: (data) => {
+        notificationDispatch({
+          type: 'UPDATE_NOTIFICATION',
+          payload: {
+            hasUnread: data.hasUnReadNotification,
+          },
+        });
+      },
+    },
+  );
 
   return (
     <AppBar position="static">
@@ -159,17 +184,15 @@ const ResponsiveAppBar: React.FC = () => {
           <Box sx={{ display: { py: 2 } }}>
             {isSignedIn && (
               <Box sx={{ display: 'flex' }}>
-                {topPages
-                  .filter((page) => page.permission?.includes(currentUserRole))
-                  .map((page) => (
-                    <Button
-                      key={page.title}
-                      onClick={(event) => handleMenuClick(event, page)}
-                      sx={{ color: 'white' }}
-                    >
-                      {page.title}
-                    </Button>
-                  ))}
+                {menu.map((page) => (
+                  <Button
+                    key={page.title}
+                    onClick={(event) => handleMenuClick(event, page)}
+                    sx={{ color: 'white' }}
+                  >
+                    {page.title}
+                  </Button>
+                ))}
 
                 <Menu
                   id="dynamic-menu"
@@ -186,10 +209,51 @@ const ResponsiveAppBar: React.FC = () => {
                     </MenuItem>
                   ))}
                 </Menu>
+                <IconButton
+                  sx={{ color: 'white' }}
+                  onClick={handleNotificationClick}
+                >
+                  <Badge
+                    color="warning"
+                    variant="dot"
+                    overlap="circular"
+                    invisible={!notificationState.hasUnread}
+                  >
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                {currentUserRole !== UserRoleType.ADMIN ? (
+                  <IconButton
+                    sx={{ color: 'white' }}
+                    onClick={handleProfileMenuOpen}
+                  >
+                    <ImageAvatar
+                      imageUrl={avatar}
+                      sx={{
+                        display: { xs: 'none', md: 'flex' },
+                      }}
+                    />
+                    <MenuIcon sx={{ display: { xs: 'flex', md: 'none' } }} />
+                  </IconButton>
+                ) : (
+                  <Button
+                    onClick={handleSignOut}
+                    sx={{ color: 'white', display: { xs: 'none', md: 'flex' } }}
+                  >
+                    登出
+                  </Button>
+                )}
+                <Menu
+                  anchorEl={profileMenuAnchorEl}
+                  open={Boolean(profileMenuAnchorEl)}
+                  onClose={handleProfileMenuClose}
+                >
+                  <MenuItem onClick={handleSignOut}>登出</MenuItem>
+                </Menu>
 
-                <Button onClick={handleSignOut} sx={{ color: 'white' }}>
+                {/* <Button onClick={handleSignOut} sx={{ color: 'white' }}>
                   登出
-                </Button>
+                </Button> */}
               </Box>
             )}
           </Box>

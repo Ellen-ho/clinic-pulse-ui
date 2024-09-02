@@ -1,4 +1,7 @@
-import { OnsiteCancelReasonType } from '../types/Consultation';
+import {
+  ConsultationStatus,
+  OnsiteCancelReasonType,
+} from '../types/Consultation';
 import { GenderType, TimePeriodType, TreatmentType } from '../types/Share';
 
 export const ConsultationTimePeriodMap = {
@@ -25,4 +28,16 @@ export const OnsiteCancelReasonMap = {
   [OnsiteCancelReasonType.SERVICE_DISSATISFACTION]: '診所人員態度不佳',
   [OnsiteCancelReasonType.PERSONAL_EMERGENCY]: '個人急事',
   [OnsiteCancelReasonType.NO_PARKING_SPACES]: '車子臨停',
+};
+
+export const ConsultationStatusMap = {
+  [ConsultationStatus.WAITING_FOR_CONSULTATION]: '等待看診',
+  [ConsultationStatus.IN_CONSULTATION]: '看診中',
+  [ConsultationStatus.ONSITE_CANCEL]: '退掛',
+  [ConsultationStatus.WAITING_FOR_ACUPUNCTURE_TREATMENT]: '等待針灸',
+  [ConsultationStatus.WAITING_FOR_BED_ASSIGNMENT]: '等待安排治療床',
+  [ConsultationStatus.WAITING_FOR_NEEDLE_REMOVAL]: '等待取針',
+  [ConsultationStatus.WAITING_FOR_GET_MEDICINE]: '等待拿藥',
+  [ConsultationStatus.CHECK_OUT]: '完成離開',
+  [ConsultationStatus.UNDERGOING_ACUPUNCTURE_TREATMENT]: '針灸治療中',
 };

@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import { FcFinePrint } from 'react-icons/fc';
-import { Box } from '@mui/material';
+import { Box, SxProps, Theme } from '@mui/material';
 
 interface INoDataFound {
   icon?: ReactNode;
   label?: string;
   children?: ReactNode;
+  sx?: SxProps<Theme>;
 }
 
 const NoDataFound: React.FC<INoDataFound> = ({
@@ -20,6 +20,7 @@ const NoDataFound: React.FC<INoDataFound> = ({
   ),
   label,
   children = '',
+  sx = {},
 }) => {
   return (
     <Box
@@ -35,6 +36,7 @@ const NoDataFound: React.FC<INoDataFound> = ({
         alignItems: 'center',
         gap: '10px',
         fontSize: '16px',
+        ...sx,
       }}
     >
       {icon}

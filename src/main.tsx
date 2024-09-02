@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from './styles/theme';
 import { FiltersProvider } from './context/FiltersProvider';
+import { NotificationProvider } from './context/NotificationProvider';
 
 ReactDOM.createRoot(document.getElementById('app') as HTMLElement).render(
   <React.StrictMode>
@@ -15,8 +16,10 @@ ReactDOM.createRoot(document.getElementById('app') as HTMLElement).render(
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <FiltersProvider>
-            <App />
-            <Toaster position="bottom-center" />
+            <NotificationProvider>
+              <App />
+              <Toaster position="bottom-center" />
+            </NotificationProvider>
           </FiltersProvider>
         </ThemeProvider>
       </BrowserRouter>

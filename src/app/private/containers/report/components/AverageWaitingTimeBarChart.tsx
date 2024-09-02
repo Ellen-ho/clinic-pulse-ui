@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import CenterText from '../../../../../components/box/CenterText';
 import DataLoading from '../../../../../components/signs/DataLoading';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 interface IAverageWaitingTimeChartData {
   date: string;
@@ -26,20 +26,12 @@ interface IAverageWaitingTimeChartData {
 }
 
 interface IAverageWaitingTimeProps {
-  startDate: string;
-  endDate: string;
-  clinicId?: string;
-  doctorId?: string;
-  timePeriod?: TimePeriodType;
+  data: IAverageWaitingTimeChartData[];
   granularity?: Granularity;
 }
 
-const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
-  startDate,
-  endDate,
-  clinicId,
-  doctorId,
-  timePeriod,
+const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
+  data,
   granularity,
 }) => {
   const [chartData, setChartData] = useState<IAverageWaitingTimeChartData[]>(
@@ -50,34 +42,34 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
 
   const [yAxisDomain, setYAxisDomain] = useState<[number, number]>([0, 0]);
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
+  // const queryString = useMemo(() => {
+  //   const params = new URLSearchParams();
 
-    if (clinicId) params.set('clinicId', clinicId);
-    if (timePeriod) params.set('timePeriod', timePeriod);
-    if (doctorId) params.set('doctorId', doctorId);
-    if (granularity) params.set('granularity', granularity);
-    params.set('startDate', startDate);
-    params.set('endDate', endDate);
+  //   if (clinicId) params.set('clinicId', clinicId);
+  //   if (timePeriod) params.set('timePeriod', timePeriod);
+  //   if (doctorId) params.set('doctorId', doctorId);
+  //   if (granularity) params.set('granularity', granularity);
+  //   params.set('startDate', startDate);
+  //   params.set('endDate', endDate);
 
-    return params.toString();
-  }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  //   return params.toString();
+  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  const { data, error } = useSWR(`getAverageWaitingTime?${queryString}`, () =>
-    getAverageWaitingTime({ queryString }),
-  );
+  // const { data, error } = useSWR(`getAverageWaitingTime?${queryString}`, () =>
+  //   getAverageWaitingTime({ queryString }),
+  // );
 
   useEffect(() => {
     setMessage(null);
     setLoading(true);
 
     if (data) {
-      if (data.data.length === 0) {
+      if (data.length === 0) {
         setMessage('選擇區間沒有門診資料');
         setLoading(false);
         setChartData([]);
       } else {
-        setChartData(data.data);
+        setChartData(data);
         setLoading(false);
       }
     }
@@ -97,17 +89,19 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
         <DataLoading />
       </Box>
     );
-  if (error)
-    return (
-      <CenterText>
-        <>{'Error loading data'}</>
-      </CenterText>
-    );
+
   if (message)
     return (
-      <CenterText>
-        <>{message}</>
-      </CenterText>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{message}</Typography>
+      </Box>
     );
 
   return (
@@ -130,35 +124,35 @@ const AverageWaitingTimeLineChart: React.FC<IAverageWaitingTimeProps> = ({
           dataKey="averageConsultationWait"
           name="看診平均等待時間"
           stackId="a"
-          fill="#2A265F"
+          fill="#004d40"
         />
         <Bar
           dataKey="averageBedAssignmentWait"
           name="治療床平均等待時間"
           stackId="a"
-          fill="#3C3D99"
+          fill="#00796b"
         />
         <Bar
           dataKey="averageAcupunctureWait"
           name="針灸平均等待時間"
           stackId="a"
-          fill="#5752D1"
+          fill="#009688"
         />
         <Bar
           dataKey="averageNeedleRemovalWait"
           name="取針平均等待時間"
           stackId="a"
-          fill="#8481DD"
+          fill="#26a69a"
         />
         <Bar
           dataKey="averageMedicationWait"
           name="取藥平均等待時間"
           stackId="a"
-          fill="#B2B0EA"
+          fill="#80cbc4"
         />
       </BarChart>
     </ResponsiveContainer>
   );
 };
 
-export default AverageWaitingTimeLineChart;
+export default AverageWaitingTimeBarChart;
