@@ -108,7 +108,7 @@ const BookingSourceDescription: React.FC<IBookingSourceDescriptionProps> = ({
       }}
     >
       <Typography
-        variant="subtitle1"
+        variant="h5"
         sx={{ fontWeight: 'bold', marginBottom: '16px' }}
       >
         {title}

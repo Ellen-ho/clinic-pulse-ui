@@ -1,4 +1,4 @@
-import { Card, Grid } from '@mui/material';
+import { Box, Card, Grid } from '@mui/material';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { Granularity, TimePeriodType } from '../../../../../types/Share';
@@ -45,7 +45,8 @@ interface IFilters {
 }
 
 const ConsultationReportPage: React.FC = () => {
-  const cardStyle = { height: '350px', padding: '20px' };
+  const cardStyle = { padding: '20px' };
+  const chartStyle = { height: '300px' };
 
   const { state } = useContext(AuthContext);
   const doctorId = state.doctorId || '';
@@ -179,10 +180,12 @@ const ConsultationReportPage: React.FC = () => {
                     compareSlotRate={averageConsultationData.compareSlots}
                     granularity={filters.granularity}
                   />
-                  <AverageConsultationCountLineChart
-                    data={averageConsultationData.data}
-                    granularity={filters.granularity}
-                  />
+                  <Box sx={chartStyle}>
+                    <AverageConsultationCountLineChart
+                      data={averageConsultationData.data}
+                      granularity={filters.granularity}
+                    />
+                  </Box>
                 </>
               )}
             </Card>
@@ -208,10 +211,12 @@ const ConsultationReportPage: React.FC = () => {
                     }
                     granularity={filters.granularity}
                   />
-                  <FirstTimeConsultationChart
-                    data={firstTimeConsultationData.data}
-                    granularity={filters.granularity}
-                  />
+                  <Box sx={chartStyle}>
+                    <FirstTimeConsultationChart
+                      data={firstTimeConsultationData.data}
+                      granularity={filters.granularity}
+                    />
+                  </Box>
                 </>
               )}
             </Card>
@@ -233,10 +238,12 @@ const ConsultationReportPage: React.FC = () => {
                     compareBookingRates={bookingSourceData.compareBookingRates}
                     granularity={filters.granularity}
                   />
-                  <BookingSourceConsultationChart
-                    data={bookingSourceData.data}
-                    granularity={filters.granularity}
-                  />
+                  <Box sx={chartStyle}>
+                    <BookingSourceConsultationChart
+                      data={bookingSourceData.data}
+                      granularity={filters.granularity}
+                    />
+                  </Box>
                 </>
               )}
             </Card>
@@ -260,10 +267,12 @@ const ConsultationReportPage: React.FC = () => {
                     }
                     granularity={filters.granularity}
                   />
-                  <CanceledConsultationChart
-                    data={canceledData.data}
-                    granularity={filters.granularity}
-                  />
+                  <Box sx={chartStyle}>
+                    <CanceledConsultationChart
+                      data={canceledData.data}
+                      granularity={filters.granularity}
+                    />
+                  </Box>
                 </>
               )}
             </Card>
@@ -307,10 +316,12 @@ const ConsultationReportPage: React.FC = () => {
                     }
                     granularity={filters.granularity}
                   />
-                  <AverageWaitingTimeBarChart
-                    data={averageWaitingTimeData.data}
-                    granularity={filters.granularity}
-                  />
+                  <Box sx={chartStyle}>
+                    <AverageWaitingTimeBarChart
+                      data={averageWaitingTimeData.data}
+                      granularity={filters.granularity}
+                    />
+                  </Box>
                 </>
               )}
             </Card>
@@ -360,10 +371,12 @@ const ConsultationReportPage: React.FC = () => {
                     }
                     granularity={filters.granularity}
                   />
-                  <DifferentTreatmentsChart
-                    data={differentTreatmentData.data}
-                    granularity={filters.granularity}
-                  />
+                  <Box sx={chartStyle}>
+                    <DifferentTreatmentsChart
+                      data={differentTreatmentData.data}
+                      granularity={filters.granularity}
+                    />
+                  </Box>
                 </>
               )}
             </Card>
