@@ -5,6 +5,7 @@ import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import { Box, Typography } from '@mui/material';
 import TimeSlotFilters from '../components/TimeSlotFilters';
 import TimeSlotCalendar from '../components/TimeSlotCalendar';
+import TimeSlotDescription from '../components/TimeSlotDescription';
 
 interface FilterValues {
   clinicId?: string;
@@ -29,6 +30,9 @@ const TimeSlotPage: React.FC = () => {
           門診表
         </Typography>
         <TimeSlotFilters onApply={handleApplyFilters} />
+        <Box sx={{ padding: '15px 0 0 15px' }}>
+          <TimeSlotDescription />
+        </Box>
         <TimeSlotCalendar clinicId={filters.clinicId} />
       </CommonWrapper>
     </PrimaryPageContent>
