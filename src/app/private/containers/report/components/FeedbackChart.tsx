@@ -15,7 +15,7 @@ import {
   YAxis,
 } from 'recharts';
 import CenterText from '../../../../../components/box/CenterText';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import DataLoading from '../../../../../components/signs/DataLoading';
 
 interface IFeedbackChartData {
@@ -34,22 +34,11 @@ interface IFeedbackChartData {
 }
 
 interface IFeedbackProps {
-  startDate: string;
-  endDate: string;
-  clinicId?: string;
-  timePeriod?: TimePeriodType;
-  doctorId?: string;
+  data: IFeedbackChartData[];
   granularity?: Granularity;
 }
 
-const FeedbackBarChart: React.FC<IFeedbackProps> = ({
-  startDate,
-  endDate,
-  clinicId,
-  timePeriod,
-  doctorId,
-  granularity,
-}) => {
+const FeedbackChart: React.FC<IFeedbackProps> = ({ data, granularity }) => {
   const [chartData, setChartData] = useState<IFeedbackChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
@@ -61,35 +50,35 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
     0, 0,
   ]);
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams();
-    if (clinicId) params.set('clinicId', clinicId);
-    if (timePeriod) params.set('timePeriod', timePeriod);
-    if (doctorId) params.set('doctorId', doctorId);
-    if (granularity) params.set('granularity', granularity);
-    params.set('startDate', startDate);
-    params.set('endDate', endDate);
-    return params.toString();
-  }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
+  // const queryString = useMemo(() => {
+  //   const params = new URLSearchParams();
+  //   if (clinicId) params.set('clinicId', clinicId);
+  //   if (timePeriod) params.set('timePeriod', timePeriod);
+  //   if (doctorId) params.set('doctorId', doctorId);
+  //   if (granularity) params.set('granularity', granularity);
+  //   params.set('startDate', startDate);
+  //   params.set('endDate', endDate);
+  //   return params.toString();
+  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
 
-  const { data, error } = useSWR(`getFeedbackCountAndRate?${queryString}`, () =>
-    getFeedbackCountAndRate({ queryString }),
-  );
+  // const { data, error } = useSWR(`getFeedbackCountAndRate?${queryString}`, () =>
+  //   getFeedbackCountAndRate({ queryString }),
+  // );
 
   useEffect(() => {
     setMessage(null);
     setLoading(true);
     if (data) {
-      if (data.data.length === 0) {
+      if (data.length === 0) {
         setMessage('選擇區間沒有反饋資料');
         setLoading(false);
         setChartData([]);
       } else {
-        setChartData(data.data);
+        setChartData(data);
         setLoading(false);
       }
       const maxCountLeft = Math.max(
-        ...data.data.map((item) =>
+        ...data.map((item) =>
           Math.max(
             item.oneStarFeedbackCount,
             item.twoStarFeedbackCount,
@@ -99,20 +88,27 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
           ),
         ),
       );
-      const maxCountRight = Math.max(
-        ...data.data.map((item) =>
+      const maxCountRight = Math.min(
+        100,
+        Math.ceil(
           Math.max(
-            item.waitAcupunctureReasonRate,
-            item.waitBedReasonRate,
-            item.waitConsultationReasonRate,
-            item.waitMedicineReasonRate,
-            item.doctorPoorAttitudeRate,
+            ...data.map((item) =>
+              Math.max(
+                item.waitAcupunctureReasonRate,
+                item.waitBedReasonRate,
+                item.waitConsultationReasonRate,
+                item.waitMedicineReasonRate,
+                item.doctorPoorAttitudeRate,
+              ),
+            ),
           ),
         ),
       );
 
+      const minCountRight = 0;
+
       setYAxisDomainLeft([0, maxCountLeft + 5]);
-      setYAxisDomainRight([0, maxCountRight + 5]);
+      setYAxisDomainRight([0, maxCountRight]);
     }
   }, [data]);
 
@@ -122,17 +118,19 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
         <DataLoading />
       </Box>
     );
-  if (error)
-    return (
-      <CenterText>
-        <>{'Error loading data'}</>
-      </CenterText>
-    );
+
   if (message)
     return (
-      <CenterText>
-        <>{message}</>
-      </CenterText>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography>{message}</Typography>
+      </Box>
     );
 
   return (
@@ -169,7 +167,6 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
         />
         <Tooltip />
         <Legend />
-        {/* 条形图展示每个星级评论人数 */}
         <Bar
           yAxisId="left"
           dataKey="oneStarFeedbackCount"
@@ -205,33 +202,32 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
           barSize={20}
           fill="#6a0dad"
         />
-        {/* 折线图展示每个负面原因的比例 */}
         <Line
           yAxisId="right"
           type="monotone"
           dataKey="waitAcupunctureReasonRate"
-          name="針灸等待時間長"
+          name="針灸等待時間過長"
           stroke="#8884d8"
         />
         <Line
           yAxisId="right"
           type="monotone"
           dataKey="waitBedReasonRate"
-          name="床位分配等待時間長"
+          name="床位分配等待時間過長"
           stroke="#82ca9d"
         />
         <Line
           yAxisId="right"
           type="monotone"
           dataKey="waitConsultationReasonRate"
-          name="看診等待時間長"
+          name="看診等待時間過長"
           stroke="#ffc658"
         />
         <Line
           yAxisId="right"
           type="monotone"
           dataKey="waitMedicineReasonRate"
-          name="藥品等待時間長"
+          name="藥品等待時間過長"
           stroke="#ff00ff"
         />
         <Line
@@ -246,4 +242,4 @@ const FeedbackBarChart: React.FC<IFeedbackProps> = ({
   );
 };
 
-export default FeedbackBarChart;
+export default FeedbackChart;

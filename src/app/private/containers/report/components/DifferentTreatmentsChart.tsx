@@ -87,8 +87,9 @@ const DifferentTreatmentsChart: React.FC<IDifferentTreatmentsProps> = ({
         );
         const minCountLeft = 0;
 
-        const maxCountRight = Math.max(
-          ...data.map((item) => Math.max(item.medicineRate, item.medicineRate)),
+        const maxCountRight = Math.min(
+          100,
+          Math.ceil(Math.max(...data.map((item) => item.medicineRate))),
         );
         const minCountRight = 0;
 
