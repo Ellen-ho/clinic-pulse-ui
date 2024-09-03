@@ -93,6 +93,12 @@ export interface IGetFeedbackCountAndRateRequest {
 }
 
 export interface IGetFeedbackCountAndRateResponse {
+  lastTotalFeedbacks: number;
+  lastOneStarFeedbackCount: number;
+  lastTwoStarFeedbackCount: number;
+  lastThreeStarFeedbackCount: number;
+  lastFourStarFeedbackCount: number;
+  lastFiveStarFeedbackCount: number;
   totalFeedbacks: number;
   oneStarFeedbackCount: number;
   twoStarFeedbackCount: number;
@@ -104,6 +110,12 @@ export interface IGetFeedbackCountAndRateResponse {
   threeStarFeedbackRate: number;
   fourStarFeedbackRate: number;
   fiveStarFeedbackRate: number;
+  compareTotalFeedbacks: number;
+  compareOneStarFeedbackCount: number;
+  compareTwoStarFeedbackCount: number;
+  compareThreeStarFeedbackCount: number;
+  compareFourStarFeedbackCount: number;
+  compareFiveStarFeedbackCount: number;
   data: Array<{
     date: string;
     feedbackCount: number;
