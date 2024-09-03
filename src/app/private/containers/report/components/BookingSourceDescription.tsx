@@ -86,7 +86,7 @@ const BookingSourceDescription: React.FC<IBookingSourceDescriptionProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         {icon}
         <Typography variant="body2" sx={{ color }}>
-          {Math.round(Math.abs(rate))}%
+          {Math.abs(rate)}%
         </Typography>
         <Typography variant="body2" sx={{ ml: 0.5 }}>
           {comparisonText}
@@ -115,7 +115,6 @@ const BookingSourceDescription: React.FC<IBookingSourceDescriptionProps> = ({
       </Typography>
 
       <Grid container spacing={2}>
-        {/* Consultation with Online Booking Card */}
         <Grid item xs={12} sm={6}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -127,7 +126,6 @@ const BookingSourceDescription: React.FC<IBookingSourceDescriptionProps> = ({
           </Card>
         </Grid>
 
-        {/* Online Booking Rate Card */}
         <Grid item xs={12} sm={6}>
           <Card sx={{ height: '100%' }}>
             <CardContent>

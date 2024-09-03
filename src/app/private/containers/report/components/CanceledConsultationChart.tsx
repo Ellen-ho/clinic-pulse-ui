@@ -77,10 +77,9 @@ const CanceledConsultationChart: React.FC<ICanceledConsultationChartProps> = ({
         );
         const minCountLeft = 0;
 
-        const maxCountRight = Math.max(
-          ...data.map((item) =>
-            Math.max(item.onsiteCancelRate, item.onsiteCancelRate),
-          ),
+        const maxCountRight = Math.min(
+          100,
+          Math.ceil(Math.max(...data.map((item) => item.onsiteCancelRate))),
         );
         const minCountRight = 0;
 

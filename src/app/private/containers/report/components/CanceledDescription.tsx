@@ -67,12 +67,12 @@ const CanceledDescription: React.FC<ICanceledDescriptionProps> = ({
       );
     }
 
-    const isPositive = rate > 0;
+    const isPositive = rate < 0;
     const color = isPositive ? 'green' : 'red';
     const icon = isPositive ? (
-      <TrendingUpIcon style={{ color }} />
-    ) : (
       <TrendingDownIcon style={{ color }} />
+    ) : (
+      <TrendingUpIcon style={{ color }} />
     );
 
     const comparisonText =
@@ -86,7 +86,7 @@ const CanceledDescription: React.FC<ICanceledDescriptionProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         {icon}
         <Typography variant="body2" sx={{ color }}>
-          {Math.round(Math.abs(rate))}%
+          {Math.abs(rate)}%
         </Typography>
         <Typography variant="body2" sx={{ ml: 0.5 }}>
           {comparisonText}

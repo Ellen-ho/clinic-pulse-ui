@@ -19,7 +19,7 @@ const RowItem: React.FC<IRowItemProps> = ({
           display: 'flex',
           flexDirection: {
             xs: 'column',
-            sm: 'row', // breakpoint: 600px
+            sm: 'row',
           },
           justifyContent: {
             xs: 'flex-start',

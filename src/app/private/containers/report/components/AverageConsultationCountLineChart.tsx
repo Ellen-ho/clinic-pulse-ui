@@ -113,7 +113,7 @@ const AverageConsultationCountLineChart: React.FC<
         const minCountRight = 0;
 
         setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
-        setYAxisDomainRight([minCountRight, maxCountRight + 5]);
+        setYAxisDomainRight([minCountRight, maxCountRight]);
       }
 
       setLoading(false);

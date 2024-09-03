@@ -1,101 +1,120 @@
-import React from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import { Granularity } from '../../../../../types/Share';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
-interface IWaitingTimeDescriptionProps {
+interface IFeedbackDescriptionProps {
   title: string;
   color: string;
-  totalAverageConsultationWait: number;
-  totalAverageBedAssignmentWait: number;
-  totalAverageAcupunctureWait: number;
-  totalAverageNeedleRemovalWait: number;
-  totalAverageMedicationWait: number;
-  compareAverageConsultationWaitRate: number;
-  compareAverageBedAssignmentWaitRate: number;
-  compareAverageAcupunctureWaitRate: number;
-  compareAverageNeedleRemovalWaitRate: number;
-  compareAverageMedicationWaitRate: number;
+  totalFeedbacks: number;
+  oneStarFeedbackCount: number;
+  twoStarFeedbackCount: number;
+  threeStarFeedbackCount: number;
+  fourStarFeedbackCount: number;
+  fiveStarFeedbackCount: number;
+  compareTotalFeedbacks: number;
+  compareOneStarFeedbackCount: number;
+  compareTwoStarFeedbackCount: number;
+  compareThreeStarFeedbackCount: number;
+  compareFourStarFeedbackCount: number;
+  compareFiveStarFeedbackCount: number;
   granularity: Granularity;
 }
 
-const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
+const FeedbackDescription: React.FC<IFeedbackDescriptionProps> = ({
   title,
   color,
-  totalAverageConsultationWait,
-  totalAverageBedAssignmentWait,
-  totalAverageAcupunctureWait,
-  totalAverageNeedleRemovalWait,
-  totalAverageMedicationWait,
-  compareAverageConsultationWaitRate,
-  compareAverageBedAssignmentWaitRate,
-  compareAverageAcupunctureWaitRate,
-  compareAverageNeedleRemovalWaitRate,
-  compareAverageMedicationWaitRate,
+  totalFeedbacks,
+  oneStarFeedbackCount,
+  twoStarFeedbackCount,
+  threeStarFeedbackCount,
+  fourStarFeedbackCount,
+  fiveStarFeedbackCount,
+  compareTotalFeedbacks,
+  compareOneStarFeedbackCount,
+  compareTwoStarFeedbackCount,
+  compareThreeStarFeedbackCount,
+  compareFourStarFeedbackCount,
+  compareFiveStarFeedbackCount,
   granularity,
 }) => {
-  const getAverageConsultationWaitLabel = () => {
+  const getTotalFeedbacksLabel = () => {
     switch (granularity) {
       case Granularity.MONTH:
-        return `當年度等待看診平均時間: ${totalAverageConsultationWait} 分`;
+        return `當年度反饋數量: ${totalFeedbacks} 則`;
       case Granularity.WEEK:
-        return `當月度等待看診平均時間: ${totalAverageConsultationWait} 分`;
+        return `當月度反饋數量: ${totalFeedbacks} 則`;
       case Granularity.DAY:
       default:
-        return `當週等待看診平均時間: ${totalAverageConsultationWait} 分`;
+        return `當週反饋數量: ${totalFeedbacks} 則`;
     }
   };
 
-  const getAverageBedAssignmentWaitLabel = () => {
+  const getOneStarFeedbackCountLabel = () => {
     switch (granularity) {
       case Granularity.MONTH:
-        return `當年度等待排床平均時間: ${totalAverageBedAssignmentWait} 分`;
+        return `當年度一星反饋數: ${oneStarFeedbackCount} 則`;
       case Granularity.WEEK:
-        return `當月度等待排床平均時間: ${totalAverageBedAssignmentWait} 分`;
+        return `當月度一星反饋數: ${oneStarFeedbackCount} 則`;
       case Granularity.DAY:
       default:
-        return `當週等待排床平均時間: ${totalAverageBedAssignmentWait} 分`;
+        return `當週一星反饋數: ${oneStarFeedbackCount} 則`;
     }
   };
 
-  const getAverageAcupunctureWaitLabel = () => {
+  const getTwoStarFeedbackCountLabel = () => {
     switch (granularity) {
       case Granularity.MONTH:
-        return `當年度等待針灸平均時間: ${totalAverageAcupunctureWait} 分`;
+        return `當年度二星反饋數: ${twoStarFeedbackCount} 則`;
       case Granularity.WEEK:
-        return `當月度等待針灸平均時間: ${totalAverageAcupunctureWait} 分`;
+        return `當月度二星反饋數: ${twoStarFeedbackCount} 則`;
       case Granularity.DAY:
       default:
-        return `當週等待針灸平均時間: ${totalAverageAcupunctureWait} 分`;
+        return `當週二星反饋數: ${twoStarFeedbackCount} 則`;
     }
   };
 
-  const getAverageNeedleRemovalWaitLabel = () => {
+  const getThreeStarFeedbackCountLabel = () => {
     switch (granularity) {
       case Granularity.MONTH:
-        return `當年度等待取針平均時間: ${totalAverageNeedleRemovalWait} 分`;
+        return `當年度三星反饋數: ${threeStarFeedbackCount} 則`;
       case Granularity.WEEK:
-        return `當月度等待取針平均時間: ${totalAverageNeedleRemovalWait} 分`;
+        return `當月度三星反饋數: ${threeStarFeedbackCount} 則`;
       case Granularity.DAY:
       default:
-        return `當週等待取針平均時間: ${totalAverageNeedleRemovalWait} 分`;
+        return `當週三星反饋數: ${threeStarFeedbackCount} 則`;
     }
   };
 
-  const getAverageMedicationWaitLabel = () => {
+  const getFourStarFeedbackCountLabel = () => {
     switch (granularity) {
       case Granularity.MONTH:
-        return `當年度等待拿藥平均時間: ${totalAverageMedicationWait} 分`;
+        return `當年度四星反饋數: ${fourStarFeedbackCount} 則`;
       case Granularity.WEEK:
-        return `當月度等待拿藥平均時間: ${totalAverageMedicationWait} 分`;
+        return `當月度四星反饋數: ${fourStarFeedbackCount} 則`;
       case Granularity.DAY:
       default:
-        return `當週等待拿藥平均時間: ${totalAverageMedicationWait} 分`;
+        return `當週四星反饋數: ${fourStarFeedbackCount} 則`;
     }
   };
 
-  const getComparisonLabel = (rate: number, granularity: Granularity) => {
+  const getFiveStarFeedbackCountLabel = () => {
+    switch (granularity) {
+      case Granularity.MONTH:
+        return `當年度五星反饋數: ${fiveStarFeedbackCount} 則`;
+      case Granularity.WEEK:
+        return `當月度五星反饋數: ${fiveStarFeedbackCount} 則`;
+      case Granularity.DAY:
+      default:
+        return `當週五星反饋數: ${fiveStarFeedbackCount} 則`;
+    }
+  };
+
+  const getComparisonLabel = (
+    rate: number,
+    granularity: Granularity,
+    isFiveStar: boolean,
+  ) => {
     if (rate === 0) {
       return (
         <Box
@@ -120,13 +139,25 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
       );
     }
 
-    const isCutDown = rate < 0;
-    const color = isCutDown ? 'green' : 'red';
-    const icon = isCutDown ? (
-      <TrendingDownIcon style={{ color }} />
-    ) : (
-      <TrendingUpIcon style={{ color }} />
-    );
+    const isPositive = rate > 0;
+    let color = 'green';
+    let icon;
+
+    if (isFiveStar) {
+      color = isPositive ? 'green' : 'red';
+      icon = isPositive ? (
+        <TrendingUpIcon style={{ color }} />
+      ) : (
+        <TrendingDownIcon style={{ color }} />
+      );
+    } else {
+      color = isPositive ? 'red' : 'green';
+      icon = isPositive ? (
+        <TrendingUpIcon style={{ color }} />
+      ) : (
+        <TrendingDownIcon style={{ color }} />
+      );
+    }
 
     const comparisonText =
       granularity === Granularity.DAY
@@ -172,11 +203,23 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Typography variant="body2">
-                {getAverageConsultationWaitLabel()}
+                {getTotalFeedbacksLabel()}
+              </Typography>
+              {getComparisonLabel(compareTotalFeedbacks, granularity, false)}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Typography variant="body2">
+                {getOneStarFeedbackCountLabel()}
               </Typography>
               {getComparisonLabel(
-                compareAverageConsultationWaitRate,
+                compareOneStarFeedbackCount,
                 granularity,
+                false,
               )}
             </CardContent>
           </Card>
@@ -186,11 +229,12 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Typography variant="body2">
-                {getAverageBedAssignmentWaitLabel()}
+                {getTwoStarFeedbackCountLabel()}
               </Typography>
               {getComparisonLabel(
-                compareAverageBedAssignmentWaitRate,
+                compareTwoStarFeedbackCount,
                 granularity,
+                false,
               )}
             </CardContent>
           </Card>
@@ -200,11 +244,12 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Typography variant="body2">
-                {getAverageAcupunctureWaitLabel()}
+                {getThreeStarFeedbackCountLabel()}
               </Typography>
               {getComparisonLabel(
-                compareAverageAcupunctureWaitRate,
+                compareThreeStarFeedbackCount,
                 granularity,
+                false,
               )}
             </CardContent>
           </Card>
@@ -214,11 +259,12 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Typography variant="body2">
-                {getAverageNeedleRemovalWaitLabel()}
+                {getFourStarFeedbackCountLabel()}
               </Typography>
               {getComparisonLabel(
-                compareAverageNeedleRemovalWaitRate,
+                compareFourStarFeedbackCount,
                 granularity,
+                false,
               )}
             </CardContent>
           </Card>
@@ -228,11 +274,12 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Typography variant="body2">
-                {getAverageMedicationWaitLabel()}
+                {getFiveStarFeedbackCountLabel()}
               </Typography>
               {getComparisonLabel(
-                compareAverageMedicationWaitRate,
+                compareFiveStarFeedbackCount,
                 granularity,
+                true,
               )}
             </CardContent>
           </Card>
@@ -242,4 +289,4 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
   );
 };
 
-export default WaitingTimeDescription;
+export default FeedbackDescription;

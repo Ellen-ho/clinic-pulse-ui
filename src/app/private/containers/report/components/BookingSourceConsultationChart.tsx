@@ -73,15 +73,14 @@ const BookingSourceConsultationChart: React.FC<
         );
         const minCountLeft = 0;
 
-        const maxCountRight = Math.max(
-          ...data.map((item) =>
-            Math.max(item.onlineBookingRate, item.onlineBookingRate),
-          ),
+        const maxCountRight = Math.min(
+          100,
+          Math.ceil(Math.max(...data.map((item) => item.onlineBookingRate))),
         );
         const minCountRight = 0;
 
         setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
-        setYAxisDomainRight([minCountRight, maxCountRight + 5]);
+        setYAxisDomainRight([minCountRight, maxCountRight]);
       }
       setLoading(false);
     }
