@@ -218,6 +218,7 @@ const TimeSlotCalendar: React.FC<CalendarProps> = ({ clinicId }) => {
     <Box margin="1rem">
       <CalendarContainer>
         <FullCalendar
+          timeZone="UTC"
           locale="zh-tw"
           plugins={[dayGridPlugin, timeGridPlugin]}
           initialView="dayGridMonth"
