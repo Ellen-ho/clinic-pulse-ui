@@ -60,6 +60,7 @@ const App: React.FC = () => {
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
       </Route>
+      {/* <Route element={<HomeLanding />} path="/" /> */}
       <Route element={<Navigate to="/signin" />} path="/" />
       <Route element={<NotFound />} path="" />
     </Routes>
