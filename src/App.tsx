@@ -27,6 +27,7 @@ import Review from './app/private/containers/review';
 import Profile from './app/private/containers/profile/Index';
 import { Feedback } from '@mui/icons-material';
 import Consultation from './app/private/containers/consultation';
+import HomeLanding from './app/public/containers/home/page/HomeLanding';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -59,8 +60,8 @@ const App: React.FC = () => {
       </Route>
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
+        <Route element={<HomeLanding />} path="/home" />
       </Route>
-      {/* <Route element={<HomeLanding />} path="/" /> */}
       <Route element={<Navigate to="/signin" />} path="/" />
       <Route element={<NotFound />} path="" />
     </Routes>

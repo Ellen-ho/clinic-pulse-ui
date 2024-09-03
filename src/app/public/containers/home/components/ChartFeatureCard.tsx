@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import iconBgUrl from '../../../../../../src/assets/real_time_icon.png';
+import iconBgUrl from '../../../../../../src/assets/chart_icon.png';
 
 const StyledImage = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -10,7 +10,7 @@ const StyledImage = styled(Box)(({ theme }) => ({
   borderRadius: '8px',
 }));
 
-const FeatureCard: React.FC = () => {
+const ChartFeatureCard: React.FC = () => {
   return (
     <Grid
       container
@@ -37,8 +37,9 @@ const FeatureCard: React.FC = () => {
       <Grid item xs={12} md={8}>
         {' '}
         <Typography variant="h6" color="primary" gutterBottom>
-          即時資料
+          統計中心
         </Typography>
+        <Typography variant="h6" color="primary" gutterBottom></Typography>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
           Title
         </Typography>
@@ -50,4 +51,4 @@ const FeatureCard: React.FC = () => {
   );
 };
 
-export default FeatureCard;
+export default ChartFeatureCard;

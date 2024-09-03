@@ -1,10 +1,14 @@
 import React from 'react';
-import { Box, Typography, TextField, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import homeBgUrl from '../../../../../../src/assets/home.png';
 import AnimatedTypography from '../components/AnimatedText';
 import FeatureCard from '../components/FeatureCard';
+import ListFeatureCard from '../components/ListFeatureCard';
+import ChartFeatureCard from '../components/ChartFeatureCard';
+import { useNavigate } from 'react-router-dom';
 
 const HomeLanding: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Box
@@ -39,12 +43,20 @@ const HomeLanding: React.FC = () => {
           <AnimatedTypography variant="body1" sx={{ mb: 3 }}>
             即時掌握診所動態，整合門診、反饋和數據統計，全方位提升診所管理效率
           </AnimatedTypography>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate('/signin');
+            }}
+          >
             登入
           </Button>
         </Box>
       </Box>
       <FeatureCard />
+      <ListFeatureCard />
+      <ChartFeatureCard />
     </>
   );
 };

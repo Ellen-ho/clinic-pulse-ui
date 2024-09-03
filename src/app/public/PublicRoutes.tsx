@@ -3,6 +3,7 @@ import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { getAuthFromCache } from '../../utils/getAuthFromCache';
 import Layout from '../layout/Layout';
+import PublicLayout from '../layout/PublicLayout';
 
 const PublicRoutes = () => {
   const location = useLocation();
@@ -14,9 +15,9 @@ const PublicRoutes = () => {
   return isSignedIn ? (
     <Navigate to="/dashboard" replace={true} state={{ from: location }} />
   ) : (
-    <Layout>
+    <PublicLayout>
       <Outlet />
-    </Layout>
+    </PublicLayout>
   );
 };
 
