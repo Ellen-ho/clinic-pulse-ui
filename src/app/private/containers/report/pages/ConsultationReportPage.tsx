@@ -195,7 +195,7 @@ const ConsultationReportPage: React.FC = () => {
               {firstTimeConsultationData && (
                 <>
                   <FirstTimeConsultationDescription
-                    title="初診人數跟初診率"
+                    title="初診人數和初診率"
                     color="#f3faff"
                     firstTimeConsultationCount={
                       firstTimeConsultationData.firstTimeConsultationCount
@@ -331,7 +331,7 @@ const ConsultationReportPage: React.FC = () => {
               {differentTreatmentData && (
                 <>
                   <DifferentTreatmentsConsultationDescription
-                    title="針灸及藥物治療人數跟比率"
+                    title="針灸及藥物治療人數和比率"
                     color="#f3faff"
                     totalConsultationWithBothTreatment={
                       differentTreatmentData.totalConsultationWithBothTreatment
