@@ -157,7 +157,7 @@ const DifferentTreatmentsConsultationDescription: React.FC<
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         {icon}
         <Typography variant="body2" sx={{ color }}>
-          {Math.round(Math.abs(rate))}%
+          {Math.abs(rate)}%
         </Typography>
         <Typography variant="body2" sx={{ ml: 0.5 }}>
           {comparisonText}
