@@ -16,7 +16,7 @@ const FeatureCard: React.FC = () => {
       container
       spacing={4}
       alignItems="center"
-      sx={{ width: '90%', margin: '0 auto' }}
+      sx={{ width: '80%', margin: '0 auto' }}
     >
       <Grid item xs={12} md={4}>
         {' '}

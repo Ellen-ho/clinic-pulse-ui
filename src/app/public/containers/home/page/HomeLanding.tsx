@@ -6,6 +6,7 @@ import FeatureCard from '../components/FeatureCard';
 import ListFeatureCard from '../components/ListFeatureCard';
 import ChartFeatureCard from '../components/ChartFeatureCard';
 import { useNavigate } from 'react-router-dom';
+import ScrollAnimation from '../components/ScrollAnimation';
 
 const HomeLanding: React.FC = () => {
   const navigate = useNavigate();
@@ -54,9 +55,15 @@ const HomeLanding: React.FC = () => {
           </Button>
         </Box>
       </Box>
-      <FeatureCard />
-      <ListFeatureCard />
-      <ChartFeatureCard />
+      <ScrollAnimation>
+        <FeatureCard />
+      </ScrollAnimation>
+      <ScrollAnimation>
+        <ListFeatureCard />
+      </ScrollAnimation>
+      <ScrollAnimation>
+        <ChartFeatureCard />
+      </ScrollAnimation>
     </>
   );
 };
