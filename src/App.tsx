@@ -28,6 +28,9 @@ import Profile from './app/private/containers/profile/Index';
 import { Feedback } from '@mui/icons-material';
 import Consultation from './app/private/containers/consultation';
 import HomeLanding from './app/public/containers/home/page/HomeLanding';
+import MailForReset from './app/public/containers/resetPassword/pages/MailForReset';
+import PasswordReset from './app/public/containers/resetPassword/pages/PasswordReset';
+import ReviewReportPage from './app/private/containers/report/pages/ReviewReportPage';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -49,6 +52,7 @@ const App: React.FC = () => {
           element={<FeedbackReportPage />}
           path="/feedback-report-center"
         />
+        <Route element={<ReviewReportPage />} path="/review-report-center" />
         <Route element={<Consultation />} path="/consultation/*" />
         <Route element={<FeedbackListPage />} path="/feedback" />
         <Route element={<FeedbackDetailPage />} path="/feedback/:id" />
@@ -60,9 +64,11 @@ const App: React.FC = () => {
       </Route>
       <Route element={<PublicRoutes />}>
         <Route element={<SignIn />} path="/signin" />
-        <Route element={<HomeLanding />} path="/home" />
+        <Route element={<MailForReset />} path="/input-email" />
+        <Route element={<PasswordReset />} path="/reset-password" />
       </Route>
-      <Route element={<Navigate to="/signin" />} path="/" />
+      {/* <Route element={<Navigate to="/signin" />} path="/" /> */}
+      <Route element={<HomeLanding />} path="/" />
       <Route element={<NotFound />} path="" />
     </Routes>
   );

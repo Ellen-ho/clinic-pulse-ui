@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { IPermission } from "../types/Users";
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { IPermission } from '../types/Users';
 
 interface IPageItem {
   title: string;
@@ -15,69 +15,74 @@ export interface IPage extends IPageItem {
 
 const pages: IPage[] = [
   {
-    title: "即時看板",
-    link: "/dashboard",
-    permission: "dashboardRead",
+    title: '即時看板',
+    link: '/dashboard',
+    permission: 'dashboardRead',
   },
   {
-    title: "看診紀錄",
-    link: "/consultation",
-    permission: "consultationRead",
+    title: '看診紀錄',
+    link: '/consultation',
+    permission: 'consultationRead',
   },
   {
-    title: "反饋紀錄",
-    link: "",
+    title: '反饋紀錄',
+    link: '',
     subMenu: [
       {
-        title: "問券反饋",
-        link: "/feedback",
-        permission: "feedbackSurveyRead",
+        title: '問券反饋',
+        link: '/feedback',
+        permission: 'feedbackSurveyRead',
       },
       {
-        title: "Google評論",
-        link: "/review",
-        permission: "onlineReviewRead",
+        title: 'Google評論',
+        link: '/review',
+        permission: 'onlineReviewRead',
       },
     ],
   },
   {
-    title: "統計中心",
-    link: "",
+    title: '統計中心',
+    link: '',
     subMenu: [
       {
-        title: "門診統計中心",
-        link: "/consultation-report-center",
-        permission: "reportCenterRead",
+        title: '門診統計中心',
+        link: '/consultation-report-center',
+        permission: 'reportCenterRead',
       },
       {
-        title: "反饋統計中心",
-        link: "/feedback-report-center",
-        permission: "feedbackSurveyRead",
+        title: '反饋統計中心',
+        link: '/feedback-report-center',
+        permission: 'feedbackSurveyRead',
+      },
+      {
+        title: 'Google評論統計中心',
+        link: '/review-report-center',
+        permission: 'onlineReviewRead',
       },
     ],
   },
   {
-    title: "門診表",
-    link: "/time-slot",
-    permission: "timeSlotRead",
+    title: '門診表',
+    link: '/time-slot',
+    permission: 'timeSlotRead',
   },
   {
-    title: "人員管理",
-    link: "",
-    permission: "staffManagementRead",
+    title: '人員管理',
+    link: '',
+    permission: 'staffManagementRead',
     subMenu: [
-      {
-        title: "人員清單",
-        link: "/profile-management",
-        permission: "staffManagementRead",
-      },
-      { title: "人員註冊", link: "/signup", permission: "staffManagementEdit" },
+      // {
+      //   title: '人員清單',
+      //   link: '/profile-management',
+      //   permission: 'staffManagementRead',
+      // },
+      { title: '人員註冊', link: '/signup', permission: 'staffManagementEdit' },
     ],
   },
   {
-    title: "個人中心",
-    link: "/profile",
-    permission: "profileRead",
+    title: '個人中心',
+    link: '/profile',
+    permission: 'profileRead',
   },
 ];
 
