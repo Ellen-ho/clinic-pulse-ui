@@ -16,10 +16,9 @@ const ListFeatureCard: React.FC = () => {
       container
       spacing={4}
       alignItems="center"
-      sx={{ width: '90%', margin: '0 auto' }}
+      sx={{ width: '70%', margin: '0 auto' }}
     >
-      {/* 左側文本區域 */}
-      <Grid item xs={12} md={7}>
+      <Grid item xs={12} md={8}>
         {' '}
         <Typography variant="h6" color="primary" gutterBottom>
           紀錄列表
@@ -31,8 +30,7 @@ const ListFeatureCard: React.FC = () => {
           subtitle
         </Typography>
       </Grid>
-
-      <Grid item xs={12} md={5}>
+      <Grid item xs={12} md={4}>
         {' '}
         <StyledImage
           component="img"

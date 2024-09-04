@@ -152,7 +152,6 @@ const DoctorProfileDetail: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* 全名 */}
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="body1">
                     姓名: {profile.lastName}
@@ -173,7 +172,6 @@ const DoctorProfileDetail: React.FC = () => {
                   </Typography>
                 </Box>
 
-                {/* 有条件地显示离职日期 */}
                 {profile.resignationDate && (
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="body1">
@@ -183,7 +181,6 @@ const DoctorProfileDetail: React.FC = () => {
                   </Box>
                 )}
 
-                {/* 电子邮件部分，带有编辑功能 */}
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="body1">
                     電子信箱: {profile.email}

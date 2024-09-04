@@ -186,7 +186,6 @@ const DifferentTreatmentsConsultationDescription: React.FC<
       </Typography>
 
       <Grid container spacing={2}>
-        {/* Total Only Acupuncture Count Card */}
         <Grid item xs={12} sm={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -201,7 +200,6 @@ const DifferentTreatmentsConsultationDescription: React.FC<
           </Card>
         </Grid>
 
-        {/* Total Only Medicine Count Card */}
         <Grid item xs={12} sm={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -213,7 +211,6 @@ const DifferentTreatmentsConsultationDescription: React.FC<
           </Card>
         </Grid>
 
-        {/* Total Consultation With Both Treatments Count Card */}
         <Grid item xs={12} sm={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -228,7 +225,6 @@ const DifferentTreatmentsConsultationDescription: React.FC<
           </Card>
         </Grid>
 
-        {/* Total Only Acupuncture Rate Card */}
         <Grid item xs={12} sm={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -240,7 +236,6 @@ const DifferentTreatmentsConsultationDescription: React.FC<
           </Card>
         </Grid>
 
-        {/* Total Only Medicine Rate Card */}
         <Grid item xs={12} sm={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -252,7 +247,6 @@ const DifferentTreatmentsConsultationDescription: React.FC<
           </Card>
         </Grid>
 
-        {/* Total Both Treatments Rate Card */}
         <Grid item xs={12} sm={4}>
           <Card sx={{ height: '100%' }}>
             <CardContent>

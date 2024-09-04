@@ -117,7 +117,6 @@ const FirstTimeConsultationDescription: React.FC<
       </Typography>
 
       <Grid container spacing={2}>
-        {/* First Time Consultation Count Card */}
         <Grid item xs={12} sm={6}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
@@ -128,8 +127,6 @@ const FirstTimeConsultationDescription: React.FC<
             </CardContent>
           </Card>
         </Grid>
-
-        {/* First Time Consultation Rate Card */}
         <Grid item xs={12} sm={6}>
           <Card sx={{ height: '100%' }}>
             <CardContent>

@@ -436,7 +436,6 @@ export const getConsultationOnsiteCanceledCountAndRate = async ({
       `/consultations/canceled?${queryString}`,
     );
 
-  console.log(response.data);
   return response.data;
 };
 

@@ -172,7 +172,7 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
               )}
             />
             <TextField
-              label="電子郵件"
+              label="電子信箱"
               type="email"
               size="small"
               {...register('email')}

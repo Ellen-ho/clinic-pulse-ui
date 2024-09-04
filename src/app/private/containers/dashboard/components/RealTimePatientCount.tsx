@@ -191,7 +191,7 @@ const RealConsultationStatistic: React.FC<IRealConsultationStatisticProps> = ({
               </Grid>
               <Grid item xs={12} md={6} lg={6}>
                 <StatBox
-                  title="等待拔針人數"
+                  title="等待取針人數"
                   value={realTimeData?.waitForNeedleRemovedCount || 0}
                   duration={0.6}
                 />
