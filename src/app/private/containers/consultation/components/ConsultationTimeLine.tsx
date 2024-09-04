@@ -36,7 +36,7 @@ const ConsultationTimeline: React.FC<ConsultationTimelineProps> = ({
     },
     {
       time: consultation.acupunctureTreatment?.removeNeedleAt,
-      label: '拔針',
+      label: '取針',
     },
     {
       time: consultation.medicineTreatment?.getMedicineAt,
