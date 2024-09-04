@@ -69,6 +69,12 @@ export interface IGetReviewCountAndRateRequest {
 }
 
 export interface IGetReviewCountAndRateResponse {
+  lastTotalReviews: number;
+  lastOneStarReviewCount: number;
+  lastTwoStarReviewCount: number;
+  lastThreeStarReviewCount: number;
+  lastFourStarReviewCount: number;
+  lastFiveStarReviewCount: number;
   totalReviews: number;
   oneStarReviewCount: number;
   twoStarReviewCount: number;
@@ -80,6 +86,12 @@ export interface IGetReviewCountAndRateResponse {
   threeStarReviewRate: number;
   fourStarReviewRate: number;
   fiveStarReviewRate: number;
+  compareTotalReviews: number;
+  compareOneStarReviewCount: number;
+  compareTwoStarReviewCount: number;
+  compareThreeStarReviewCount: number;
+  compareFourStarReviewCount: number;
+  compareFiveStarReviewCount: number;
   data: Array<{
     date: string;
     reviewCount: number;
