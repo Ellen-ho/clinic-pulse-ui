@@ -16,11 +16,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { NotificationContext } from '../../context/NotificationContext';
 import { getNotificationHints } from '../../services/NotificationService';
 import useSWR from 'swr';
-import {
-  FiltersContext,
-  useFiltersContext,
-} from '../../context/FiltersContext';
-import { getDoctorProfile } from '../../services/DoctorService';
 import useNavMenu, { IPage } from '../../hooks/UseNavMenu';
 
 interface Doctor {
@@ -35,18 +30,14 @@ const ResponsiveAppBar: React.FC = () => {
   const isSignedIn = state.isSignedIn;
   const currentUserRole = state.currentUser?.role ?? UserRoleType.DOCTOR;
   const avatar = state.currentUser?.avatar;
-  const { doctors } = useFiltersContext();
   const [currentMenu, setCurrentMenu] = useState<IPage | null>(null);
   const { state: notificationState, dispatch: notificationDispatch } =
     useContext(NotificationContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [profileMenuAnchorEl, setProfileMenuAnchorEl] =
     useState<null | HTMLElement>(null);
-  const [doctorMenuAnchorEl, setDoctorMenuAnchorEl] =
-    useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
-  const doctorMenuOpen = Boolean(doctorMenuAnchorEl);
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -59,25 +50,6 @@ const ResponsiveAppBar: React.FC = () => {
       navigate(page.link);
       setAnchorEl(null);
       setCurrentMenu(null);
-    }
-  };
-
-  const handleDoctorMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setDoctorMenuAnchorEl(event.currentTarget);
-  };
-
-  const handleDoctorMenuClose = () => {
-    setDoctorMenuAnchorEl(null);
-  };
-
-  const handleDoctorProfileClick = async (doctorId: string) => {
-    try {
-      const doctorProfile = await getDoctorProfile({ doctorId });
-      navigate(`/profile?doctorId=${doctorId}`);
-    } catch (error) {
-      console.error('Failed to fetch doctor profile:', error);
-    } finally {
-      handleDoctorMenuClose();
     }
   };
 
@@ -250,10 +222,6 @@ const ResponsiveAppBar: React.FC = () => {
                 >
                   <MenuItem onClick={handleSignOut}>登出</MenuItem>
                 </Menu>
-
-                {/* <Button onClick={handleSignOut} sx={{ color: 'white' }}>
-                  登出
-                </Button> */}
               </Box>
             )}
           </Box>
