@@ -105,8 +105,6 @@ const FeedbackChart: React.FC<IFeedbackProps> = ({ data, granularity }) => {
         ),
       );
 
-      const minCountRight = 0;
-
       setYAxisDomainLeft([0, maxCountLeft + 5]);
       setYAxisDomainRight([0, maxCountRight]);
     }
@@ -144,7 +142,7 @@ const FeedbackChart: React.FC<IFeedbackProps> = ({ data, granularity }) => {
         <YAxis
           domain={yAxisDomainLeft}
           label={{
-            value: '人數',
+            value: '數量',
             angle: -90,
             position: 'insideLeft',
             offset: -5,
