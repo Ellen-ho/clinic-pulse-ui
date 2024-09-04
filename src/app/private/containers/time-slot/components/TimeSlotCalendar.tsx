@@ -85,94 +85,34 @@ const formatTimeSlotsToEvents = (
   }));
 };
 
-const renderSessionHeader = (
-  sessionName: string,
-  timeRange: string,
-  backgroundColor: string,
-) => (
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 'auto',
-      textAlign: 'center',
-      border: `2px solid ${backgroundColor}`,
-      borderRadius: '8px',
-      backgroundColor: `${backgroundColor}20`,
-      padding: '8px',
-      marginBottom: '4px',
-    }}
-  >
-    <Typography variant="body2" sx={{ fontWeight: 700 }}>
-      {sessionName} {timeRange}
-    </Typography>
-  </Box>
-);
-
-const renderEventContent = (
-  eventInfo: any,
-  displayedSessions: Set<string>,
-  viewType: string,
-) => {
-  const { timePeriod, doctorName, consultationRoom } =
-    eventInfo.event.extendedProps;
-
-  const getSessionDetails = (timePeriod: TimePeriodType) => {
-    switch (timePeriod) {
-      case TimePeriodType.MORNING_SESSION:
-        return { name: '早診', timeRange: '8:30 am ~ 12:00 pm' };
-      case TimePeriodType.AFTERNOON_SESSION:
-        return { name: '午診', timeRange: '2:30 pm ~ 5:30 pm' };
-      case TimePeriodType.EVENING_SESSION:
-        return { name: '晚診', timeRange: '6:30 pm ~ 9:30 pm' };
-      default:
-        return { name: '', timeRange: '' };
-    }
-  };
-
-  const { name: sessionName, timeRange } = getSessionDetails(timePeriod);
-  const sessionKey = `${eventInfo.event.startStr}-${timePeriod}`;
-
-  const showSessionHeader =
-    !displayedSessions.has(sessionKey) && viewType === 'dayGridMonth';
-
-  if (showSessionHeader) {
-    displayedSessions.add(sessionKey);
-  }
+const renderEventContent = (eventInfo: any, viewType: string) => {
+  const { doctorName, consultationRoom } = eventInfo.event.extendedProps;
 
   return (
-    <Box>
-      {viewType === 'dayGridMonth' &&
-        showSessionHeader &&
-        renderSessionHeader(sessionName, timeRange, eventInfo.backgroundColor)}
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems:
-            viewType === 'timeGridWeek' || viewType === 'timeGridDay'
-              ? 'flex-start'
-              : 'center',
-          justifyContent: 'center',
-          height: '100%',
-          textAlign:
-            viewType === 'timeGridWeek' || viewType === 'timeGridDay'
-              ? 'left'
-              : 'center',
-          border: `2px solid ${eventInfo.backgroundColor}`,
-          borderRadius: '8px',
-          backgroundColor: `${eventInfo.backgroundColor}20`,
-          padding: '8px',
-          order: consultationRoom === '一診' ? 1 : 2,
-        }}
-      >
-        <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-          {eventInfo.event.title}
-        </Typography>
-      </Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems:
+          viewType === 'timeGridWeek' || viewType === 'timeGridDay'
+            ? 'flex-start'
+            : 'center',
+        justifyContent: 'center',
+        height: '100%',
+        textAlign:
+          viewType === 'timeGridWeek' || viewType === 'timeGridDay'
+            ? 'left'
+            : 'center',
+        border: `2px solid ${eventInfo.backgroundColor}`,
+        borderRadius: '8px',
+        backgroundColor: `${eventInfo.backgroundColor}20`,
+        padding: '8px',
+        order: consultationRoom === '一診' ? 1 : 2,
+      }}
+    >
+      <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+        {eventInfo.event.title}
+      </Typography>
     </Box>
   );
 };
@@ -197,8 +137,6 @@ const TimeSlotCalendar: React.FC<CalendarProps> = ({ clinicId }) => {
 
     fetchTimeSlots();
   }, [clinicId]);
-
-  const displayedSessions = new Set<string>();
 
   const handleViewDidMount = (view: { view: { type: string } }) => {
     const calendarEl = document.querySelector('.fc') as HTMLElement | null;
@@ -237,7 +175,7 @@ const TimeSlotCalendar: React.FC<CalendarProps> = ({ clinicId }) => {
           events={events}
           eventOrder={['start', 'roomOrder']}
           eventContent={(eventInfo) =>
-            renderEventContent(eventInfo, displayedSessions, currentViewType)
+            renderEventContent(eventInfo, currentViewType)
           }
           dayMaxEvents={true}
           height="auto"
