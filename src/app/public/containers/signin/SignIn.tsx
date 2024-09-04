@@ -38,6 +38,7 @@ const schema = yup
 
 const SignIn: React.FC = () => {
   const [isloading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const {
     register,
@@ -48,25 +49,29 @@ const SignIn: React.FC = () => {
   });
 
   const onSignIn = async (data: ISignInFormInputs) => {
-    const payload = {
-      email: data.email,
-      password: data.password,
-    };
-    setLoading(true);
-    const response = await signinUser(payload);
-    dispatch({
-      type: 'SIGN_IN',
-      payload: {
-        token: response.token,
-        currentUser: {
-          id: response.user.id,
-          role: response.user.role as UserRoleType,
-          avatar: response.user.avatar,
+    try {
+      const payload = {
+        email: data.email,
+        password: data.password,
+      };
+      setLoading(true);
+      const response = await signinUser(payload);
+      dispatch({
+        type: 'SIGN_IN',
+        payload: {
+          token: response.token,
+          currentUser: {
+            id: response.user.id,
+            role: response.user.role as UserRoleType,
+            avatar: response.user.avatar,
+          },
+          permissions: response.permissions,
+          doctorId: response.doctorId,
         },
-        permissions: response.permissions,
-        doctorId: response.doctorId,
-      },
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
     setLoading(false);
   };
 
@@ -116,6 +121,9 @@ const SignIn: React.FC = () => {
               <ButtonAreaWrapper>
                 <Button type="submit" variant="contained" color="primary">
                   登入
+                </Button>
+                <Button variant="text" onClick={() => navigate('/input-email')}>
+                  忘記密碼
                 </Button>
               </ButtonAreaWrapper>
 
