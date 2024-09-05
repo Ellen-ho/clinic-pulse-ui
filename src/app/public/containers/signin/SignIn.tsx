@@ -22,8 +22,9 @@ import PersonPinIcon from '@mui/icons-material/PersonPin';
 import { ButtonAreaWrapper } from '../../../layout/CommonWrapper.styled';
 import { signinUser } from '../../../../services/UserService';
 import { UserRoleType } from '../../../../types/Users';
-import signInBgUrl from '/src/assets/sign_in_bg.jpg';
+import signInBgUrl from '/src/assets/sign_in_bg.png';
 import DataLoading from '../../../../components/signs/DataLoading';
+import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 interface ISignInFormInputs {
   email: string;
   password: string;
@@ -31,8 +32,11 @@ interface ISignInFormInputs {
 
 const schema = yup
   .object({
-    email: yup.string().required(),
-    password: yup.string().required(),
+    email: yup
+      .string()
+      .email('請輸入正確的電子信箱')
+      .required('此欄位為必填項目'),
+    password: yup.string().required('此欄位為必填項目'),
   })
   .required();
 
@@ -50,12 +54,8 @@ const SignIn: React.FC = () => {
 
   const onSignIn = async (data: ISignInFormInputs) => {
     try {
-      const payload = {
-        email: data.email,
-        password: data.password,
-      };
       setLoading(true);
-      const response = await signinUser(payload);
+      const response = await signinUser(data);
       dispatch({
         type: 'SIGN_IN',
         payload: {
@@ -76,39 +76,51 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <PrimaryPageContent>
-      <SignInWrapper>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100vh',
-            backgroundImage: `url("${signInBgUrl}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        ></Box>
-        <Card sx={{ position: 'relative', zIndex: '1' }}>
-          {isloading && <DataLoading sx={{ zIndex: '1' }} />}
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              align="center"
-            >
-              <PersonPinIcon sx={{ fontSize: 50, color: '#777' }} />
+    <SignInWrapper>
+      <Card
+        sx={{
+          display: 'flex',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          width: '80%',
+          boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.1)',
+          maxWidth: '1200px',
+        }}
+      >
+        <Grid
+          item
+          xs={4}
+          sx={{ display: { xs: 'none', md: 'block' }, width: '38%' }}
+        >
+          <Box
+            sx={{
+              height: '100%',
+              backgroundImage: `url("${signInBgUrl}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={8}
+          sx={{ width: '62%', display: 'flex', alignItems: 'center' }}
+        >
+          <CardContent sx={{ flex: 1 }}>
+            {isloading && <DataLoading />}
+            <Typography variant="h4" align="center" gutterBottom>
+              登入
             </Typography>
             <FormWrapper onSubmit={handleSubmit(onSignIn)}>
               <TextField
-                label="Email"
+                label="電子信箱"
                 type="email"
                 size="small"
                 {...register('email')}
                 error={!!errors.email}
-                helperText={<>{errors.email?.message}</>}
+                helperText={errors.email?.message}
+                sx={{ mb: 2 }}
               />
               <TextField
                 label="密碼"
@@ -116,27 +128,86 @@ const SignIn: React.FC = () => {
                 size="small"
                 {...register('password')}
                 error={!!errors.password}
-                helperText={<>{errors.password?.message}</>}
+                helperText={errors.password?.message}
+                sx={{ mb: 3 }}
               />
-              <ButtonAreaWrapper>
+              <ButtonAreaWrapper gap="20px">
                 <Button type="submit" variant="contained" color="primary">
                   登入
                 </Button>
-                <Button variant="text" onClick={() => navigate('/input-email')}>
+                <Button
+                  onClick={() => navigate('/input-email')}
+                  sx={{ borderRadius: '10px' }}
+                  variant="outlined"
+                  startIcon={<MedicalInformationIcon />}
+                >
+                  {' '}
                   忘記密碼
                 </Button>
               </ButtonAreaWrapper>
 
-              <Alert severity="info">
+              <Alert severity="info" sx={{ mt: 3 }}>
                 <AlertTitle>測試帳號</AlertTitle>
-                <div>帳號：admin@example.com，密碼：123456</div>
-                <div>帳號：doctor_zhang@example.com，密碼：123456</div>
+                <Grid container alignItems="center" spacing={1} sx={{ mb: 2 }}>
+                  <Grid item>
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        px: 2,
+                        py: 0.5,
+                        border: '1px solid #1976d2',
+                        borderRadius: '16px',
+                        minWidth: '70px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ fontSize: '0.875rem', lineHeight: '1.43' }}
+                      >
+                        管理者
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body2" component="div">
+                      帳號：admin@example.com，密碼：123456
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container alignItems="center" spacing={1}>
+                  <Grid item>
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        px: 2,
+                        py: 0.5,
+                        border: '1px solid #1976d2',
+                        borderRadius: '16px',
+                        minWidth: '70px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ fontSize: '0.875rem', lineHeight: '1.43' }}
+                      >
+                        醫師
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body2" component="div">
+                      帳號：doctor_zhang@example.com，密碼：123456
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Alert>
             </FormWrapper>
           </CardContent>
-        </Card>
-      </SignInWrapper>
-    </PrimaryPageContent>
+        </Grid>
+      </Card>
+    </SignInWrapper>
   );
 };
 

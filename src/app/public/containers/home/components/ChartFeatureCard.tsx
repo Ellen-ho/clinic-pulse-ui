@@ -39,12 +39,11 @@ const ChartFeatureCard: React.FC = () => {
         <Typography variant="h6" color="primary" gutterBottom>
           統計中心
         </Typography>
-        <Typography variant="h6" color="primary" gutterBottom></Typography>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-          Title
+          多維度數據分析，助力診所經營決策
         </Typography>
         <Typography variant="body1" sx={{ mb: 3 }}>
-          subtitle
+          根據不同的時間顆粒度彙整和比較數據，隨時掌握經營狀況，支持診所的數據驅動決策
         </Typography>
       </Grid>
     </Grid>

@@ -10,79 +10,51 @@ import { TimePeriodType } from '../../../../../types/Share';
 import { AuthContext } from '../../../../../context/AuthContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
 
-interface FilterValues {
+export interface FeedbackFilterValues {
   startDate: string;
   endDate: string;
   clinicId?: string;
-  timePeriod?: TimePeriodType;
+  timePeriod?: string;
+  feedbackRating?: number;
   doctorId?: string;
   patientName?: string;
-  feedbackRating?: number;
   page?: number;
   limit?: number;
 }
 
 const FeedbackListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
   const { state } = useContext(AuthContext);
-  const doctorId = state.doctorId || '';
+  const parsed = queryString.parse(location.search);
   const isDoctor = state.doctorId != null;
-  const [filters, setFilters] = useState<FilterValues>({
-    startDate: initialStartDate,
-    endDate: initialEndDate,
-    clinicId: undefined,
-    timePeriod: undefined,
-    doctorId: isDoctor ? doctorId : undefined,
-    patientName: undefined,
-    feedbackRating: undefined,
-    page: 1,
-    limit: 25,
+  const [filters, setFilters] = useState<FeedbackFilterValues>({
+    startDate:
+      (parsed?.startDate as string) ??
+      dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
+    endDate: (parsed?.endDate as string) ?? dayjs().format('YYYY-MM-DD'),
+    clinicId: parsed?.clinicId as string,
+    timePeriod: parsed?.timePeriod as string,
+    feedbackRating: parsed?.feedbackRating
+      ? Number(parsed.feedbackRating)
+      : undefined,
+    doctorId: isDoctor
+      ? (state.doctorId as string)
+      : (parsed?.doctorId as string),
+    patientName: parsed?.patientName as string,
+    page: parsed?.page ? Number(parsed?.page as string) : 1,
+    limit: parsed?.limit ? Number(parsed?.limit as string) : 10,
   });
 
   const handleApplyFilters = useCallback(
-    (newFilters: Partial<FilterValues>) => {
+    (newFilters: Partial<FeedbackFilterValues>) => {
       setFilters((prev) => ({ ...prev, ...newFilters }));
     },
     [],
   );
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const newStartDate = params.get('startDate');
-    const newEndDate = params.get('endDate');
-    const newClinicId = params.get('clinicId');
-    const newTimePeriod = params.get('timePeriod') as
-      | TimePeriodType
-      | undefined;
-    const newDoctorId = params.get('doctorId');
-    const newPatientName = params.get('patientName');
-    const newFeedbackRating = params.get('feedbackRating')
-      ? parseInt(params.get('feedbackRating') as string, 10)
-      : undefined;
-    const newPage = parseInt(params.get('page') || '1', 10);
-    const newLimit = parseInt(params.get('limit') || '25', 10);
-
-    setFilters((prev) => ({
-      ...prev,
-      startDate: newStartDate || prev.startDate,
-      endDate: newEndDate || prev.endDate,
-      clinicId: newClinicId || prev.clinicId,
-      timePeriod: newTimePeriod || prev.timePeriod,
-      doctorId: newDoctorId || prev.doctorId,
-      patientName: newPatientName || prev.patientName,
-      feedbackRating:
-        newFeedbackRating !== undefined
-          ? newFeedbackRating
-          : prev.feedbackRating,
-      page: newPage || prev.page,
-      limit: newLimit || prev.limit,
-    }));
-  }, []);
 
   return (
     <PrimaryPageContent>
@@ -90,14 +62,18 @@ const FeedbackListPage: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           反饋列表
         </Typography>
-        <FeedbackListFilters onApply={handleApplyFilters} />
+        <FeedbackListFilters
+          onApply={handleApplyFilters}
+          initFilters={filters}
+        />
         <Box
           sx={{
             flexGrow: 1,
             overflowY: 'hidden',
           }}
-        ></Box>
-        <FeedbackList {...filters} />
+        >
+          <FeedbackList {...filters} onApply={handleApplyFilters} />
+        </Box>
       </CommonWrapper>
     </PrimaryPageContent>
   );

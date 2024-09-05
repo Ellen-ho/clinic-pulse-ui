@@ -43,7 +43,7 @@ const FeedbackDetail: React.FC = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={12}>
         <BasicCard title="反饋詳情">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -98,7 +98,7 @@ const FeedbackDetail: React.FC = () => {
           </Box>
         </BasicCard>
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={12}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>

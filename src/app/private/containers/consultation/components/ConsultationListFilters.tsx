@@ -21,11 +21,6 @@ interface IConsultationListFiltersProps {
   initFilters: FilterValues;
 }
 
-interface IPatientOption {
-  id: string;
-  fullName: string;
-}
-
 const timePeriodMappings = {
   早診: TimePeriodType.MORNING_SESSION,
   午診: TimePeriodType.AFTERNOON_SESSION,
@@ -55,17 +50,12 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     useContext(FiltersContext) || {};
   const [doctors, setDoctors] = useState<IDoctors[]>([]);
   const [clinics, setClinics] = useState<IClinics[]>([]);
-  const [startDate, setStartDate] = useState<string | null>(
-    initFilters.startDate ?? dayjs().startOf('isoWeek'),
+  const [startDate, setStartDate] = useState<string>(
+    initFilters.startDate ?? dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
   );
-  const [endDate, setEndDate] = useState<string | null>(() => {
-    const today = dayjs();
-    const endOfWeek = dayjs().endOf('isoWeek');
-
-    return today.isSame(endOfWeek, 'day')
-      ? endOfWeek.format('YYYY-MM-DD')
-      : today.format('YYYY-MM-DD');
-  });
+  const [endDate, setEndDate] = useState<string>(
+    initFilters.endDate ?? dayjs().format('YYYY-MM-DD'),
+  );
   const [clinicId, setClinicId] = useState<string | undefined>(
     initFilters.clinicId,
   );
@@ -100,9 +90,11 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   };
 
   const handleApplyFilters = () => {
+    if (!startDate || !endDate) return;
+
     const filters = {
-      startDate: dayjs(startDate).format('YYYY-MM-DD') || '',
-      endDate: dayjs(endDate).format('YYYY-MM-DD') || '',
+      startDate: startDate,
+      endDate: endDate,
       clinicId,
       timePeriod,
       totalDurationMin,
@@ -122,6 +114,9 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
     from: string;
     to: string;
   }) => {
+    setStartDate(from);
+    setEndDate(to);
+
     const filters = {
       startDate: from,
       endDate: to,
@@ -202,8 +197,8 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
         <Grid item xs={12} sm={4}>
           <BasicDateRangePicker
             setDateRange={handleStartAndEndDate}
-            initStart={dayjs().startOf('isoWeek')}
-            initEnd={endDate ? dayjs(endDate) : dayjs().endOf('isoWeek')}
+            initStart={dayjs(startDate)}
+            initEnd={dayjs(endDate)}
           />
         </Grid>
         <Grid item xs={12} sm={2}>

@@ -1,71 +1,52 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { IDoctor } from '../../../../../types/Doctors';
 import { GenderType } from '../../../../../types/Share';
 import { AuthContext } from '../../../../../context/AuthContext';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  IconButton,
-  MenuItem,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Box, Card, CardContent, IconButton, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import useSWR from 'swr';
 import toast from 'react-hot-toast';
-
 import PrimaryPageTop from '../../../../layout/PrimaryPageTop';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import DataLoading from '../../../../../components/signs/DataLoading';
 import AvatarUploadDialog from '../components/AvatarUploadDialog';
 import ImageAvatar from '../../../../../components/avatar/ImageAvatar';
-import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
+import { NarrowCommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import { getDoctorProfile } from '../../../../../services/DoctorService';
-import {
-  Edit as EditIcon,
-  Check as CheckIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material';
+import { Edit as EditIcon } from '@mui/icons-material';
 import { UserRoleType } from '../../../../../types/Users';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const defaultDoctor: IDoctor = {
-  avatar: null,
-  firstName: '',
-  lastName: '',
-  gender: GenderType.MALE,
-  birthDate: new Date(),
-  onboardDate: new Date(),
-  resignationDate: null,
-  email: '',
-};
-
 const DoctorProfileDetail: React.FC = () => {
   const { state, dispatch } = useContext(AuthContext);
-  const [profile, setProfile] = useState<IDoctor>(defaultDoctor);
   const [isAvatarUploadDialogOpen, setAvatarUploadDialogOpen] = useState(false);
   const isDoctor = state.currentUser?.role === UserRoleType.DOCTOR;
-  const isAdmin = state.currentUser?.role === UserRoleType.ADMIN;
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const doctorIdFromQuery = queryParams.get('doctorId');
 
   const doctorId = doctorIdFromQuery || state.doctorId || '';
 
-  const handleImageUpload = (imageUrl: string) => {
+  const defaultDoctor: IDoctor = {
+    avatar: state.currentUser?.avatar || null,
+    firstName: '',
+    lastName: '',
+    gender: GenderType.MALE,
+    birthDate: new Date(),
+    onboardDate: new Date(),
+    resignationDate: null,
+    email: '',
+  };
+
+  const [profile, setProfile] = useState<IDoctor>(defaultDoctor);
+
+  const handleImageUpload = async (imageUrl: string) => {
     setProfile((prev) => ({ ...prev, avatar: imageUrl }));
-    setAvatarUploadDialogOpen(false);
     mutate();
     toast.success('相片更新成功！');
   };
@@ -107,7 +88,7 @@ const DoctorProfileDetail: React.FC = () => {
   return (
     <>
       <PrimaryPageContent>
-        <CommonWrapper>
+        <NarrowCommonWrapper>
           <PrimaryPageTop pageTitle="個人資料" />
           {isLoading ? (
             <DataLoading />
@@ -189,7 +170,7 @@ const DoctorProfileDetail: React.FC = () => {
               </CardContent>
             </Card>
           )}
-        </CommonWrapper>
+        </NarrowCommonWrapper>
       </PrimaryPageContent>
       {isDoctor && (
         <AvatarUploadDialog

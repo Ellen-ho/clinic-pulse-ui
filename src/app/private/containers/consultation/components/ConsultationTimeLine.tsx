@@ -23,16 +23,16 @@ const ConsultationTimeline: React.FC<ConsultationTimelineProps> = ({
     { time: consultation.endAt, label: '結束看診' },
     { time: consultation.onsiteCancelAt, label: '退掛' },
     {
+      time: consultation.acupunctureTreatment?.assignBedAt,
+      label: '排床',
+    },
+    {
       time: consultation.acupunctureTreatment?.startAt,
       label: '開始針灸',
     },
     {
       time: consultation.acupunctureTreatment?.endAt,
       label: '結束針灸',
-    },
-    {
-      time: consultation.acupunctureTreatment?.assignBedAt,
-      label: '排床',
     },
     {
       time: consultation.acupunctureTreatment?.removeNeedleAt,

@@ -12,17 +12,12 @@ import { IClinics } from '../../../../../types/Clinics';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
 import { AuthContext } from '../../../../../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import BasicDateRangePicker from '../../../../../components/dateRangePicker/BasicDateRangePicker';
+import { ReviewFilterValues } from '../pages/ReviewListPage';
 
 interface IReviewListFiltersProps {
-  onApply: (filters: {
-    startDate: string;
-    endDate: string;
-    clinicId?: string;
-    timePeriod?: TimePeriodType;
-    doctorId?: string;
-    patientName?: string;
-    feedbackRating?: number;
-  }) => void;
+  onApply: (filters: ReviewFilterValues) => void;
+  initFilters: ReviewFilterValues;
 }
 
 const reviewRatings = [
@@ -33,20 +28,29 @@ const reviewRatings = [
   { value: 5 },
 ];
 
-const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({ onApply }) => {
+const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({
+  onApply,
+  initFilters,
+}) => {
   const { state } = useContext(AuthContext);
   const isDoctor = state.doctorId != null;
   const { clinics: contextClinics } = useContext(FiltersContext) || {};
   const [clinics, setClinics] = useState<IClinics[]>([]);
-  const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(
-    dayjs().startOf('isoWeek'),
+  const [startDate, setStartDate] = useState<string>(
+    initFilters.startDate ?? dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
   );
-  const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(
-    dayjs().endOf('isoWeek'),
+  const [endDate, setEndDate] = useState<string>(
+    initFilters.endDate ?? dayjs().format('YYYY-MM-DD'),
   );
-  const [clinicId, setClinicId] = useState<string | undefined>(undefined);
-  const [rating, setRating] = useState<number | undefined>(undefined);
-  const [patientName, setPatientName] = useState('');
+  const [clinicId, setClinicId] = useState<string | undefined>(
+    initFilters.clinicId,
+  );
+  const [reviewRating, setReviewRating] = useState<number | undefined>(
+    initFilters.reviewRating,
+  );
+  const [patientName, setPatientName] = useState<string | undefined>(
+    initFilters.patientName,
+  );
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,12 +67,35 @@ const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({ onApply }) => {
   };
 
   const handleApplyFilters = () => {
+    if (!startDate || !endDate) return;
+
     const filters = {
-      startDate: startDate?.format('YYYY-MM-DD') || '',
-      endDate: endDate?.format('YYYY-MM-DD') || '',
+      startDate: startDate,
+      endDate: endDate,
       clinicId,
-      patientName: patientName.trim() ? patientName : undefined,
-      reviewRating: rating,
+      patientName: patientName?.trim() ? patientName : undefined,
+      reviewRating,
+    };
+
+    onApply(filters);
+    updateQueryParams(filters);
+  };
+
+  const handleStartAndEndDate = ({
+    from,
+    to,
+  }: {
+    from: string;
+    to: string;
+  }) => {
+    setStartDate(from);
+    setEndDate(to);
+    const filters = {
+      startDate: from,
+      endDate: to,
+      clinicId,
+      patientName: patientName?.trim() ? patientName : undefined,
+      reviewRating,
     };
 
     onApply(filters);
@@ -82,7 +109,7 @@ const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({ onApply }) => {
     return () => {
       debouncedFetch.cancel();
     };
-  }, [startDate, endDate, clinicId, rating, patientName]);
+  }, [startDate, endDate, clinicId, patientName, reviewRating]);
 
   useEffect(() => {
     const cachedClinics = getClinicsFromCache();
@@ -99,44 +126,14 @@ const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({ onApply }) => {
     }
   }, [contextClinics]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const initialStartDate = params.get('startDate');
-    const initialEndDate = params.get('endDate');
-    const initialClinicId = params.get('clinicId');
-    const initialPatientName = params.get('patientName');
-    const initialRating = params.get('reviewRating');
-
-    if (initialStartDate) setStartDate(dayjs(initialStartDate));
-    if (initialEndDate) setEndDate(dayjs(initialEndDate));
-    if (initialClinicId) setClinicId(initialClinicId);
-    if (initialPatientName) setPatientName(initialPatientName);
-    if (initialRating) setRating(parseInt(initialRating, 10));
-  }, [location.search]);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={1} alignItems="center">
-        <Grid item xs={12} sm={2}>
-          <DatePicker
-            sx={{ width: '100%' }}
-            label="起始時間"
-            format="YYYY/MM/DD"
-            defaultValue={dayjs().startOf('isoWeek')}
-            onChange={(newValue) => {
-              setStartDate(newValue ? dayjs(newValue) : null);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <DatePicker
-            sx={{ width: '100%' }}
-            label="終止時間"
-            format="YYYY/MM/DD"
-            defaultValue={dayjs().endOf('isoWeek')}
-            onChange={(newValue) => {
-              setEndDate(newValue ? dayjs(newValue) : null);
-            }}
+        <Grid item xs={12} sm={4}>
+          <BasicDateRangePicker
+            setDateRange={handleStartAndEndDate}
+            initStart={dayjs(startDate)}
+            initEnd={dayjs(endDate)}
           />
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -163,12 +160,12 @@ const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({ onApply }) => {
               );
             }}
             renderInput={(params) => <TextField {...params} label="評論星級" />}
-            onChange={(event, newValue) => setRating(newValue?.value)}
+            onChange={(event, newValue) => setReviewRating(newValue?.value)}
           />
         </Grid>
         <Grid item xs={12} sm={2}>
           <PatientAutocomplete
-            value={patientName}
+            value={patientName || ''}
             onChange={(newValue) => setPatientName(newValue)}
           />
         </Grid>

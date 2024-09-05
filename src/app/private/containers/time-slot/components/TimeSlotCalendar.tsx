@@ -108,6 +108,10 @@ const renderEventContent = (eventInfo: any, viewType: string) => {
         backgroundColor: `${eventInfo.backgroundColor}20`,
         padding: '8px',
         order: consultationRoom === '一診' ? 1 : 2,
+        paddingRight:
+          viewType === 'timeGridWeek' && consultationRoom === '一診'
+            ? '100px'
+            : '0',
       }}
     >
       <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>

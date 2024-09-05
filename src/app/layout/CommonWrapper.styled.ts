@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 import { mq } from '../../styles/media-query';
 
+interface ButtonAreaWrapperProps {
+  gap?: string;
+}
+
 export const CommonWrapper = styled.div`
   ${mq({
     height: '100%',
@@ -23,11 +27,11 @@ export const NarrowCommonWrapper = styled.div`
   })}
 `;
 
-export const ButtonAreaWrapper = styled.div`
+export const ButtonAreaWrapper = styled.div<ButtonAreaWrapperProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 10px;
+  gap: ${(props) => props.gap || '10px'};
 `;

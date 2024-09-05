@@ -10,5 +10,5 @@ export const dateFormatter = (
   format: string = 'MMM D, YYYY h:mm A',
 ) => {
   if (!date) return 'No date provided';
-  return dayjs(date).tz('Asia/Taipei').format(format);
+  return dayjs(date).tz('Africa/Timbuktu').format(format);
 };
