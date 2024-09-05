@@ -1,36 +1,29 @@
 import React from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import PrivateRoutes from './app/private/PrivateRoutes';
-import Home from './app/public/containers/home/Home';
 import SignIn from './app/public/containers/signin/SignIn';
 import SignUp from './app/private/containers/signup/SignUp';
 import NotFound from './app/public/containers/not-found/NotFound';
 import useInitAuth from './hooks/UseInitAuth';
 import PublicRoutes from './app/public/PublicRoutes';
 import LoadingComponent from './components/loading/Loading';
-import ConsultationListPage from './app/private/containers/consultation/pages/ConsultationListPage';
-import ConsultationDetailPage from './app/private/containers/consultation/pages/ConsultationDetailPage';
 import FeedbackListPage from './app/private/containers/feedback/pages/FeedbackListPage';
 import FeedbackDetailPage from './app/private/containers/feedback/pages/FeedbackDetailPage';
 import ConsultationReportPage from './app/private/containers/report/pages/ConsultationReportPage';
 import DashboardPage from './app/private/containers/dashboard/pages/DashboardPage';
 import FeedbackReportPage from './app/private/containers/report/pages/FeedbackReportPage';
 import useSocketNotification from './hooks/UseSocketNotification';
-import ReviewListPage from './app/private/containers/review/pages/ReviewListPage';
-import ReviewDetailPage from './app/private/containers/review/pages/ReviewDetailPage';
 import Notification from './app/private/containers/notification/Index';
-import DoctorProfileDetail from './app/private/containers/profile/pages/DoctorProfileDetail';
-import Calendar from './app/private/containers/time-slot/components/TimeSlotCalendar';
-import TimeSlotPage from './app/private/containers/time-slot/pages/TimeSlotPage';
 import TimeSlot from './app/private/containers/time-slot';
 import Review from './app/private/containers/review';
 import Profile from './app/private/containers/profile/Index';
-import { Feedback } from '@mui/icons-material';
 import Consultation from './app/private/containers/consultation';
 import HomeLanding from './app/public/containers/home/page/HomeLanding';
 import MailForReset from './app/public/containers/resetPassword/pages/MailForReset';
 import PasswordReset from './app/public/containers/resetPassword/pages/PasswordReset';
 import ReviewReportPage from './app/private/containers/report/pages/ReviewReportPage';
+import Term from './app/layout/Term';
+import Privacy from './app/layout/Privacy';
 
 const App: React.FC = () => {
   const isLoading = useInitAuth();
@@ -69,6 +62,8 @@ const App: React.FC = () => {
       </Route>
       {/* <Route element={<Navigate to="/signin" />} path="/" /> */}
       <Route element={<HomeLanding />} path="/" />
+      <Route element={<Term />} path="/terms" />
+      <Route element={<Privacy />} path="/privacy" />
       <Route element={<NotFound />} path="" />
     </Routes>
   );
