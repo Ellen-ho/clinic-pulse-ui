@@ -124,31 +124,31 @@ const AverageWaitingTimeBarChart: React.FC<IAverageWaitingTimeProps> = ({
           dataKey="averageConsultationWait"
           name="看診平均等待時間"
           stackId="a"
-          fill="#004d40"
+          fill="#2A265F"
         />
         <Bar
           dataKey="averageBedAssignmentWait"
           name="治療床平均等待時間"
           stackId="a"
-          fill="#00796b"
+          fill="#3C3D99"
         />
         <Bar
           dataKey="averageAcupunctureWait"
           name="針灸平均等待時間"
           stackId="a"
-          fill="#009688"
+          fill="#5752D1"
         />
         <Bar
           dataKey="averageNeedleRemovalWait"
           name="取針平均等待時間"
           stackId="a"
-          fill="#26a69a"
+          fill="#8481DD"
         />
         <Bar
           dataKey="averageMedicationWait"
           name="取藥平均等待時間"
           stackId="a"
-          fill="#80cbc4"
+          fill="#B2B0EA"
         />
       </BarChart>
     </ResponsiveContainer>
