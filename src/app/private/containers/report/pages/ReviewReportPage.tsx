@@ -70,7 +70,7 @@ const ReviewReportPage: React.FC = () => {
   return (
     <PrimaryPageContent>
       <CommonWrapper>
-        <Grid container spacing={1}>
+        <Grid container spacing={1} sx={{ paddingBottom: '20px' }}>
           <Grid item xs={12} md={12} lg={12}>
             <ReviewFilters onApply={handleApplyFilters} />
           </Grid>
