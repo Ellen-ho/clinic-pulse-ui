@@ -9,6 +9,7 @@ import { AuthContext } from '../../../../../context/AuthContext';
 import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import queryString from 'query-string';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
@@ -36,11 +37,7 @@ const ConsultationListPage: React.FC = () => {
     startDate:
       (parsed?.startDate as string) ??
       dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
-    endDate:
-      (parsed?.endDate as string) ??
-      (dayjs().isSame(dayjs().endOf('isoWeek'), 'day')
-        ? dayjs().endOf('isoWeek').format('YYYY-MM-DD')
-        : dayjs().format('YYYY-MM-DD')),
+    endDate: (parsed?.endDate as string) ?? dayjs().format('YYYY-MM-DD'),
     clinicId: parsed?.clinicId as string,
     timePeriod: parsed?.timePeriod as string,
     totalDurationMin: parsed?.totalDurationMin
