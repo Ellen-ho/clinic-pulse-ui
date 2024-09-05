@@ -67,17 +67,9 @@ const pages: IPage[] = [
     permission: 'timeSlotRead',
   },
   {
-    title: '人員管理',
-    link: '',
-    permission: 'staffManagementRead',
-    subMenu: [
-      // {
-      //   title: '人員清單',
-      //   link: '/profile-management',
-      //   permission: 'staffManagementRead',
-      // },
-      { title: '人員註冊', link: '/signup', permission: 'staffManagementEdit' },
-    ],
+    title: '人員註冊',
+    link: '/signup',
+    permission: 'staffManagementEdit',
   },
   {
     title: '個人中心',
