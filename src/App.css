@@ -7,11 +7,58 @@ body {
   background-color: #f6f7fa;
 }
 
-/* date range style change */
 .MuiPopper-root .MuiDateRangeCalendar-root > div:first-child {
   display: none;
 }
 
 .MuiTypography-root.MuiTypography-body1.MuiMultiInputDateRangeField-separator {
   display: none;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.your-container-class {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.your-container-class::-webkit-scrollbar {
+  width: 12px;
+}
+
+.your-container-class::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.your-container-class::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+.your-container-class::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
