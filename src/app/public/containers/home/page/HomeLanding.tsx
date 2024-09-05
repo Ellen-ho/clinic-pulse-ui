@@ -1,12 +1,15 @@
 import React from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import homeBgUrl from '../../../../../../src/assets/home.png';
 import AnimatedTypography from '../components/AnimatedText';
-import FeatureCard from '../components/FeatureCard';
+import FeatureCard from '../components/RealTimeFeatureCard';
 import ListFeatureCard from '../components/ListFeatureCard';
 import ChartFeatureCard from '../components/ChartFeatureCard';
 import { useNavigate } from 'react-router-dom';
 import ScrollAnimation from '../components/ScrollAnimation';
+import RealTimeFeatureCard from '../components/RealTimeFeatureCard';
+import AppFooter from '../../../../layout/AppFooter';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const HomeLanding: React.FC = () => {
   const navigate = useNavigate();
@@ -50,13 +53,24 @@ const HomeLanding: React.FC = () => {
             onClick={() => {
               navigate('/signin');
             }}
+            sx={{
+              fontSize: '1.2rem',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+              transition: 'transform 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                boxShadow: '0 6px 25px rgba(0, 0, 0, 0.15)',
+              },
+            }}
           >
             登入
           </Button>
         </Box>
       </Box>
       <ScrollAnimation>
-        <FeatureCard />
+        <RealTimeFeatureCard />
       </ScrollAnimation>
       <ScrollAnimation>
         <ListFeatureCard />
@@ -64,6 +78,7 @@ const HomeLanding: React.FC = () => {
       <ScrollAnimation>
         <ChartFeatureCard />
       </ScrollAnimation>
+      <AppFooter />
     </>
   );
 };

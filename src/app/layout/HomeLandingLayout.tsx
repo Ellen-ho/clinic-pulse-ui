@@ -1,3 +1,4 @@
+import AppFooter from './AppFooter';
 import MainContent from './MainContent.styled';
 import ResponsiveAppBar from './ResponsiveAppBar';
 

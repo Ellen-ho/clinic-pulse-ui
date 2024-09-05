@@ -24,10 +24,10 @@ const ListFeatureCard: React.FC = () => {
           紀錄列表
         </Typography>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-          Title
+          快速篩選與定位問題，提升診療效率
         </Typography>
         <Typography variant="body1" sx={{ mb: 3 }}>
-          subtitle
+          提供條件篩選功能，能夠根據需要查找具體的看診、反饋、評論紀錄，迅速找出問題並採取相應措施
         </Typography>
       </Grid>
       <Grid item xs={12} md={4}>
