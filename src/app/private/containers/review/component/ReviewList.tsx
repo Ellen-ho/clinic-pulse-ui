@@ -43,7 +43,7 @@ const ReviewList: React.FC<IReviewListProps> = ({
       render: (value: any) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {`${value.name}`}
+            {value.name}
           </div>
         );
       },

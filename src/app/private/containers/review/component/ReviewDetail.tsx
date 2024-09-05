@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import BasicCard from '../../../../../components/card/BasicCard';
 import {
@@ -54,9 +54,32 @@ const ReviewDetail: React.FC = () => {
               評論星等: {data.reviewRating}
             </Typography>
             <Typography variant="body1">
-              回覆日期: {data.receivedDate}
+              回覆日期: {data.responseDate}
             </Typography>
-            <Typography variant="body1">評論連結: {data.link}</Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: 'blue',
+                cursor: 'pointer',
+                '&:hover': {
+                  textDecoration: 'underline',
+                  color: 'darkblue',
+                },
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (
+                  typeof data.link === 'string' &&
+                  data.link.startsWith('https://')
+                ) {
+                  window.open(data.link, '_blank');
+                } else {
+                  console.warn('Invalid link:', data.link);
+                }
+              }}
+            >
+              查看評論連結
+            </Typography>
           </Box>
         </BasicCard>
       </Grid>
