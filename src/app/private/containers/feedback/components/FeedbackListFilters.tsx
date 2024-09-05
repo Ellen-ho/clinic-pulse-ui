@@ -98,9 +98,11 @@ const FeedbackListFilters: React.FC<IFeedbackListFiltersProps> = ({
   };
 
   const handleApplyFilters = () => {
+    if (!startDate || !endDate) return;
+
     const filters = {
-      startDate: startDate || '',
-      endDate: endDate || '',
+      startDate: startDate,
+      endDate: endDate,
       clinicId,
       timePeriod,
       feedbackRating,

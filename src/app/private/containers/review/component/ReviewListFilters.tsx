@@ -67,9 +67,11 @@ const ReviewListFilters: React.FC<IReviewListFiltersProps> = ({
   };
 
   const handleApplyFilters = () => {
+    if (!startDate || !endDate) return;
+
     const filters = {
-      startDate: startDate || '',
-      endDate: endDate || '',
+      startDate: startDate,
+      endDate: endDate,
       clinicId,
       patientName: patientName?.trim() ? patientName : undefined,
       reviewRating,

@@ -90,9 +90,11 @@ const ConsultationListFilters: React.FC<IConsultationListFiltersProps> = ({
   };
 
   const handleApplyFilters = () => {
+    if (!startDate || !endDate) return;
+
     const filters = {
-      startDate: startDate || '',
-      endDate: endDate || '',
+      startDate: startDate,
+      endDate: endDate,
       clinicId,
       timePeriod,
       totalDurationMin,
