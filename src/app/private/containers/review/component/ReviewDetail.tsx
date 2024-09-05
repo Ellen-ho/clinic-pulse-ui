@@ -38,7 +38,7 @@ const ReviewDetail: React.FC = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={6}>
         <BasicCard title="Google 評論詳情">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -83,7 +83,7 @@ const ReviewDetail: React.FC = () => {
           </Box>
         </BasicCard>
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={6}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
