@@ -40,20 +40,8 @@ import { useLocation, useParams } from 'react-router-dom';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const defaultDoctor: IDoctor = {
-  avatar: null,
-  firstName: '',
-  lastName: '',
-  gender: GenderType.MALE,
-  birthDate: new Date(),
-  onboardDate: new Date(),
-  resignationDate: null,
-  email: '',
-};
-
 const DoctorProfileDetail: React.FC = () => {
   const { state, dispatch } = useContext(AuthContext);
-  const [profile, setProfile] = useState<IDoctor>(defaultDoctor);
   const [isAvatarUploadDialogOpen, setAvatarUploadDialogOpen] = useState(false);
   const isDoctor = state.currentUser?.role === UserRoleType.DOCTOR;
   const isAdmin = state.currentUser?.role === UserRoleType.ADMIN;
@@ -63,9 +51,21 @@ const DoctorProfileDetail: React.FC = () => {
 
   const doctorId = doctorIdFromQuery || state.doctorId || '';
 
-  const handleImageUpload = (imageUrl: string) => {
+  const defaultDoctor: IDoctor = {
+    avatar: state.currentUser?.avatar || null,
+    firstName: '',
+    lastName: '',
+    gender: GenderType.MALE,
+    birthDate: new Date(),
+    onboardDate: new Date(),
+    resignationDate: null,
+    email: '',
+  };
+
+  const [profile, setProfile] = useState<IDoctor>(defaultDoctor);
+
+  const handleImageUpload = async (imageUrl: string) => {
     setProfile((prev) => ({ ...prev, avatar: imageUrl }));
-    setAvatarUploadDialogOpen(false);
     mutate();
     toast.success('相片更新成功！');
   };

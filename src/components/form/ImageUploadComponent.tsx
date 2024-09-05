@@ -3,22 +3,26 @@ import { Box, Button, CircularProgress, Container, Input } from '@mui/material';
 import { MuiFileInput } from 'mui-file-input';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { uploadAvatar } from '../../services/DoctorService';
-
 interface ImageUploadProps {
   onImageUpload: (imageUrl: string) => void;
+  onPreview: (previewUrl: string) => void;
   id: string;
 }
 
 const ImageUploadComponent: React.FC<ImageUploadProps> = ({
   onImageUpload,
+  onPreview,
   id,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleFileChange = (newFile: File | null) => {
     setSelectedFile(newFile);
+    if (newFile) {
+      const objectUrl = URL.createObjectURL(newFile);
+      onPreview(objectUrl);
+    }
   };
 
   const handleUpload = async () => {
@@ -26,7 +30,6 @@ const ImageUploadComponent: React.FC<ImageUploadProps> = ({
       setLoading(true);
       try {
         const response = await uploadAvatar(selectedFile, id);
-        setImageUrl(response.imageUrl);
         onImageUpload(response.imageUrl);
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -52,18 +55,6 @@ const ImageUploadComponent: React.FC<ImageUploadProps> = ({
         inputProps={{ accept: 'image/*' }}
         sx={{ border: '1px dashed #ccc', width: '100%' }}
       />
-      {/* <Input
-        type="file"
-        inputProps={{ accept: 'image/*' }}
-        onChange={handleFileChange}
-      /> */}
-      {/* <Button
-        variant="contained"
-        onClick={handleUpload}
-        disabled={!selectedFile || loading}
-      >
-        Upload
-      </Button> */}
       <LoadingButton
         onClick={handleUpload}
         loading={loading}
@@ -71,13 +62,6 @@ const ImageUploadComponent: React.FC<ImageUploadProps> = ({
       >
         上傳更新
       </LoadingButton>
-      {/* {loading && <CircularProgress />}
-      {imageUrl && (
-        <div>
-          <h3>Uploaded Image</h3>
-          <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%' }} />
-        </div>
-      )} */}
     </Box>
   );
 };

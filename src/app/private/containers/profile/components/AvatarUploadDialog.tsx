@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -26,6 +26,23 @@ const AvatarUploadDialog: React.FC<AvatarUploadDialogProps> = ({
   onImageUpload,
   id,
 }) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(imageUrl);
+
+  const handlePreviewImage = (newPreviewUrl: string) => {
+    setPreviewUrl(newPreviewUrl);
+  };
+
+  const handleConfirmUpload = async (uploadedImageUrl: string) => {
+    onImageUpload(uploadedImageUrl);
+    setPreviewUrl(uploadedImageUrl);
+    onClose();
+  };
+
+  const handleCloseDialog = () => {
+    setPreviewUrl(imageUrl);
+    onClose();
+  };
+
   return (
     <Dialog fullWidth maxWidth="sm" open={isOpen} onClose={onClose}>
       <DialogTitle>編輯相片</DialogTitle>
@@ -38,7 +55,7 @@ const AvatarUploadDialog: React.FC<AvatarUploadDialogProps> = ({
           }}
         >
           <ImageAvatar
-            imageUrl={imageUrl}
+            imageUrl={previewUrl}
             sx={{
               width: 150,
               height: 150,
@@ -46,11 +63,15 @@ const AvatarUploadDialog: React.FC<AvatarUploadDialogProps> = ({
             }}
           />
           <Divider />
-          <ImageUploadComponent onImageUpload={onImageUpload} id={id} />
+          <ImageUploadComponent
+            onImageUpload={handleConfirmUpload}
+            onPreview={handlePreviewImage}
+            id={id}
+          />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>取消</Button>
+        <Button onClick={handleCloseDialog}>取消</Button>
       </DialogActions>
     </Dialog>
   );
