@@ -8,11 +8,12 @@ import PrimaryPageContent from '../../../../layout/PrimaryPageContent';
 import { CommonWrapper } from '../../../../layout/CommonWrapper.styled';
 import ReviewListFilters from '../component/ReviewListFilters';
 import ReviewList from '../component/ReviewList';
+import queryString from 'query-string';
 
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);
 
-interface FilterValues {
+export interface ReviewFilterValues {
   startDate: string;
   endDate: string;
   clinicId?: string;
@@ -23,62 +24,28 @@ interface FilterValues {
 }
 
 const ReviewListPage: React.FC = () => {
-  const initialStartDate = dayjs().startOf('isoWeek').format('YYYY-MM-DD');
-  const initialEndDate = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
   const { state } = useContext(AuthContext);
-  const [filters, setFilters] = useState<FilterValues>({
-    startDate: initialStartDate,
-    endDate: initialEndDate,
-    clinicId: undefined,
-    patientName: undefined,
-    reviewRating: undefined,
+  const parsed = queryString.parse(location.search);
+  const [filters, setFilters] = useState<ReviewFilterValues>({
+    startDate:
+      (parsed?.startDate as string) ??
+      dayjs().startOf('isoWeek').format('YYYY-MM-DD'),
+    endDate: (parsed?.endDate as string) ?? dayjs().format('YYYY-MM-DD'),
+    clinicId: parsed?.clinicId as string,
+    patientName: parsed?.patientName as string,
+    reviewRating: parsed?.reviewRating
+      ? Number(parsed.reviewRating)
+      : undefined,
     page: 1,
     limit: 25,
   });
 
   const handleApplyFilters = useCallback(
-    (newFilters: Partial<FilterValues>) => {
+    (newFilters: Partial<ReviewFilterValues>) => {
       setFilters((prev) => ({ ...prev, ...newFilters }));
     },
     [],
   );
-
-  // useEffect(() => {
-  //   const params = new URLSearchParams(window.location.search);
-  //   const newStartDate = params.get('startDate');
-  //   const newEndDate = params.get('endDate');
-  //   const newClinicId = params.get('clinicId');
-  //   const newTimePeriod = params.get('timePeriod') as
-  //     | TimePeriodType
-  //     | undefined;
-  //   const newDoctorId = params.get('doctorId');
-  //   const newPatientName = params.get('patientName');
-  //   const newFeedbackRating = params.get('feedbackRating')
-  //     ? parseInt(params.get('feedbackRating') as string, 10)
-  //     : undefined;
-  //   const newPage = parseInt(params.get('page') || '1', 10);
-  //   const newLimit = parseInt(params.get('limit') || '25', 10);
-
-  //   setFilters((prev) => ({
-  //     ...prev,
-  //     startDate: newStartDate || prev.startDate,
-  //     endDate: newEndDate || prev.endDate,
-  //     clinicId: newClinicId || prev.clinicId,
-  //     timePeriod: newTimePeriod || prev.timePeriod,
-  //     doctorId: newDoctorId || prev.doctorId,
-  //     patientName: newPatientName || prev.patientName,
-  //     feedbackRating:
-  //       newFeedbackRating !== undefined
-  //         ? newFeedbackRating
-  //         : prev.feedbackRating,
-  //     page: newPage || prev.page,
-  //     limit: newLimit || prev.limit,
-  //   }));
-  // }, []);
-
-  useEffect(() => {
-    console.log('Updated filters:', filters);
-  }, [filters]);
 
   return (
     <PrimaryPageContent>
@@ -86,14 +53,15 @@ const ReviewListPage: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Google 評論列表
         </Typography>
-        <ReviewListFilters onApply={handleApplyFilters} />
+        <ReviewListFilters onApply={handleApplyFilters} initFilters={filters} />
         <Box
           sx={{
             flexGrow: 1,
             overflowY: 'hidden',
           }}
-        ></Box>
-        <ReviewList {...filters} />
+        >
+          <ReviewList {...filters} onApply={handleApplyFilters} />
+        </Box>
       </CommonWrapper>
     </PrimaryPageContent>
   );

@@ -11,25 +11,28 @@ import GenderTag from '../../../../../components/tag/GenderTag';
 import ConsultationTimePeriodTag from '../../../../../components/tag/ConsultationTimePeriodTag';
 import RatingTag from '../../../../../components/tag/RatingTag';
 import { Typography } from '@mui/material';
+import { FeedbackFilterValues } from '../pages/FeedbackListPage';
 
 interface IFeedbackListProps {
+  onApply: (filters: FeedbackFilterValues) => void;
   startDate: string;
   endDate: string;
   clinicId?: string;
-  timePeriod?: TimePeriodType;
+  timePeriod?: string;
+  feedbackRating?: number;
   doctorId?: string;
   patientName?: string;
-  feedbackRating?: number;
 }
 
 const FeedbackList: React.FC<IFeedbackListProps> = ({
+  onApply,
   startDate,
   endDate,
   clinicId,
   timePeriod,
+  feedbackRating,
   doctorId,
   patientName,
-  feedbackRating,
 }) => {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -87,6 +90,10 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
       render: (value: any) => {
         return (
           <Typography
+            component="a"
+            href={`/consultation/${value}`}
+            target="_blank"
+            rel="noopener noreferrer"
             variant="body2"
             sx={{
               color: 'blue',
@@ -98,7 +105,6 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/consultation/${value}`);
             }}
           >
             查看門診
@@ -134,11 +140,6 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
     rowsPerPage,
   ]);
 
-  useEffect(() => {
-    const newUrl = `${window.location.pathname}?${queryString}`;
-    navigate(newUrl, { replace: true });
-  }, [queryString, navigate]);
-
   const { data, isLoading } = useSWR(`getFeedbackList?${queryString}`, () => {
     return getFeedbackList({ queryString });
   });
@@ -172,16 +173,16 @@ const FeedbackList: React.FC<IFeedbackListProps> = ({
 
   return (
     <StickyHeadTable
-      sx={{ height: '100%' }}
+      // sx={{ height: '100%' }}
       columns={columns}
       data={feedbacks || []}
       count={totalCounts || 0}
       page={effectivePage}
       rowsPerPage={rowsPerPage}
-      isLoading={isLoading}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onRowClick={handleClickFeedback}
+      isLoading={isLoading}
     />
   );
 };

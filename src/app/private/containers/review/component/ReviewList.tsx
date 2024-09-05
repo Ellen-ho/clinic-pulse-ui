@@ -7,8 +7,10 @@ import RatingTag from '../../../../../components/tag/RatingTag';
 import { Typography } from '@mui/material';
 import useSWR from 'swr';
 import { getReviewList } from '../../../../../services/ReviewService';
+import { ReviewFilterValues } from '../pages/ReviewListPage';
 
 interface IReviewListProps {
+  onApply: (filters: ReviewFilterValues) => void;
   startDate: string;
   endDate: string;
   clinicId?: string;
@@ -17,6 +19,7 @@ interface IReviewListProps {
 }
 
 const ReviewList: React.FC<IReviewListProps> = ({
+  onApply,
   startDate,
   endDate,
   clinicId,
@@ -117,11 +120,6 @@ const ReviewList: React.FC<IReviewListProps> = ({
     rowsPerPage,
   ]);
 
-  useEffect(() => {
-    const newUrl = `${window.location.pathname}?${queryString}`;
-    navigate(newUrl, { replace: true });
-  }, [queryString, navigate]);
-
   const { data, isLoading } = useSWR(`getReviewList?${queryString}`, () => {
     return getReviewList({ queryString });
   });
@@ -155,16 +153,16 @@ const ReviewList: React.FC<IReviewListProps> = ({
 
   return (
     <StickyHeadTable
-      sx={{ height: '100%' }}
+      // sx={{ height: '100%' }}
       columns={columns}
       data={reviews || []}
       count={totalCounts || 0}
       page={effectivePage}
       rowsPerPage={rowsPerPage}
-      isLoading={isLoading}
       onPageChange={handlePageChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onRowClick={handleClickReview}
+      isLoading={isLoading}
     />
   );
 };

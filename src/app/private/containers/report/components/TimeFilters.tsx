@@ -221,6 +221,10 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({ onApply }) => {
     }
   }, [contextDoctors, contextClinics]);
 
+  useEffect(() => {
+    setSelectedWeek(weeks[0].toString());
+  }, [selectedMonth]);
+
   return (
     <Grid container spacing={2}>
       <Grid
