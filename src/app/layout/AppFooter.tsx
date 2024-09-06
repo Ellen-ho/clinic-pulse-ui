@@ -5,6 +5,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 
 function AppFooter() {
   const currentYear = new Date().getFullYear();
+  const linkColor = '#8FCFFF';
 
   return (
     <Box
@@ -48,15 +49,21 @@ function AppFooter() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                color: 'white',
+                color: 'inherit',
                 gap: '8px',
                 '&:hover': {
-                  color: '#8FCFFF',
+                  color: '#ccc',
                 },
               }}
             >
-              <GitHubIcon />
-              <Typography sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+              <GitHubIcon sx={{ color: 'white' }} />
+              <Typography
+                sx={{
+                  fontWeight: 'bold',
+                  fontSize: '1.1rem',
+                  color: linkColor,
+                }}
+              >
                 前端
               </Typography>
             </Link>
@@ -69,15 +76,21 @@ function AppFooter() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                color: 'white',
+                color: 'inherit',
                 gap: '8px',
                 '&:hover': {
-                  color: '#8FCFFF',
+                  color: '#ccc',
                 },
               }}
             >
-              <GitHubIcon />
-              <Typography sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+              <GitHubIcon sx={{ color: 'white' }} />
+              <Typography
+                sx={{
+                  fontWeight: 'bold',
+                  fontSize: '1.1rem',
+                  color: linkColor,
+                }}
+              >
                 後端
               </Typography>
             </Link>
