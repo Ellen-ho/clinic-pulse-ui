@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { FiltersContext } from '../../../../../context/FiltersContext';
 import { IClinics } from '../../../../../types/Clinics';
 import { getClinicsFromCache } from '../../../../../utils/getClinicsFromCache';
-import { Autocomplete, Grid, TextField } from '@mui/material';
+import { Autocomplete, Grid, TextField, Typography } from '@mui/material';
 import _ from 'lodash';
 import { AuthContext } from '../../../../../context/AuthContext';
 
@@ -18,6 +18,10 @@ const TimeSlotFilters: React.FC<ITimeSlotFiltersProps> = ({ onApply }) => {
   const [clinicId, setClinicId] = useState<string | undefined>(
     '16458ab0-4bb6-4141-9bf0-6d7398942d9b',
   );
+
+  const doctorClinicName = clinics.find(
+    (clinic) => clinic.id === clinicId,
+  )?.name;
 
   const handleApplyFilters = () => {
     const filters = {
@@ -52,7 +56,7 @@ const TimeSlotFilters: React.FC<ITimeSlotFiltersProps> = ({ onApply }) => {
 
   return (
     <Grid container spacing={1} alignItems="center">
-      {!isDoctor && (
+      {!isDoctor ? (
         <Grid item xs={12} sm={2}>
           <Autocomplete
             options={clinics}
@@ -63,6 +67,12 @@ const TimeSlotFilters: React.FC<ITimeSlotFiltersProps> = ({ onApply }) => {
             }
             value={clinics.find((clinic) => clinic.id === clinicId) || null}
           />
+        </Grid>
+      ) : (
+        <Grid item xs={12} sm={2}>
+          <Typography variant="h6" style={{ color: '#6c52d8' }}>
+            {doctorClinicName ? `${doctorClinicName}` : '未知院區'}
+          </Typography>
         </Grid>
       )}
     </Grid>

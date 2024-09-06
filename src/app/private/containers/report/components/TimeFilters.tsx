@@ -330,15 +330,19 @@ const TimeFilters: React.FC<ITimeSelectionProps> = ({ onApply }) => {
           </FormControl>
         )}
       </Grid>
-      <Grid item xs={12} sm={2}>
-        <Autocomplete
-          options={clinics}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => <TextField {...params} label="院區" />}
-          onChange={(event, value) => setClinicId(value ? value.id : undefined)}
-          value={clinics.find((clinic) => clinic.id === clinicId) || null}
-        />
-      </Grid>
+      {!isDoctor && (
+        <Grid item xs={12} sm={2}>
+          <Autocomplete
+            options={clinics}
+            getOptionLabel={(option) => option.name}
+            renderInput={(params) => <TextField {...params} label="院區" />}
+            onChange={(event, value) =>
+              setClinicId(value ? value.id : undefined)
+            }
+            value={clinics.find((clinic) => clinic.id === clinicId) || null}
+          />
+        </Grid>
+      )}
       <Grid item xs={12} sm={2}>
         <Autocomplete
           options={timePeriodOptions}
