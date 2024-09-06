@@ -69,15 +69,21 @@ const HomeLanding: React.FC = () => {
           </Button>
         </Box>
       </Box>
-      <ScrollAnimation>
-        <RealTimeFeatureCard />
-      </ScrollAnimation>
-      <ScrollAnimation>
-        <ListFeatureCard />
-      </ScrollAnimation>
-      <ScrollAnimation>
-        <ChartFeatureCard />
-      </ScrollAnimation>
+      <Box sx={{ my: 10 }}>
+        <ScrollAnimation>
+          <RealTimeFeatureCard />
+        </ScrollAnimation>
+      </Box>
+      <Box sx={{ my: 10 }}>
+        <ScrollAnimation>
+          <ListFeatureCard />
+        </ScrollAnimation>
+      </Box>
+      <Box sx={{ my: 10 }}>
+        <ScrollAnimation>
+          <ChartFeatureCard />
+        </ScrollAnimation>
+      </Box>
       <AppFooter />
     </>
   );

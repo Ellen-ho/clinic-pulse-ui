@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Grid,
@@ -7,56 +7,88 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Slider,
 } from '@mui/material';
+
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/system';
 
 import iconBgUrl from '../../../../../../src/assets/real_time_icon.png';
-import realTimeGif from '../../../../../../src/assets/real_time_admin.gif';
+import realTimeNav from '../../../../../../src/assets/real_time_admin.gif';
+import realTimeAdminFilter from '../../../../../../src/assets/real_time_filters.gif';
+import realTimeDoctor from '../../../../../../src/assets/real_time_doctor.gif';
 
-const StyledImage = styled(Box)(({ theme }) => ({
+const StyledImageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: 'auto',
-  display: 'block',
+  height: '300px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  overflow: 'hidden',
   borderRadius: '8px',
+  backgroundColor: '#f0f0f0',
 }));
 
-const RealTimeFeatureCard: React.FC = () => {
-  const [currentImage, setCurrentImage] = useState(iconBgUrl);
+const StyledImage = styled('img')({
+  width: '100%',
+  height: '100%',
+  objectFit: 'contain',
+  display: 'block',
+});
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+const RealTimeFeatureCard: React.FC = () => {
+  const [currentImage, setCurrentImage] = useState(0);
 
   const images = [
     {
-      src: realTimeGif,
+      src: realTimeNav,
       text: '各院區門診即時等待時間及即時現況',
+    },
+    {
+      src: realTimeAdminFilter,
+      text: '管理者可使用篩選器查看不同院區跟診間即時現況',
+    },
+    {
+      src: realTimeDoctor,
+      text: '醫師的即時頁面會自動帶出其正在進行中的門診即時資訊',
     },
   ];
 
-  const handleListItemClick = (index: number, src: string) => {
-    setCurrentImage(src);
-    setSelectedIndex(index);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prevImage) => (prevImage + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  const handleSliderChange = (event: any, newValue: number | number[]) => {
+    setCurrentImage(newValue as number);
+  };
+
+  const handleImageClick = (index: number) => {
+    setCurrentImage(index);
   };
 
   return (
     <Grid
       container
-      spacing={4}
+      spacing={6}
       alignItems="center"
       sx={{ width: '80%', margin: '0 auto' }}
     >
       <Grid item xs={12} md={4}>
-        <StyledImage
-          component="img"
-          src={currentImage}
-          alt="Feature Image"
-          sx={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-            borderRadius: '8px',
-          }}
-          {...({} as React.ImgHTMLAttributes<HTMLImageElement>)}
+        <StyledImageContainer>
+          <StyledImage src={images[currentImage].src} alt="Feature Image" />
+        </StyledImageContainer>
+        <Slider
+          value={currentImage}
+          min={0}
+          max={images.length - 1}
+          step={1}
+          onChange={handleSliderChange}
+          marks
+          sx={{ mt: 2 }}
         />
       </Grid>
 
@@ -76,11 +108,19 @@ const RealTimeFeatureCard: React.FC = () => {
             <ListItem
               button
               key={index}
-              onClick={() => handleListItemClick(index, image.src)}
+              onClick={() => handleImageClick(index)}
               sx={{
                 backgroundColor:
-                  selectedIndex === index ? '#f0f0f0' : 'transparent',
-                transition: 'background-color 0.3s ease',
+                  currentImage === index ? '#f0f0f0' : 'transparent',
+                transition: 'all 0.3s ease',
+                fontWeight: currentImage === index ? 'bold' : 'normal',
+                transform: currentImage === index ? 'scale(1.05)' : 'scale(1)',
+                boxShadow:
+                  currentImage === index
+                    ? '0px 4px 10px rgba(0, 0, 0, 0.1)'
+                    : 'none',
+                padding: '16px',
+                borderRadius: '8px',
               }}
             >
               <ListItemIcon>
