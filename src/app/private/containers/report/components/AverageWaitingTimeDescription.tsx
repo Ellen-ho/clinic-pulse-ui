@@ -107,9 +107,10 @@ const WaitingTimeDescription: React.FC<IWaitingTimeDescriptionProps> = ({
           <Typography variant="body2" sx={{ color: 'gray' }}>
             相等
           </Typography>
+          <Typography variant="body2" sx={{ mx: 0.5 }}>
+            vs
+          </Typography>
           <Typography variant="body2">
-            {' '}
-            vs{' '}
             {granularity === Granularity.DAY
               ? '上週'
               : granularity === Granularity.WEEK
