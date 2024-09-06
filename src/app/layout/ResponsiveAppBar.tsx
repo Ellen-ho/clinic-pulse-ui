@@ -72,7 +72,7 @@ const ResponsiveAppBar: React.FC = () => {
 
   const handleSignOut = () => {
     dispatch({ type: 'SIGN_OUT' });
-    navigate('/signin');
+    navigate('/');
   };
 
   if (!isSignedIn) {
