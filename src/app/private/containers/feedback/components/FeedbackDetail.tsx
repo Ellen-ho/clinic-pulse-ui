@@ -7,6 +7,7 @@ import {
   CardContent,
   Divider,
   Grid,
+  Rating,
   Typography,
 } from '@mui/material';
 import { getSingleFeedback } from '../../../../../services/FeedbackService';
@@ -62,9 +63,10 @@ const FeedbackDetail: React.FC = () => {
             <Typography variant="body1">
               反饋日期: {data.receivedDate}
             </Typography>
-            <Typography variant="body1">
-              反饋星等: {data.feedbackRating}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body1">反饋星等:</Typography>
+              <Rating value={data.feedbackRating} precision={0.5} readOnly />
+            </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography variant="body1">反饋選項:</Typography>
               <FeedbackSelectedContentTag type={data.selectedContent} />

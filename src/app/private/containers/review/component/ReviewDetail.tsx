@@ -7,6 +7,7 @@ import {
   CardContent,
   Divider,
   Grid,
+  Rating,
   Typography,
 } from '@mui/material';
 import { getSingleReview } from '../../../../../services/ReviewService';
@@ -50,9 +51,10 @@ const ReviewDetail: React.FC = () => {
             <Typography variant="body1">
               評論日期: {data.receivedDate}
             </Typography>
-            <Typography variant="body1">
-              評論星等: {data.reviewRating}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body1">評論星等:</Typography>
+              <Rating value={data.reviewRating} precision={0.5} readOnly />
+            </Box>
             <Typography variant="body1">
               回覆日期: {data.responseDate}
             </Typography>
