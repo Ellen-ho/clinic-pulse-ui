@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import ScrollAnimation from '../components/ScrollAnimation';
 import RealTimeFeatureCard from '../components/RealTimeFeatureCard';
 import AppFooter from '../../../../layout/AppFooter';
-import GitHubIcon from '@mui/icons-material/GitHub';
 
 const HomeLanding: React.FC = () => {
   const navigate = useNavigate();

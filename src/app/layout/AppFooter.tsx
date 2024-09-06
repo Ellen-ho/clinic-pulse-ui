@@ -35,13 +35,52 @@ function AppFooter() {
           <Box
             sx={{
               display: 'flex',
-
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '10px',
+              gap: '20px',
             }}
           >
-            <GitHubIcon sx={{ color: 'white' }} />
+            <Link
+              href="https://github.com/Ellen-ho/clinic-pulse-ui"
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: 'white',
+                gap: '8px',
+                '&:hover': {
+                  color: '#8FCFFF',
+                },
+              }}
+            >
+              <GitHubIcon />
+              <Typography sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                前端
+              </Typography>
+            </Link>
+
+            <Link
+              href="https://github.com/Ellen-ho/clinic-pulse-api"
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: 'white',
+                gap: '8px',
+                '&:hover': {
+                  color: '#8FCFFF',
+                },
+              }}
+            >
+              <GitHubIcon />
+              <Typography sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                後端
+              </Typography>
+            </Link>
           </Box>
           <Box
             sx={{
