@@ -142,7 +142,7 @@ const SignIn: React.FC = () => {
                   startIcon={<MedicalInformationIcon />}
                 >
                   {' '}
-                  忘記密碼
+                  忘記密碼 / 修改密碼
                 </Button>
               </ButtonAreaWrapper>
 
