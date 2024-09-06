@@ -29,7 +29,7 @@ const pages: IPage[] = [
     link: '',
     subMenu: [
       {
-        title: '問券反饋',
+        title: '問卷反饋',
         link: '/feedback',
         permission: 'feedbackSurveyRead',
       },
