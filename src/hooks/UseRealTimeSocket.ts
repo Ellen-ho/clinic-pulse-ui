@@ -49,19 +49,6 @@ const useRealTimeSocket = <T extends object>({
     socket.on('realTimeList', (updatedRow: any) => {
       if (onMessage) {
         onMessage(updatedRow);
-      } else {
-        setRealTimeData((prev) => {
-          if ('data' in prev && Array.isArray(prev.data)) {
-            const updatedData = prev.data.map((item) =>
-              item.id === updatedRow.id ? { ...item, ...updatedRow } : item,
-            );
-            return {
-              ...prev,
-              data: updatedData,
-            };
-          }
-          return prev;
-        });
       }
     });
 

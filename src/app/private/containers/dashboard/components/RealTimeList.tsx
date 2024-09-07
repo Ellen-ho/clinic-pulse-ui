@@ -136,6 +136,13 @@ const RealTimeList: React.FC<IRealTimeListProps> = ({
 
   const handleRealTimeUpdate = (updatedRow: any) => {
     setRealTimeListData((prevData) => {
+      if (updatedRow.status === ConsultationStatus.WAITING_FOR_CONSULTATION) {
+        return {
+          ...prevData,
+          data: [updatedRow, ...prevData.data],
+        };
+      }
+
       const updatedData = prevData.data.map((item) =>
         item.id === updatedRow.id ? { ...item, ...updatedRow } : item,
       );
