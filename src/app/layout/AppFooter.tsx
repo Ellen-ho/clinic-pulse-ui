@@ -38,36 +38,8 @@ function AppFooter() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '20px',
             }}
           >
-            <Link
-              href="https://github.com/Ellen-ho/clinic-pulse-ui"
-              target="_blank"
-              rel="noopener noreferrer"
-              underline="none"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                color: 'inherit',
-                gap: '8px',
-                '&:hover': {
-                  color: '#ccc',
-                },
-              }}
-            >
-              <GitHubIcon sx={{ color: 'white' }} />
-              <Typography
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  color: linkColor,
-                }}
-              >
-                前端
-              </Typography>
-            </Link>
-
             <Link
               href="https://github.com/Ellen-ho/clinic-pulse-api"
               target="_blank"
@@ -77,22 +49,12 @@ function AppFooter() {
                 display: 'flex',
                 alignItems: 'center',
                 color: 'inherit',
-                gap: '8px',
                 '&:hover': {
                   color: '#ccc',
                 },
               }}
             >
-              <GitHubIcon sx={{ color: 'white' }} />
-              <Typography
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  color: linkColor,
-                }}
-              >
-                後端
-              </Typography>
+              <GitHubIcon sx={{ color: 'white', fontSize: '2rem' }} />
             </Link>
           </Box>
           <Box
