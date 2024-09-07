@@ -13,10 +13,9 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/system';
 
-import iconBgUrl from '../../../../../../src/assets/real_time_icon.png';
-import realTimeNav from '../../../../../../src/assets/real_time_admin.gif';
-import realTimeAdminFilter from '../../../../../../src/assets/real_time_filters.gif';
-import realTimeDoctor from '../../../../../../src/assets/real_time_doctor.gif';
+import realTimeNav from '../../../../../../src/assets/real_time_admin.png';
+import realTimeAdminFilter from '../../../../../../src/assets/real_time_filter.gif';
+import realTimeDoctor from '../../../../../../src/assets/real_time_doctor.png';
 
 const StyledImageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
