@@ -13,7 +13,6 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/system';
 
-import realTimeNav from '../../../../../../src/assets/real_time_admin.png';
 import realTimeAdminFilter from '../../../../../../src/assets/real_time_filter.gif';
 import realTimeDoctor from '../../../../../../src/assets/real_time_doctor.png';
 
@@ -31,7 +30,7 @@ const StyledImageContainer = styled(Box)(({ theme }) => ({
 const StyledImage = styled('img')({
   width: '100%',
   height: '100%',
-  objectFit: 'contain',
+  objectFit: 'cover',
   display: 'block',
 });
 
@@ -40,7 +39,7 @@ const RealTimeFeatureCard: React.FC = () => {
 
   const images = [
     {
-      src: realTimeNav,
+      src: realTimeAdminFilter,
       text: '各院區門診即時等待時間及即時現況',
     },
     {
@@ -76,7 +75,7 @@ const RealTimeFeatureCard: React.FC = () => {
       alignItems="center"
       sx={{ width: '80%', margin: '0 auto' }}
     >
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <StyledImageContainer>
           <StyledImage src={images[currentImage].src} alt="Feature Image" />
         </StyledImageContainer>
@@ -91,7 +90,7 @@ const RealTimeFeatureCard: React.FC = () => {
         />
       </Grid>
 
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" color="primary" gutterBottom>
           即時資訊
         </Typography>
