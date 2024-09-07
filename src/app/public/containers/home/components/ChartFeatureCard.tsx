@@ -14,7 +14,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/system';
 
 import reportAdminUrl from '../../../../../../src/assets/admin_report.gif';
-import reportDoctorUrl from '../../../../../../src/assets/doctor_report.gif';
+import reportDoctorUrl from '../../../../../../src/assets/doctor_report.png';
 
 const StyledImageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -30,7 +30,7 @@ const StyledImageContainer = styled(Box)(({ theme }) => ({
 const StyledImage = styled('img')({
   width: '100%',
   height: '100%',
-  objectFit: 'contain',
+  objectFit: 'cover',
   display: 'block',
 });
 
@@ -71,7 +71,7 @@ const ChartFeatureCard: React.FC = () => {
       alignItems="center"
       sx={{ width: '80%', margin: '0 auto' }}
     >
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <StyledImageContainer>
           <StyledImage src={images[currentImage].src} alt="Feature Image" />
         </StyledImageContainer>
@@ -86,7 +86,7 @@ const ChartFeatureCard: React.FC = () => {
         />
       </Grid>
 
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={6}>
         {' '}
         <Typography variant="h6" color="primary" gutterBottom>
           統計中心
