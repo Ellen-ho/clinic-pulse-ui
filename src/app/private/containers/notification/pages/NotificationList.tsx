@@ -38,6 +38,7 @@ import NotificationIcons from '../components/NotificationIcons';
 import { useNavigate } from 'react-router-dom';
 import { NotificationType } from '../../../../../types/Notifications';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DataLoading from '../../../../../components/signs/DataLoading';
 
 const NotificationList: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -53,7 +54,7 @@ const NotificationList: React.FC = () => {
   const handleCloseMenu = () => {
     setAnchorElNav(null);
   };
-  const { data, mutate } = useSWR(`getNotifications?q=${page}`, () =>
+  const { data, isLoading, mutate } = useSWR(`getNotifications?q=${page}`, () =>
     getNotificationList({
       query: {
         limit: 10,
@@ -125,7 +126,12 @@ const NotificationList: React.FC = () => {
       <NarrowCommonWrapper>
         <PrimaryPageTop pageTitle={'通知列表'} />
         <Card>
-          <CardContent>
+          <CardContent
+            sx={{
+              height: '100%',
+              overflowY: 'auto',
+            }}
+          >
             <Box textAlign={'right'}>
               <IconButton onClick={handleOpenMenu}>
                 <MoreVertIcon />
@@ -214,7 +220,11 @@ const NotificationList: React.FC = () => {
               </List>
             ) : (
               <Box sx={{ position: 'relative', minHeight: '200px' }}>
-                <NoDataFound label="目前沒有通知訊息" />
+                {isLoading ? (
+                  <DataLoading />
+                ) : (
+                  <NoDataFound label="目前沒有通知訊息" />
+                )}
               </Box>
             )}
           </CardContent>
