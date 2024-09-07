@@ -1,7 +1,15 @@
 # clinic-pulse-ui
 
-## How to install
+## Local development
+
+### Install dependency
 
 ```
-yarn install
+yarn install --frozen-lockfile
+```
+
+### Running the application
+
+```shell
+yarn dev
 ```
