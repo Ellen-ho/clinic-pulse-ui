@@ -13,7 +13,7 @@ import { styled } from '@mui/system';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import consultationListUrl from '../../../../../../src/assets/consultation_list.gif';
-import listDoctorUrl from '../../../../../../src/assets/list_doctor.gif';
+import listDoctorUrl from '../../../../../../src/assets/list_doctor.png';
 import feedbackUrl from '../../../../../../src/assets/feedback.gif';
 import detailUrl from '../../../../../../src/assets/detail.png';
 
@@ -31,7 +31,7 @@ const StyledImageContainer = styled(Box)(({ theme }) => ({
 const StyledImage = styled('img')({
   width: '100%',
   height: '100%',
-  objectFit: 'contain',
+  objectFit: 'cover',
   display: 'block',
 });
 
@@ -80,7 +80,7 @@ const ListFeatureCard: React.FC = () => {
       alignItems="center"
       sx={{ width: '80%', margin: '0 auto' }}
     >
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" color="primary" gutterBottom>
           紀錄列表
         </Typography>
@@ -119,7 +119,7 @@ const ListFeatureCard: React.FC = () => {
         </List>
       </Grid>
 
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <StyledImageContainer>
           <StyledImage src={images[currentImage].src} alt="Feature Image" />
         </StyledImageContainer>
