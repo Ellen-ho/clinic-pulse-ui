@@ -117,15 +117,18 @@ const SignIn: React.FC = () => {
                 label="電子信箱"
                 type="email"
                 size="small"
+                defaultValue="admin@example.com"
                 {...register('email')}
                 error={!!errors.email}
                 helperText={errors.email?.message}
                 sx={{ mb: 2 }}
               />
+
               <TextField
                 label="密碼"
                 type="password"
                 size="small"
+                defaultValue="123456"
                 {...register('password')}
                 error={!!errors.password}
                 helperText={errors.password?.message}

@@ -20,7 +20,12 @@ export const FiltersProvider: React.FC<{ children: React.ReactNode }> = ({
       const storedDoctors = localStorage.getItem('doctors');
       const storedClinics = localStorage.getItem('clinics');
 
-      if (storedDoctors && storedClinics) {
+      if (
+        storedDoctors &&
+        storedClinics &&
+        storedDoctors !== 'undefined' &&
+        storedClinics !== 'undefined'
+      ) {
         setDoctors(JSON.parse(storedDoctors));
         setClinics(JSON.parse(storedClinics));
       } else {
