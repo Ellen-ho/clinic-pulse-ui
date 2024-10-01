@@ -116,7 +116,6 @@ const SignUpCard: React.FC<ISingUpCard> = ({ title = '' }) => {
                 error={!!errors.role}
                 defaultValue=""
               >
-                <MenuItem value="ADMIN">管理員</MenuItem>
                 <MenuItem value="DOCTOR">醫師</MenuItem>
               </Select>
             </FormControl>
