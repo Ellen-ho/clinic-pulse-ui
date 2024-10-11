@@ -1,11 +1,9 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import GitHubIcon from '@mui/icons-material/GitHub';
 
 function AppFooter() {
   const currentYear = new Date().getFullYear();
-  const linkColor = '#8FCFFF';
 
   return (
     <Box
@@ -33,30 +31,6 @@ function AppFooter() {
             gap: '15px',
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Link
-              href="https://github.com/Ellen-ho/clinic-pulse-api"
-              target="_blank"
-              rel="noopener noreferrer"
-              underline="none"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                color: 'inherit',
-                '&:hover': {
-                  color: '#ccc',
-                },
-              }}
-            >
-              <GitHubIcon sx={{ color: 'white', fontSize: '2rem' }} />
-            </Link>
-          </Box>
           <Box
             sx={{
               display: 'flex',
