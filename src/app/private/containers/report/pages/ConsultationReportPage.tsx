@@ -177,7 +177,7 @@ const ConsultationReportPage: React.FC = () => {
                     compareAverageRate={
                       averageConsultationData.compareAverageRate
                     }
-                    compareSlotRate={averageConsultationData.compareSlots}
+                    compareSlotRate={averageConsultationData.compareSlotRate}
                     granularity={filters.granularity}
                   />
                   <Box sx={chartStyle}>

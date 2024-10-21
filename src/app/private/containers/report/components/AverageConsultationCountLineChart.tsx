@@ -44,53 +44,6 @@ const AverageConsultationCountLineChart: React.FC<
     0, 0,
   ]);
 
-  // const queryString = useMemo(() => {
-  //   const params = new URLSearchParams();
-
-  //   if (clinicId) params.set('clinicId', clinicId);
-  //   if (timePeriod) params.set('timePeriod', timePeriod);
-  //   if (doctorId) params.set('doctorId', doctorId);
-  //   if (granularity) params.set('granularity', granularity);
-  //   params.set('startDate', startDate);
-  //   params.set('endDate', endDate);
-
-  //   return params.toString();
-  // }, [startDate, endDate, clinicId, timePeriod, doctorId, granularity]);
-
-  // const { data, error } = useSWR(
-  //   `GetAverageConsultationCount?${queryString}`,
-  //   () => getAverageConsultationCount({ queryString }),
-  // );
-
-  // useEffect(() => {
-  //   setMessage(null);
-  //   setLoading(true);
-  //   if (data) {
-  //     if (data.totalConsultations === 0) {
-  //       setMessage('選擇區間沒有門診資料');
-  //     } else {
-  //       setChartData(data.data);
-
-  //       const maxCountLeft = Math.max(
-  //         ...data.data.map((item) =>
-  //           Math.max(item.consultationCount, item.consultationCount),
-  //         ),
-  //       );
-  //       const minCountLeft = 0;
-
-  //       const maxCountRight = Math.max(
-  //         ...data.data.map((item) =>
-  //           Math.max(item.averageCount, item.averageCount),
-  //         ),
-  //       );
-  //       const minCountRight = 0;
-
-  //       setYAxisDomainLeft([minCountLeft, maxCountLeft + 5]);
-  //       setYAxisDomainRight([minCountRight, maxCountRight + 5]);
-  //     }
-  //     setLoading(false);
-  //   }
-  // }, [data]);
   useEffect(() => {
     setMessage(null);
     setLoading(true);
@@ -174,8 +127,6 @@ const AverageConsultationCountLineChart: React.FC<
           stroke="#82ca9d"
         />
 
-        {/* <YAxis yAxisId="left" orientation="left" stroke="#8884d8" /> */}
-        {/* <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" /> */}
         <Tooltip />
         <Legend />
         <Bar
